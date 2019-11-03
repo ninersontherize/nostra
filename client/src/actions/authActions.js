@@ -45,6 +45,47 @@ export const loginUser = userData => dispatch => {
     );
 };
 
+//send email with unique token to reset password
+export const sendForgotEmail = userData => dispatch => {
+  axios
+    .post("/api/users/forgotPassword", userData)
+
+    //TODO - send to static page that lets the user know this was a success
+    
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+export const validateToken = tokenData => dispatch => {
+  return axios
+    .post("/api/users/validateToken", tokenData)
+    .then(res => {
+      return res.data.email;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+export const updatePassword = (userData, history) => dispatch => {
+  axios 
+    .put("/api/users/updatePassword", userData)
+    .then(res => history.push("/login")) //re-direct to login on successful register
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Set logged in user
 export const setCurrentUser = decoded => {
   return {

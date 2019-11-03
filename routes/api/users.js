@@ -1,11 +1,16 @@
+const crypto = require("crypto");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
+const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
+const validateForgotPasswordInput = require("../../validation/forgotPassword");
+const validateUpdatePasswordInput = require("../../validation/updatePassword");
 
 const User = require("../../models/User");
 
@@ -27,7 +32,9 @@ router.post("/register", (req, res) => {
         name:req.body.name,
         email: req.body.email,
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        resetPasswordToken: null,
+        resetPasswordExpires:null
       });
 
       bcrypt.genSalt(10, (err, salt) => {
@@ -84,6 +91,115 @@ router.post("/login", (req, res) => {
         return res.status(400).json({ passwordincorrect: "Password incorrect" });
       }
     });
+  });
+});
+
+// @route POST api/users/forgotPassword
+// @desc send email to user to prompt reset of password
+// @access Public
+router.post("/forgotPassword", (req, res) => {
+  const{ errors, isValid } = validateForgotPasswordInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const email = req.body.email;
+
+  User.findOne({ email }).then(user => {
+    if(!user) {
+      return res.status(404).json({ emailnotfound: "Email not found" });
+    }
+
+    const token = crypto.randomBytes(20).toString("hex");
+    User.updateOne({ email: email }, {
+      resetPasswordToken: token,
+      resetPasswordExpires: Date.now() + 360000
+    }, function(err, affected, res) {
+      console.log(res);
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: `${process.env.REACT_APP_EMAIL_ACCOUNT}`,
+        pass: `${process.env.REACT_APP_EMAIL_PASSWORD}`
+      }
+    });
+
+    const mailOptions = {
+      from: "nostra.help@gmail.com",
+      to: `${user.email}`,
+      subject: "Link to Reset Password",
+      text:
+        "You are receiving this email because a request has been made to reset the password for your account. \n\n" +
+        "Please click on the following link, or paste it into your browser and follow the steps to complete the process. \n\n" +
+        `http://localhost:3000/reset/${token} \n\n` +
+        "This link will expire in one hour, if you did not request this, please ignore this email and your password \n\n" +
+        "will remain unchanged. \n\n\n" +
+        "Thanks for using our service, \n\n" +
+        "Nostra Support Team \n"
+    };
+
+    console.log("sending mail");
+
+    transporter.sendMail(mailOptions, function(err, res){
+      if (err) {
+        console.error("there was an error: ", err);
+      } else {
+        res.status(200).json("recover email sent");
+      }
+    });
+  });
+});
+
+// @route POST api/users/forgotPassword
+// @desc validate token passed corresponds to user
+// @access Public
+router.post("/validateToken", (req, res) => {
+  const resetPasswordToken = req.body.resetPasswordToken;
+  User.findOne({ resetPasswordToken: resetPasswordToken, resetPasswordExpires: { $gt: Date.now() } })
+      .then(user => {
+        if(!user) {
+          return res.status(404).json({ email: "Password reset link is invalid or has expired" });
+        } else {
+          res.status(200).send({
+            email: user.email,
+            message: 'password reset link valid'
+          });
+        }
+  });
+});
+
+// @route PUT api/users/updatePassword
+// @desc update user's password after link is visited
+// @access Public
+router.put("/updatePassword", (req, res) => {
+  console.log(req.body);
+  const { errors, isValid } = validateUpdatePasswordInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  User.findOne({ email: req.body.email }).then(user => {
+    if (!user) {
+      return res.status(404).json({ email: "User not found" });
+    } else {
+      console.log(user);
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt
+          .hash(req.body.password, salt, (err, hash) => {
+            User.updateOne({ email: user.email }, {
+              password: hash,
+              resetPasswordToken: null,
+              resetPasswordExpires: null
+            }, function(err, affected, res) {
+              console.log(res);
+            });
+          });
+      });
+    }
   });
 });
 
