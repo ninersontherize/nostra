@@ -196,6 +196,10 @@ router.put("/updatePassword", (req, res) => {
               resetPasswordExpires: null
             }, function(err, affected, res) {
               console.log(res);
+            })
+            .then(() => {
+              console.log("password updated");
+              res.status(200).send({ message: "password updated"});
             });
           });
       });

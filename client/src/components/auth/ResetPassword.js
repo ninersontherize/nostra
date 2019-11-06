@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { validateToken, updatePassword } from "../../actions/authActions";
 import classnames from "classnames";
@@ -28,6 +28,14 @@ class ResetPassword extends Component {
     });
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   }
@@ -40,7 +48,7 @@ class ResetPassword extends Component {
       password: this.state.password,
       confirm_password: this.state.confirm_password
     };
-    console.log(userData);
+    console.log(this.props.history);
     this.props.updatePassword(userData, this.props.history);
   }
 
@@ -146,4 +154,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { validateToken, updatePassword })(ResetPassword);
+export default connect(mapStateToProps, { validateToken, updatePassword })(withRouter(ResetPassword));

@@ -77,7 +77,9 @@ export const validateToken = tokenData => dispatch => {
 export const updatePassword = (userData, history) => dispatch => {
   axios 
     .put("/api/users/updatePassword", userData)
-    .then(res => history.push("/login")) //re-direct to login on successful register
+    .then(res => {
+      history.push("/login"); 
+    }) //re-direct to login on successful register
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
