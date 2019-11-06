@@ -46,12 +46,10 @@ export const loginUser = userData => dispatch => {
 };
 
 //send email with unique token to reset password
-export const sendForgotEmail = userData => dispatch => {
+export const sendForgotEmail = (userData, history) => dispatch => {
   axios
     .post("/api/users/forgotPassword", userData)
-
-    //TODO - send to static page that lets the user know this was a success
-    
+    .then(res => history.push("/emailSent")) //send to static success page on success
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

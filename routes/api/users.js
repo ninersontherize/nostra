@@ -146,10 +146,10 @@ router.post("/forgotPassword", (req, res) => {
     transporter.sendMail(mailOptions, function(err, res){
       if (err) {
         console.error("there was an error: ", err);
-      } else {
-        res.status(200).json("recover email sent");
       }
     });
+
+    res.status(200).send({ message: "recover email sent" });
   });
 });
 
@@ -175,7 +175,6 @@ router.post("/validateToken", (req, res) => {
 // @desc update user's password after link is visited
 // @access Public
 router.put("/updatePassword", (req, res) => {
-  console.log(req.body);
   const { errors, isValid } = validateUpdatePasswordInput(req.body);
 
   if (!isValid) {
@@ -186,7 +185,6 @@ router.put("/updatePassword", (req, res) => {
     if (!user) {
       return res.status(404).json({ email: "User not found" });
     } else {
-      console.log(user);
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt
           .hash(req.body.password, salt, (err, hash) => {

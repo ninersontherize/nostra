@@ -28,7 +28,7 @@ class ResetPassword extends Component {
     });
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
         errors: nextProps.errors
@@ -48,7 +48,7 @@ class ResetPassword extends Component {
       password: this.state.password,
       confirm_password: this.state.confirm_password
     };
-    console.log(this.props.history);
+
     this.props.updatePassword(userData, this.props.history);
   }
 

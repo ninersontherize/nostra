@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { sendForgotEmail } from "../../actions/authActions";
 import classnames from "classnames";
@@ -15,6 +15,14 @@ class ForgotPassword extends Component {
     };
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   }
@@ -26,7 +34,7 @@ class ForgotPassword extends Component {
       email: this.state.email
     };
 
-    this.props.sendForgotEmail(userData);
+    this.props.sendForgotEmail(userData, this.props.history);
   };
 
   render() {
@@ -91,4 +99,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { sendForgotEmail })(ForgotPassword);
+export default connect(mapStateToProps, { sendForgotEmail })(withRouter(ForgotPassword));
