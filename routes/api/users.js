@@ -134,7 +134,7 @@ router.post("/forgotPassword", (req, res) => {
       text:
         "You are receiving this email because a request has been made to reset the password for your account. \n\n" +
         "Please click on the following link, or paste it into your browser and follow the steps to complete the process. \n\n" +
-        `http://localhost:3000/reset/${token} \n\n` +
+        `http://${process.env.REACT_APP_EMAIL_DOMAIN}/reset/${token} \n\n` +
         "This link will expire in one hour, if you did not request this, please ignore this email and your password \n\n" +
         "will remain unchanged. \n\n\n" +
         "Thanks for using our service, \n\n" +
