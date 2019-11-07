@@ -21,7 +21,7 @@
     "eject": "react-scripts eject"
     
   },
-  "proxy": "http://www.nostra.gg:5000",
+  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": "react-app"
   },

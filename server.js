@@ -5,6 +5,7 @@ const passport = require("passport");
 const path = require("path");
 
 const users = require("./routes/api/users");
+const leagues = require("./routes/api/leagues");
 
 const app = express();
 
@@ -28,6 +29,7 @@ mongoose
 app.use(passport.initialize());
 require("./config/passport")(passport);
 app.use("/api/users", users);
+app.use("/api/leagues", leagues);
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {

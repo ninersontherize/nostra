@@ -7,10 +7,10 @@ const keys = require("../../config/keys");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-const validateRegisterInput = require("../../validation/register");
-const validateLoginInput = require("../../validation/login");
-const validateForgotPasswordInput = require("../../validation/forgotPassword");
-const validateUpdatePasswordInput = require("../../validation/updatePassword");
+const validateRegisterInput = require("../../validation/user/register");
+const validateLoginInput = require("../../validation/user/login");
+const validateForgotPasswordInput = require("../../validation/user/forgotPassword");
+const validateUpdatePasswordInput = require("../../validation/user/updatePassword");
 
 const User = require("../../models/User");
 
