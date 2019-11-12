@@ -1,0 +1,153 @@
+import React, { Component } from "react";
+import Checkbox from '@material-ui/core/Checkbox';
+import { Link, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { createLeague } from "../../actions/leagueActions";
+import classnames from "classnames"
+
+import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+const OPTIONS = ["LCS", "LEC"];
+
+class CreateLeague extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      name: "",
+      game: "League of Legends",
+      leagues_supported: [],
+      checkboxes: OPTIONS.reduce(
+        (options, option) => ({
+          ...options,
+          [option]: false
+        }),
+        {}
+      ),
+      errors: {}
+    };
+  }
+
+  onChange = e => {
+    this.setState({ [e.target.id]: e.target.value });
+  };
+
+  onSubmit = async e => {
+    e.preventDefault();
+
+    await this.updateLeaguesSupported();
+
+    const newLeague = {
+      name: this.state.name,
+      game: this.state.game,
+      leagues_supported: this.state.leagues_supported,
+    };
+
+    this.props.createLeague(newLeague, this.props.history);
+  };
+
+  updateLeaguesSupported = () => {
+    Object.keys(this.state.checkboxes)
+    .filter(checkbox => this.state.checkboxes[checkbox])
+    .forEach(checkbox => {
+      let addedLeagues = this.state.leagues_supported.concat(checkbox);
+      this.setState({ leagues_supported: addedLeagues }, () => {
+        console.log(this.state.leagues_supported);
+      });
+    });
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
+  handleCheckboxChange = changeEvent => {
+    const { name } = changeEvent.target;
+    console.log("checkbox changed!");
+    this.setState(prevState => ({
+      checkboxes: {
+        ...prevState.checkboxes,
+        [name]: !prevState.checkboxes[name]
+      }
+    }));
+  };
+
+  render() {
+    const{ errors } = this.state;
+
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col s8 offset-s2">
+            <Link to="/" className="btn-flat waves-effect">
+              <i className="material-icons left">keyboard_backspace</i> Back to home
+            </Link>
+            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+              <h4>
+                <b>Create</b> your league below
+              </h4>
+            </div>
+            <form noValidate onSubmit={this.onSubmit}>
+              <div className="input-field col s12">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.name}
+                  error={errors.name}
+                  id="name"
+                  type="text"
+                  className={classnames('', { invalid: errors.name })}
+                />
+                <label htmlFor="name">League Name</label>
+                <span className="red-text">{errors.name}</span>
+              </div>
+              <FormLabel component="legend">Choose which leagues you'll be able to place bets on</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />}
+                  label="LCS"
+                />
+                <FormControlLabel
+                  control={<Checkbox name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />}
+                  label="LEC"
+                />
+              </FormGroup>
+              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                <button
+                  style={{
+                    width: "250px",
+                    borderRadius: "3px",
+                    letterSpacing: "1.5px",
+                    marginTop: "1rem"
+                  }}
+                  type="submit"
+                  className="btn btn-large waves-effect waves-light hoverable blue accent-3">
+                    Create League
+                  </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+CreateLeague.propTypes = {
+  createLeague: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(mapStateToProps, { createLeague })(withRouter(CreateLeague));

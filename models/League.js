@@ -14,7 +14,7 @@ const LeagueSchema = new Schema({
   leagues_supported: {
     type: Array,
     required: true
-  },    
+  },   
   created_date: {
     type: Date,
     default: Date.now

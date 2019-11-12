@@ -14,6 +14,7 @@ import Login from "./components/auth/Login";
 import EmailSent from "./components/auth/EmailSent";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
+import CreateLeague from "./components/league/CreateLeague";
 
 import "./App.css";
 import ForgotPassword from './components/auth/ForgotPassword';
@@ -53,6 +54,7 @@ class App extends Component {
             <Route exact path="/emailSent" component={EmailSent} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/createLeague" component={CreateLeague} />
             </Switch>
           </div>
         </Router> 

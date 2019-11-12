@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
@@ -19,6 +20,9 @@ class Dashboard extends Component {
               <b>Hey there,</b> {user.name.split(" ")[0]}
               <p className="flow-text grey-text text-darken-1">
                 Welcome to <b>nostra.gg</b>, we are currently under construction, but check back soon for more features!
+              </p>
+              <p className="grey-text text-darken-1">
+                  Create your first league <Link to="/createLeague">here.</Link>
               </p>
             </h4>
             <button
