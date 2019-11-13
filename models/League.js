@@ -15,6 +15,22 @@ const LeagueSchema = new Schema({
     type: Array,
     required: true
   },   
+  private: {
+    type: Boolean,
+    required: true
+  },
+  max_players: {
+    type: Number,
+    required: false
+  },
+  starting_cash: {
+    type: Number,
+    required: true
+  },
+  in_progress: {
+    type: Boolean,
+    required: true
+  },
   created_date: {
     type: Date,
     default: Date.now

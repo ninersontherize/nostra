@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from "@material-ui/core/Checkbox";
+import Switch from "@material-ui/core/Switch";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -27,6 +28,10 @@ class CreateLeague extends Component {
         }),
         {}
       ),
+      private: false,
+      max_players: null,
+      starting_cash: 5000,
+      in_progress: false,
       errors: {}
     };
   }
@@ -44,6 +49,10 @@ class CreateLeague extends Component {
       name: this.state.name,
       game: this.state.game,
       leagues_supported: this.state.leagues_supported,
+      private: this.state.private,
+      max_players: this.state.max_players,
+      starting_cash: this.state.starting_cash,
+      in_progress: this.state.in_progress
     };
 
     this.props.createLeague(newLeague, this.props.history);
@@ -78,6 +87,14 @@ class CreateLeague extends Component {
       }
     }));
   };
+  
+  handleSwitchChange = event => {
+    const { name } = event.target;
+    console.log(event.target.value);
+    this.setState({ [name]: !this.state.private }, () => {
+      console.log(this.state.private);
+    });
+  };
 
   render() {
     const{ errors } = this.state;
@@ -107,17 +124,48 @@ class CreateLeague extends Component {
                 <label htmlFor="name">League Name</label>
                 <span className="red-text">{errors.name}</span>
               </div>
+              <div className="input-field col s12">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.max_players}
+                  error={errors.max_players}
+                  id="max_players"
+                  type="number"
+                  className={classnames('', { invalid: errors.max_players })}
+                />
+                <label htmlFor="name">Number of Players</label>
+                <span className="red-text">{errors.max_players}</span>
+              </div>
               <FormLabel component="legend">Choose which leagues you'll be able to place bets on</FormLabel>
               <FormGroup>
                 <FormControlLabel
-                  control={<Checkbox name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />}
+                  control={<Checkbox color="primary" name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />}
                   label="LCS"
                 />
                 <FormControlLabel
-                  control={<Checkbox name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />}
+                  control={<Checkbox color="primary" name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />}
                   label="LEC"
                 />
               </FormGroup>
+              <FormLabel component="Legend">Would you like this league to be private?</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Switch color="primary" name="private" checked={this.state.private} onChange={this.handleSwitchChange} value="private" />}
+                  label="Private"
+                />
+              </FormGroup>
+              <div className="input-field col s12">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.starting_cash}
+                  error={errors.starting_cash}
+                  id="starting_cash"
+                  type="number"
+                  className={classnames('', { invalid: errors.starting_cash })}
+                />
+                <label htmlFor="name">Starting Bankroll</label>
+                <span className="red-text">{errors.starting_cash}</span>
+              </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <button
                   style={{
