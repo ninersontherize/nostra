@@ -14,10 +14,13 @@ import Login from "./components/auth/Login";
 import EmailSent from "./components/auth/EmailSent";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
+import CreateLeague from "./components/league/CreateLeague";
+import SearchLeague from "./components/league/SearchLeague";
 
 import "./App.css";
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
+import JoinLeague from './components/league/JoinLeague';
 
 //Check fro token to keep user logged in
 if (localStorage.jwtToken) {
@@ -53,6 +56,9 @@ class App extends Component {
             <Route exact path="/emailSent" component={EmailSent} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/createLeague" component={CreateLeague} />
+              <PrivateRoute exact path="/searchLeague" component={SearchLeague} />
+              <PrivateRoute exact path="/joinLeague/:league_id" component={JoinLeague} />
             </Switch>
           </div>
         </Router> 

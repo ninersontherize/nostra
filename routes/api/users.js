@@ -5,14 +5,27 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const nodemailer = require("nodemailer");
+const isEmpty = require("is-empty");
 require("dotenv").config();
 
-const validateRegisterInput = require("../../validation/register");
-const validateLoginInput = require("../../validation/login");
-const validateForgotPasswordInput = require("../../validation/forgotPassword");
-const validateUpdatePasswordInput = require("../../validation/updatePassword");
+const validateRegisterInput = require("../../validation/user/register");
+const validateLoginInput = require("../../validation/user/login");
+const validateForgotPasswordInput = require("../../validation/user/forgotPassword");
+const validateUpdatePasswordInput = require("../../validation/user/updatePassword");
 
 const User = require("../../models/User");
+
+
+// @route GET api/users/users
+// @desc retrieve a list of registered users -- optional body param search
+// @access public
+router.get("/users", (req, res) => {
+  if ( isEmpty(req.body) ) {
+    User.find().then( users => res.json(users)).catch(err => console.log(err));
+  } else {
+    User.find({ name: req.body.search }).then( users => res.json(users)).catch(err => console.log(err));
+  }
+});
 
 // @route POST api/users/register
 // @desc Register user
