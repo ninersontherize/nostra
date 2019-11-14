@@ -21,8 +21,11 @@ class Dashboard extends Component {
               <p className="flow-text grey-text text-darken-1">
                 Welcome to <b>nostra.gg</b>, we are currently under construction, but check back soon for more features!
               </p>
-              <p className="grey-text text-darken-1">
-                  Create your first league <Link to="/createLeague">here.</Link>
+              <p className="flow-text grey-text text-darken-1">
+                  <b>Create</b> your first league <Link to="/createLeague">here.</Link>
+              </p>
+              <p className="flow-text grey-text text-darken-1">
+                  Or <b>search</b> for a league to join <Link to="/searchLeague">here.</Link>
               </p>
             </h4>
             <button

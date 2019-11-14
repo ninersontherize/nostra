@@ -31,6 +31,10 @@ const LeagueSchema = new Schema({
     type: Boolean,
     required: true
   },
+  league_owner: {
+    type: String,
+    required: true
+  },
   created_date: {
     type: Date,
     default: Date.now

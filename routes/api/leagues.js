@@ -31,7 +31,8 @@ router.post("/createLeague", (req, res) => {
         private: req.body.private,
         max_players: req.body.max_players,
         starting_cash: req.body.starting_cash,
-        in_progress: req.body.in_progress
+        in_progress: req.body.in_progress,
+        league_owner: req.body.creating_user_id
       });
 
       new_league.save().then(league => {
@@ -52,10 +53,10 @@ router.post("/createLeague", (req, res) => {
 // @desc show leagues through search or if body is empty show all leagues
 // @access public
 router.get("/leagues", (req, res) => {
-  if ( isEmpty(req.body) ) {
+  if ( isEmpty(req.query) ) {
     League.find().then( leagues => res.json(leagues)).catch(err => console.log(err));
   } else {
-    League.find({ name: req.body.search }).then( leagues => res.json(leagues)).catch(err => console.log(err));
+    League.find({ name: new RegExp(req.query.search) }).then( leagues => res.json(leagues)).catch(err => console.log(err));
   }
 });
 
@@ -236,6 +237,17 @@ router.delete("/removeUserLeague", (req, res) => {
   });
 });
 
+// @route GET api/leagues/getCurrentPlayers
+// @desc Get the number of players currently in a league
+// @access public
+router.get("/getCurrentPlayers", (req, res) => {
+  var league_id = req.query.league_id
+
+  UserLeague.find({ league_id: league_id }).count().then(count => {
+    return res.status(200).json(count);
+  });
+});
+
 // @route PUT api/leagues/updateBankroll
 // @desc Update bankroll after given win or loss
 // @access public
@@ -248,8 +260,6 @@ router.put("/updateBankroll", (req, res) => {
     if (!user_league) {
       return res.status(404).json({ user_league: "Submitted user does not exist in that league." });
     } else {
-      console.log(user_league.user_bankroll + change);
-      console.log(change);
       UserLeague.updateOne({ _id: user_league.id }, { 
         user_bankroll: (user_league.user_bankroll + change)
       }, function(err, affected, res) {

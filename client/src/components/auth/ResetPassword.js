@@ -24,7 +24,9 @@ class ResetPassword extends Component {
     };
 
     this.props.validateToken(tokenData).then(email => {
-      this.state.email = email;
+      this.setState({
+        email: email
+      });
     });
   };
 
@@ -34,11 +36,11 @@ class ResetPassword extends Component {
         errors: nextProps.errors
       });
     }
-  }
+  };
 
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
-  }
+  };
 
   onSubmit = e => {
     e.preventDefault();
@@ -50,7 +52,7 @@ class ResetPassword extends Component {
     };
 
     this.props.updatePassword(userData, this.props.history);
-  }
+  };
 
   render() {
     const { errors } = this.state;

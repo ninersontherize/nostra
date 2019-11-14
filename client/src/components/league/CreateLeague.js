@@ -29,7 +29,7 @@ class CreateLeague extends Component {
         {}
       ),
       private: false,
-      max_players: null,
+      max_players: "",
       starting_cash: 5000,
       in_progress: false,
       errors: {}
@@ -52,7 +52,9 @@ class CreateLeague extends Component {
       private: this.state.private,
       max_players: this.state.max_players,
       starting_cash: this.state.starting_cash,
-      in_progress: this.state.in_progress
+      in_progress: this.state.in_progress,
+      league_owner: this.props.auth.user.id,
+      user_id: this.props.auth.user.id
     };
 
     this.props.createLeague(newLeague, this.props.history);
@@ -156,6 +158,7 @@ class CreateLeague extends Component {
               </FormGroup>
               <div className="input-field col s12">
                 <input
+                  placeholder={this.starting_cash}
                   onChange={this.onChange}
                   value={this.state.starting_cash}
                   error={errors.starting_cash}
