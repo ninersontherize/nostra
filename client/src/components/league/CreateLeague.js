@@ -1,15 +1,9 @@
 import React, { Component } from "react";
-import Checkbox from "@material-ui/core/Checkbox";
-import Switch from "@material-ui/core/Switch";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { createLeague } from "../../actions/leagueActions";
 import classnames from "classnames"
-
-import FormLabel from '@material-ui/core/FormLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const OPTIONS = ["LCS", "LEC"];
 
@@ -105,7 +99,7 @@ class CreateLeague extends Component {
       <div className="container">
         <div className="row">
           <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
+            <Link to="/dashboard" className="btn-flat waves-effect">
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
@@ -138,24 +132,30 @@ class CreateLeague extends Component {
                 <label htmlFor="name">Number of Players</label>
                 <span className="red-text">{errors.max_players}</span>
               </div>
-              <FormLabel component="legend">Choose which leagues you'll be able to place bets on</FormLabel>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox color="primary" name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />}
-                  label="LCS"
-                />
-                <FormControlLabel
-                  control={<Checkbox color="primary" name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />}
-                  label="LEC"
-                />
-              </FormGroup>
-              <FormLabel component="Legend">Would you like this league to be private?</FormLabel>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Switch color="primary" name="private" checked={this.state.private} onChange={this.handleSwitchChange} value="private" />}
-                  label="Private"
-                />
-              </FormGroup>
+              <div>
+              <label component="legend">Choose which leagues you'll be able to place bets on</label>
+                <p>
+                  <label>
+                    <input type="checkbox" color="primary" name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />
+                    <span>LCS</span>
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    <input type="checkbox" color="primary" name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />
+                    <span>LEC</span>
+                  </label>
+                </p>
+              </div>
+              <div className="switch">
+                <label>
+                  Public
+                  <input type="checkbox" color="primary" name="private" checked={this.state.private} onChange={this.handleSwitchChange} value="private" 
+                  label="Private" />
+                  <span className="lever"></span>
+                  Private
+                </label>
+              </div>
               <div className="input-field col s12">
                 <input
                   placeholder={this.starting_cash}

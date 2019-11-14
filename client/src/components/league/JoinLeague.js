@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { showLeague, joinLeague, getCurrentPlayers } from "../../actions/leagueActions";
+import { showLeague, joinLeague, getCurrentPlayers, checkCurrentUserMembership } from "../../actions/leagueActions";
 import classnames from "classnames"
 
 class JoinLeague extends Component {
@@ -13,13 +13,14 @@ class JoinLeague extends Component {
       name: "",
       game: "",
       leagues_supported: [],
-      private: false,
+      private: "",
       current_players: "",
       max_players: "",
       starting_cash: "",
-      in_progress: false,
+      in_progress: "",
       season_in_progress: "",
       private_league: "",
+      user_exists: false,
       errors: {}
     };
   }
@@ -39,8 +40,13 @@ class JoinLeague extends Component {
     this.props.joinLeague(joinData, this.props.history);
   };
 
-  componentDidMount() {
-    this.props.showLeague(this.props.match.params.league_id).then(res => {
+  async componentDidMount() {
+    const userData = {
+      league_id: this.props.match.params.league_id,
+      user_id: this.props.auth.user.id
+    };
+
+    await this.props.showLeague(this.props.match.params.league_id).then(res => {
       this.setState({ 
         name: res.name,
         game: res.game,
@@ -52,7 +58,7 @@ class JoinLeague extends Component {
       });
     });
 
-    if (this.state.in_progress = true) {
+    if (this.state.in_progress === true) {
       this.setState({
         season_in_progress: "Yes"
       });
@@ -62,7 +68,7 @@ class JoinLeague extends Component {
       });
     }
 
-    if (this.state.private = true) {
+    if (this.state.private === true) {
       this.setState({
         private_league: "Yes"
       });
@@ -72,9 +78,15 @@ class JoinLeague extends Component {
       });
     }
 
-    this.props.getCurrentPlayers(this.props.match.params.league_id).then(res => {
+    await this.props.getCurrentPlayers(this.props.match.params.league_id).then(res => {
       this.setState({
         current_players: res
+      });
+    });
+
+    await this.props.checkCurrentUserMembership(userData).then(res => {
+      this.setState({
+        user_exists: res
       });
     });
   };
@@ -82,10 +94,9 @@ class JoinLeague extends Component {
   render() {
     const{ errors } = this.state;
 
-    const isLoggedIn = this.state.isLoggedIn;
     let button;
 
-    if (!this.state.private && this.state.max_players >= this.state.current_players) {
+    if ((this.state.private === false) && (this.state.max_players >= this.state.current_players) && (this.state.in_progress === false) && (this.state.user_exists === false)) {
       button = <button
                   style={{
                     width: "250px",
@@ -103,7 +114,7 @@ class JoinLeague extends Component {
       <div className="container">
         <div className="row">
           <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
+            <Link to="/dashboard" className="btn-flat waves-effect">
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
@@ -231,6 +242,7 @@ JoinLeague.propTypes = {
   joinLeague: PropTypes.func.isRequired,
   showLeague: PropTypes.func.isRequired,
   getCurrentPlayers: PropTypes.func.isRequired,
+  checkCurrentUserMembership: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -240,4 +252,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { joinLeague, showLeague, getCurrentPlayers })(withRouter(JoinLeague));
+export default connect(mapStateToProps, { joinLeague, showLeague, getCurrentPlayers, checkCurrentUserMembership })(withRouter(JoinLeague));

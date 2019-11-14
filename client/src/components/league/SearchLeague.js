@@ -5,12 +5,6 @@ import PropTypes from "prop-types";
 import { searchLeague } from "../../actions/leagueActions";
 import classnames from "classnames"
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
 const isEmpty = require("is-empty");
 
 class SearchLeague extends Component {
@@ -61,7 +55,7 @@ class SearchLeague extends Component {
       <div className="container">
         <div className="row">
           <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
+            <Link to="/dashboard" className="btn-flat waves-effect">
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
@@ -96,32 +90,32 @@ class SearchLeague extends Component {
                   </button>
               </div>
             </form>
-            <Table className="minwidth: 650" aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>League Name</TableCell>
-                  <TableCell align="right">Max Players</TableCell>
-                  <TableCell align="right">Starting Bankroll</TableCell>
-                  <TableCell align="right">Leagues Supported</TableCell>
-                  <TableCell align="right">Private</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+            <table className="highlight minwidth: 650" aria-label="simple table">
+              <thead>
+                <tr>
+                  <th>League Name</th>
+                  <th align="right">Max Players</th>
+                  <th align="right">Starting Bankroll</th>
+                  <th align="right">Leagues Supported</th>
+                  <th align="right">Private</th>
+                </tr>
+              </thead>
+              <tbody>
                 {this.state.search_results.map(row => (
-                  <TableRow key={row._id}>
-                    <TableCell component="th" scope="row">
+                  <tr key={row._id}>
+                    <td component="th" scope="row">
                       <Link to={`/joinLeague/${row._id}`}>
                         {row.name}
                       </Link>
-                    </TableCell>
-                    <TableCell align="right">{row.max_players}</TableCell>
-                    <TableCell align="right">{row.starting_cash}</TableCell>
-                    <TableCell align="right">{row.leagues_supported}</TableCell>
-                    <TableCell align="right">{row.private}</TableCell>
-                  </TableRow>
+                    </td>
+                    <td align="right">{row.max_players}</td>
+                    <td align="right">{row.starting_cash}</td>
+                    <td align="right">{row.leagues_supported}</td>
+                    <td align="right">{row.private}</td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

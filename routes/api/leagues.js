@@ -19,7 +19,7 @@ router.post("/createLeague", (req, res) => {
   }
 
   var creating_user_id = req.body.user_id;
-
+  
   League.findOne({ name: req.body.name }).then( league => {
     if (league) {
       return res.status(400).json({ league: "League name must be unique, a league with this name already exists." });
@@ -32,8 +32,10 @@ router.post("/createLeague", (req, res) => {
         max_players: req.body.max_players,
         starting_cash: req.body.starting_cash,
         in_progress: req.body.in_progress,
-        league_owner: req.body.creating_user_id
+        league_owner: creating_user_id
       });
+
+      console.log(new_league);
 
       new_league.save().then(league => {
         const new_user_league = new UserLeague({
@@ -241,12 +243,28 @@ router.delete("/removeUserLeague", (req, res) => {
 // @desc Get the number of players currently in a league
 // @access public
 router.get("/getCurrentPlayers", (req, res) => {
-  var league_id = req.query.league_id
+  var league_id = req.query.league_id;
 
   UserLeague.find({ league_id: league_id }).count().then(count => {
     return res.status(200).json(count);
   });
 });
+
+// @route GET api/leagues/checkCurrentUserMembership
+// @desc Check to see if a user is already part of a league
+// @access public
+router.get("/checkCurrentUserMembership", (req, res) => {
+  var league_id = req.query.league_id;
+  var user_id = req.query.user_id;
+
+  UserLeague.find({ league_id: league_id, user_id: user_id }).count().then(count => {
+    if (count > 0) {
+      return res.status(200).json(true);
+    } else {
+      return res.status(200).json(false);
+    }
+  })
+})
 
 // @route PUT api/leagues/updateBankroll
 // @desc Update bankroll after given win or loss

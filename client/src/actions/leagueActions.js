@@ -7,6 +7,7 @@ import errorReducer from "../reducers/errorReducer";
 
 //Register User
 export const createLeague = (userData, history) => dispatch => {
+  console.log(userData);
   axios
     .post("/api/leagues/createLeague", userData)
     .then(res => history.push("/dashboard")) //re-direct to dashboard on successful creation
@@ -82,3 +83,22 @@ export const getCurrentPlayers = leagueData => dispatch => {
       })
     );
 };
+
+export const checkCurrentUserMembership = userData => dispatch => {
+  return axios
+    .get("/api/leagues/checkCurrentUserMembership", {
+      params: {
+        user_id: userData.user_id,
+        league_id: userData.league_id
+      }
+    })
+    .then(res => {
+      return res.data
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+}
