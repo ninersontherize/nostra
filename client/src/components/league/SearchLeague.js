@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { searchLeague } from "../../actions/leagueActions";
@@ -30,22 +30,18 @@ class SearchLeague extends Component {
     if (!isEmpty(this.state.search)) {
       searchData = this.state.search;
     }
-    
-    console.log(searchData);
 
     await this.props.searchLeague(searchData).then(res => {
             this.setState({ 
               search: "",
               search_results: res 
             });
-            console.log(this.state.search_results);
           });
   };
 
   componentDidMount() {
     this.props.searchLeague().then(res => {
       this.setState({ search_results: res });
-      console.log(this.state.search_results);
     });
   };
 

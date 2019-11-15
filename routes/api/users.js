@@ -27,6 +27,20 @@ router.get("/users", (req, res) => {
   }
 });
 
+// @route DELETE api/users/deleteUser
+// @desc Delete a user by id
+// @access public
+router.delete("/deleteUser", (req, res) => {
+  User.findOne({ _id: req.body.id }).then( user => {
+    if (!user) {
+      return res.status(404).json({ user: "That id does not exist, delete failed" });
+    } else {
+      User.deleteOne({ _id: req.body.id }).then( user => console.log(user));
+      return res.status(200).json({ user: "User successfully deleted" });
+    }
+  });
+});
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -37,7 +51,7 @@ router.post("/register", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email, username: req.body.username }).then(user => {
+  User.findOne({$or: [{ email: req.body.email}, {username: req.body.username}] }).then(user => {
     if (user) {
       return res.status(400).json({ email: "Email or username already exists" });
     } else {

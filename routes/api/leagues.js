@@ -188,6 +188,17 @@ router.put("/:id/endSeason", (req, res) => {
   });
 });
 
+// @route GET api/leagues/userLeagues
+// @desc show user_leagues through search or if body is empty show all user_leagues
+// @access public
+router.get("/userLeagues", (req, res) => {
+  if ( isEmpty(req.query) ) {
+    UserLeague.find().then( user_leagues => res.json(user_leagues)).catch(err => console.log(err));
+  } else {
+    UserLeague.find({ league_id: req.query.search }).then( user_leagues => res.json(user_leagues)).catch(err => console.log(err));
+  }
+});
+
 // @route POST api/leagues/:league_id/:user_id/addUsertoLeague
 // @desc Add a user to a league
 // @access public
@@ -263,8 +274,19 @@ router.get("/checkCurrentUserMembership", (req, res) => {
     } else {
       return res.status(200).json(false);
     }
-  })
-})
+  });
+});
+
+// @route GET api/leagues/getMyLeagues
+// @desc Grab all the leagues a specific user belongs to
+// @access public
+router.get("/getMyLeagues", (req, res) => {
+  var user_id = req.query.user_id;
+
+  UserLeague.find({ user_id: user_id }).then(leagues => {
+    return res.status(200).json(leagues);
+  });
+});
 
 // @route PUT api/leagues/updateBankroll
 // @desc Update bankroll after given win or loss

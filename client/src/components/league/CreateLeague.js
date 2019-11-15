@@ -42,7 +42,7 @@ class CreateLeague extends Component {
     const newLeague = {
       name: this.state.name,
       game: this.state.game,
-      leagues_supported: this.state.leagues_supported,
+      leagues_supported: this.state.leagues_supported.filter((v, i, a) => a.indexOf(v) === i),
       private: this.state.private,
       max_players: this.state.max_players,
       starting_cash: this.state.starting_cash,

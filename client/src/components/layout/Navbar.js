@@ -8,7 +8,7 @@ class Navbar extends Component {
         <nav className="z-depth-0">
           <div className="nav-wrapper white">
             <Link
-              to="/"
+              to="/dashboard"
               style={{
                 fontFamily: "monospace"
               }}

@@ -21,6 +21,7 @@ import "./App.css";
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
 import JoinLeague from './components/league/JoinLeague';
+import MyLeagues from './components/league/MyLeagues';
 
 //Check fro token to keep user logged in
 if (localStorage.jwtToken) {
@@ -59,6 +60,7 @@ class App extends Component {
               <PrivateRoute exact path="/createLeague" component={CreateLeague} />
               <PrivateRoute exact path="/searchLeague" component={SearchLeague} />
               <PrivateRoute exact path="/joinLeague/:league_id" component={JoinLeague} />
+              <PrivateRoute exact path="/myLeagues" component={MyLeagues} />
             </Switch>
           </div>
         </Router> 

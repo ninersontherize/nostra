@@ -10,7 +10,7 @@ export const createLeague = (userData, history) => dispatch => {
   console.log(userData);
   axios
     .post("/api/leagues/createLeague", userData)
-    .then(res => history.push("/dashboard")) //re-direct to dashboard on successful creation
+    .then(res => history.push("/myLeagues")) //re-direct to dashboard on successful creation
     .catch(err => 
       dispatch({
         type: GET_ERRORS,
@@ -43,9 +43,28 @@ export const showLeague = searchData => dispatch => {
   return axios
     .get(`/api/leagues/${searchData}/leagues`)
     .then(res => {
-      return res.data
+      return res.data;
     })
     .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//get league ids for a specific user -> returns userleague objects
+export const getMyLeagues = searchData => dispatch => {
+  return axios
+    .get("/api/leagues/getMyLeagues", {
+      params: {
+        user_id: searchData
+      }
+    })
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
