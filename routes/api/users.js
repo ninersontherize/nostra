@@ -20,17 +20,20 @@ const User = require("../../models/User");
 // @desc retrieve a list of registered users -- optional body param search
 // @access public
 router.get("/users", (req, res) => {
+
   if ( isEmpty(req.body) ) {
     User.find().then( users => res.json(users)).catch(err => console.log(err));
   } else {
     User.find({ name: req.body.search }).then( users => res.json(users)).catch(err => console.log(err));
   }
+
 });
 
 // @route DELETE api/users/deleteUser
 // @desc Delete a user by id
 // @access public
 router.delete("/deleteUser", (req, res) => {
+
   User.findOne({ _id: req.body.id }).then( user => {
     if (!user) {
       return res.status(404).json({ user: "That id does not exist, delete failed" });
@@ -39,19 +42,21 @@ router.delete("/deleteUser", (req, res) => {
       return res.status(200).json({ user: "User successfully deleted" });
     }
   });
+
 });
 
 // @route POST api/users/register
 // @desc Register user
 // @access Public
 router.post("/register", (req, res) => {
+
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  User.findOne({$or: [{ email: req.body.email}, {username: req.body.username}] }).then(user => {
+  User.findOne({$or: [{ email: req.body.email }, { username: req.body.username }] }).then(user => {
     if (user) {
       return res.status(400).json({ email: "Email or username already exists" });
     } else {
@@ -73,12 +78,14 @@ router.post("/register", (req, res) => {
       });
     }
   });
+
 });
 
 // @route POST api/users/login
 // @desc Login user and return JWT token
 // @access Public
 router.post("/login", (req, res) => {
+
   const{ errors, isValid } = validateLoginInput(req.body);
 
   if (!isValid) {
@@ -119,12 +126,14 @@ router.post("/login", (req, res) => {
       }
     });
   });
+
 });
 
 // @route POST api/users/forgotPassword
 // @desc send email to user to prompt reset of password
 // @access Public
 router.post("/forgotPassword", (req, res) => {
+
   const{ errors, isValid } = validateForgotPasswordInput(req.body);
 
   if (!isValid) {
@@ -178,12 +187,14 @@ router.post("/forgotPassword", (req, res) => {
 
     res.status(200).send({ message: "recover email sent" });
   });
+
 });
 
 // @route POST api/users/forgotPassword
 // @desc validate token passed corresponds to user
 // @access Public
 router.post("/validateToken", (req, res) => {
+
   const resetPasswordToken = req.body.resetPasswordToken;
   User.findOne({ resetPasswordToken: resetPasswordToken, resetPasswordExpires: { $gt: Date.now() } })
       .then(user => {
@@ -196,12 +207,14 @@ router.post("/validateToken", (req, res) => {
           });
         }
   });
+
 });
 
 // @route PUT api/users/updatePassword
 // @desc update user's password after link is visited
 // @access Public
 router.put("/updatePassword", (req, res) => {
+
   const { errors, isValid } = validateUpdatePasswordInput(req.body);
 
   if (!isValid) {
@@ -230,6 +243,7 @@ router.put("/updatePassword", (req, res) => {
       });
     }
   });
+  
 });
 
 module.exports = router;

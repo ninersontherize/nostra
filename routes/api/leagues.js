@@ -12,6 +12,7 @@ const UserLeague = require("../../models/UserLeague");
 // @desc Create League
 // @access Public
 router.post("/createLeague", (req, res) => {
+
   const { errors, isValid } = validateCreateLeagueInput(req.body);
 
   if (!isValid) {
@@ -49,23 +50,27 @@ router.post("/createLeague", (req, res) => {
       }).catch(err => console.log(err));
     }
   });
+
 });
 
 // @route GET api/leagues/leagues
 // @desc show leagues through search or if body is empty show all leagues
 // @access public
 router.get("/leagues", (req, res) => {
+
   if ( isEmpty(req.query) ) {
     League.find().then( leagues => res.json(leagues)).catch(err => console.log(err));
   } else {
     League.find({ name: new RegExp(req.query.search) }).then( leagues => res.json(leagues)).catch(err => console.log(err));
   }
+
 });
 
 // @route GET api/leagues/:id/leagues
 // @desc show a single league through search or if body is empty show all leagues
 // @access public
 router.get("/:id/leagues", (req, res) => {
+
   var id = req.params.id;
 
   League.findOne({ _id: id }).then( league => {
@@ -75,12 +80,14 @@ router.get("/:id/leagues", (req, res) => {
       res.json(league);
     }
   }).catch(err => console.log(err));
+
 });
 
 // @route DELETE api/leagues/deleteLeague
 // @desc Delete a league by id
-// @access public
+// @access private - backend only
 router.delete("/deleteLeague", (req, res) => {
+
   const { errors, isValid } = validateDeleteLeagueInput(req.body);
 
   if (!isValid) {
@@ -95,12 +102,14 @@ router.delete("/deleteLeague", (req, res) => {
       return res.status(200).json({ league: "League successfully deleted" });
     }
   });
+
 });
 
 // @route PUT api/leagues/:id/editLeague
 // @desc Edit a league by id
 // @access public
 router.put("/:id/editLeague", (req, res) => {
+
   const { errors, isValid } = validateCreateLeagueInput(req.body);
 
   if (!isValid) {
@@ -133,12 +142,14 @@ router.put("/:id/editLeague", (req, res) => {
       }  
     }
   });
+
 });
 
 // @route PUT api/leagues/:id/startSeason
 // @desc Start a season in a league
 // @access public
 router.put("/:id/startSeason", (req, res) => {
+
   var id = req.params.id;
 
   League.findOne({ _id: id }).then( league => {
@@ -163,12 +174,14 @@ router.put("/:id/startSeason", (req, res) => {
       });
     }
   });
+
 });
 
 // @route PUT api/leagues/:id/endSeason
 // @desc End a season in a league
 // @access public
 router.put("/:id/endSeason", (req, res) => {
+
   var id = req.params.id;
 
   League.findOne({ _id: id }).then( league => {
@@ -186,23 +199,27 @@ router.put("/:id/endSeason", (req, res) => {
       });
     }
   });
+
 });
 
 // @route GET api/leagues/userLeagues
 // @desc show user_leagues through search or if body is empty show all user_leagues
 // @access public
 router.get("/userLeagues", (req, res) => {
+
   if ( isEmpty(req.query) ) {
     UserLeague.find().then( user_leagues => res.json(user_leagues)).catch(err => console.log(err));
   } else {
     UserLeague.find({ league_id: req.query.search }).then( user_leagues => res.json(user_leagues)).catch(err => console.log(err));
   }
+
 });
 
 // @route POST api/leagues/:league_id/:user_id/addUsertoLeague
 // @desc Add a user to a league
 // @access public
 router.post("/addUserLeague", (req, res) => {
+
   var league_id = req.body.league_id;
   var user_id = req.body.user_id;
 
@@ -231,12 +248,14 @@ router.post("/addUserLeague", (req, res) => {
       });
     }
   });
+
 });
 
 // @route DELETE api/leagues/:league_id/:user_id/removeUserLeague
 // @desc Remove a user from a league
 // @access public
 router.delete("/removeUserLeague", (req, res) => {
+
   var league_id = req.body.league_id;
   var user_id = req.body.user_id;
 
@@ -248,23 +267,27 @@ router.delete("/removeUserLeague", (req, res) => {
       return res.status(200).json({ league: "User successfully removed from League" });
     }
   });
+
 });
 
 // @route GET api/leagues/getCurrentPlayers
 // @desc Get the number of players currently in a league
 // @access public
 router.get("/getCurrentPlayers", (req, res) => {
+
   var league_id = req.query.league_id;
 
   UserLeague.find({ league_id: league_id }).count().then(count => {
     return res.status(200).json(count);
   });
+
 });
 
 // @route GET api/leagues/checkCurrentUserMembership
 // @desc Check to see if a user is already part of a league
 // @access public
 router.get("/checkCurrentUserMembership", (req, res) => {
+
   var league_id = req.query.league_id;
   var user_id = req.query.user_id;
 
@@ -275,23 +298,27 @@ router.get("/checkCurrentUserMembership", (req, res) => {
       return res.status(200).json(false);
     }
   });
+
 });
 
 // @route GET api/leagues/getMyLeagues
 // @desc Grab all the leagues a specific user belongs to
 // @access public
 router.get("/getMyLeagues", (req, res) => {
+
   var user_id = req.query.user_id;
 
   UserLeague.find({ user_id: user_id }).then(leagues => {
     return res.status(200).json(leagues);
   });
+
 });
 
 // @route PUT api/leagues/updateBankroll
 // @desc Update bankroll after given win or loss
 // @access public
 router.put("/updateBankroll", (req, res) => {
+
   var league_id = req.body.league_id;
   var user_id = req.body.user_id;
   var change = req.body.change;
@@ -310,6 +337,7 @@ router.put("/updateBankroll", (req, res) => {
       return res.status(200).json(user_league);
     }
   });
+  
 });
 
 module.exports = router;
