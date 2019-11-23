@@ -21,10 +21,10 @@ const User = require("../../models/User");
 // @access public
 router.get("/users", (req, res) => {
 
-  if ( isEmpty(req.body) ) {
+  if ( isEmpty(req.query) ) {
     User.find().then( users => res.json(users)).catch(err => console.log(err));
   } else {
-    User.find({ name: req.body.search }).then( users => res.json(users)).catch(err => console.log(err));
+    User.find({ name: req.query.search }).then( users => res.json(users)).catch(err => console.log(err));
   }
 
 });
@@ -244,6 +244,21 @@ router.put("/updatePassword", (req, res) => {
     }
   });
   
+});
+
+// @route GET api/users/users
+// @desc retrieve a list of registered users -- optional body param search
+// @access private
+router.get("/userInformation", (req, res) => {
+
+  var id_list = JSON.parse(req.query.id_list);
+
+  if ( isEmpty(req.query) ) {
+    User.find().then( users => res.json(users)).catch(err => console.log(err));
+  } else {
+    User.find({ _id : { $in : id_list } }).then( users => res.json(users)).catch(err => console.log(err));
+  }
+
 });
 
 module.exports = router;

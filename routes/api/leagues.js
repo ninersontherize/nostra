@@ -20,35 +20,38 @@ router.post("/createLeague", (req, res) => {
   }
 
   var creating_user_id = req.body.user_id;
-  
-  League.findOne({ name: req.body.name }).then( league => {
-    if (league) {
-      return res.status(400).json({ league: "League name must be unique, a league with this name already exists." });
-    } else {
-      const new_league = new League({
-        name: req.body.name,
-        game: req.body.game,
-        leagues_supported: req.body.leagues_supported,
-        private: req.body.private,
-        max_players: req.body.max_players,
-        starting_cash: req.body.starting_cash,
-        in_progress: req.body.in_progress,
-        league_owner: creating_user_id
-      });
 
-      console.log(new_league);
-
-      new_league.save().then(league => {
-        const new_user_league = new UserLeague({
-          user_id: creating_user_id,
-          league_id: league._id,
-          user_bankroll: league.starting_cash,
+  User.findOne({ _id: creating_user_id }).then(user => {
+    League.findOne({ name: req.body.name }).then( league => {
+      if (league) {
+        return res.status(400).json({ league: "League name must be unique, a league with this name already exists." });
+      } else {
+        const new_league = new League({
+          name: req.body.name,
+          game: req.body.game,
+          leagues_supported: req.body.leagues_supported,
+          private: req.body.private,
+          max_players: req.body.max_players,
+          starting_cash: req.body.starting_cash,
+          in_progress: req.body.in_progress,
+          league_owner: creating_user_id
         });
-
-        new_user_league.save().then(user_league => res.json(user_league)).catch(err => console.log(err));
-        res.json(league);
-      }).catch(err => console.log(err));
-    }
+  
+        console.log(new_league);
+  
+        new_league.save().then(league => {
+          const new_user_league = new UserLeague({
+            user_id: creating_user_id,
+            league_id: league._id,
+            username: user.username,
+            user_bankroll: league.starting_cash,
+          });
+  
+          new_user_league.save().then(user_league => res.json(user_league)).catch(err => console.log(err));
+          res.json(league);
+        }).catch(err => console.log(err));
+      }
+    });
   });
 
 });
@@ -238,6 +241,7 @@ router.post("/addUserLeague", (req, res) => {
               const new_user_league = new UserLeague({
                 user_id: user_id,
                 league_id: league_id,
+                username: user.username,
                 user_bankroll: league.starting_cash,
               });
     
@@ -277,8 +281,8 @@ router.get("/getCurrentPlayers", (req, res) => {
 
   var league_id = req.query.league_id;
 
-  UserLeague.find({ league_id: league_id }).count().then(count => {
-    return res.status(200).json(count);
+  UserLeague.find({ league_id: league_id }).then(players => {
+    return res.status(200).json(players);
   });
 
 });

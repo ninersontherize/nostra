@@ -14,7 +14,8 @@ class JoinLeague extends Component {
       game: "",
       leagues_supported: [],
       private: "",
-      current_players: "",
+      current_player_count: "",
+      current_players: [],
       max_players: "",
       starting_cash: "",
       in_progress: "",
@@ -54,7 +55,7 @@ class JoinLeague extends Component {
         private: res.private,
         max_players: res.max_players,
         starting_cash: res.starting_cash,
-        in_progress: res.in_progress 
+        in_progress: res.in_progress
       });
     });
 
@@ -80,8 +81,10 @@ class JoinLeague extends Component {
 
     await this.props.getCurrentPlayers(this.props.match.params.league_id).then(res => {
       this.setState({
-        current_players: res
+        current_players: res,
+        current_player_count: res.length
       });
+      console.log(this.state.current_players.length);
     });
 
     await this.props.checkCurrentUserMembership(userData).then(res => {
@@ -95,6 +98,7 @@ class JoinLeague extends Component {
     const{ errors } = this.state;
 
     let button;
+    let table;
 
     if ((this.state.private === false) && (this.state.max_players >= this.state.current_players) && (this.state.in_progress === false) && (this.state.user_exists === false)) {
       button = <button
@@ -108,6 +112,32 @@ class JoinLeague extends Component {
                   className="btn btn-large waves-effect waves-light hoverable blue accent-3">
                     Join League
                 </button>;
+    }
+
+    if ((this.state.current_players.length > 0)) {
+      table = <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                <h5>
+                  <b>League</b> Users
+                </h5>
+                <table className="highlight minwidth: 650" aria-label="simple table">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th align="right">Current Bankroll</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.current_players.map(row => (
+                      <tr key={row.user_id}>
+                        <td component="th" scope="row">
+                            {row.username}
+                        </td>
+                        <td align="right">{row.user_bankroll}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
     }
 
     return (
@@ -165,12 +195,12 @@ class JoinLeague extends Component {
               <div className="input-field col s12">
                 <input
                   readOnly
-                  placeholder={this.state.current_players}
-                  value={this.state.current_players}
-                  error={errors.current_players}
-                  id="current_players"
+                  placeholder={this.state.current_player_count}
+                  value={this.state.current_player_count}
+                  error={errors.current_player_count}
+                  id="current_player_count"
                   type="number"
-                  className={classnames('', { invalid: errors.current_players })}
+                  className={classnames('', { invalid: errors.current_player_count })}
                 />
                 <label htmlFor="name">Current Number of Players</label>
                 <span className="red-text">{errors.max_players}</span>
@@ -227,6 +257,7 @@ class JoinLeague extends Component {
                 <label htmlFor="name">Season in Progress</label>
                 <span className="red-text">{errors.season_in_progress}</span>
               </div>
+              {table}
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 {button}
               </div>

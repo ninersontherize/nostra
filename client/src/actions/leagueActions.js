@@ -93,6 +93,7 @@ export const getCurrentPlayers = leagueData => dispatch => {
       }
     })
     .then(res => {
+      console.log(res.data);
       return res.data;
     })
     .catch(err =>

@@ -11,6 +11,10 @@ const UserLeagueSchema = new Schema({
     type: String,
     required: true
   },
+  username: {
+    type: String,
+    required: true
+  },
   user_bankroll: {
     type: Number,
     required: true
