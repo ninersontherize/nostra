@@ -2,7 +2,7 @@ const mongoose = require ("mongoose");
 const Schema = mongoose.Schema;
 
 // Create Schema
-const BetSchema = new Schema({
+const WagerSchema = new Schema({
   user_id: {
     type: String,
     required: true
@@ -19,15 +19,27 @@ const BetSchema = new Schema({
     type: String,
     required: true
   },
+  team_name: {
+    type: String,
+    required: true
+  },
   amount: {
     type: String,
     required: true
   },
-  method: {
+  wager_type: {
+    type: String,
+    required: true
+  },
+  odds: {
     type: String,
     required: true
   },
   win: {
+    type: Boolean,
+    required: false
+  },
+  closed: {
     type: Boolean,
     required: false
   },  
@@ -37,4 +49,4 @@ const BetSchema = new Schema({
   }
 });
 
-module.exports = Bet = mongoose.model("bets", BetSchema);
+module.exports = Wager = mongoose.model("wagers", WagerSchema);

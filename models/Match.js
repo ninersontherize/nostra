@@ -35,14 +35,22 @@ const MatchSchema = new Schema({
     type: String,
     required: true
   },   
-  money_line: {
-    type: String,
+  money_line_home: {
+    type: Number,
+    required: false
+  },
+  money_line_away: {
+    type: Number,
     required: false
   },
   spread: {
-    type: String,
+    type: Number,
     required: false
   }, 
+  spread_favorite: {
+    type: String,
+    required: false
+  },
   winning_id: {
     type: String,
     required: false

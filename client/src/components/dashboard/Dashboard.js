@@ -28,6 +28,9 @@ class Dashboard extends Component {
                   Or <Link to="/searchLeague"><b>Search</b></Link> for a league to join.
               </p>
               <p className="flow-text grey-text text-darken-1">
+                  Or <Link to="/searchMatch"><b>Search</b></Link> upcoming matches.
+              </p>
+              <p className="flow-text grey-text text-darken-1">
                   <Link to="/myLeagues"><b>My</b> Leagues</Link>
               </p>
             </h4>

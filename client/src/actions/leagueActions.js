@@ -3,9 +3,8 @@ import axios from "axios";
 import {
   GET_ERRORS
 } from "./types";
-import errorReducer from "../reducers/errorReducer";
 
-//Register User
+//Create League
 export const createLeague = (userData, history) => dispatch => {
   console.log(userData);
   axios

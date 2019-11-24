@@ -13,15 +13,15 @@ router.post("/createMatch", (req, res) => {
     if (!tournament) {
       return res.status(404).json({ league: "Matches must take place in a valid tournament, please check tournament id and try again." });
     } else {
-      Team.findOne({ _id: req.body.home_team_id }).then(home_team => {
+      Team.findOne({ _id: req.body.home_team_id, tournament_id: tournament.id }).then(home_team => {
         if (!home_team) {
           return res.status(404).json({ home_team: "Home team must be a valid team, please check home team id and try again" });
         } else {
-          Team.findOne({ _id: req.body.away_team_id }).then(away_team => {
+          Team.findOne({ _id: req.body.away_team_id, tournament_id: tournament.id }).then(away_team => {
             if (!away_team) {
               return res.status(404).json({ away_team: "Away team must be a valid team, please check away team id and try again"})
             } else {
-              Match.findOne({ tournament_id: req.body.tournament_id, team_a_id: req.body.team_a_id, team_b_id: req.body.team_b_id, match_date: req.body.match_date }).then( match => {
+              Match.findOne({ tournament_id: req.body.tournament_id, home_team_id: req.body.home_team_id, away_team_id: req.body.away_team_id, match_date: req.body.match_date }).then( match => {
                 if (match) {
                   return res.status(400).json({ league: "Match participants and date must be unique, please try again." });
                 } else {
@@ -34,8 +34,10 @@ router.post("/createMatch", (req, res) => {
                     away_team_id: req.body.away_team_id,
                     away_team_name: away_team.name,
                     away_team_short_name: away_team.short_name,
-                    money_line: req.body.money_line,
+                    money_line_home: req.body.money_line_home,
+                    money_line_away: req.body.money_line_away,
                     spread: req.body.spread,
+                    spread_favorite: req.body.spread_favorite,
                     winning_id: req.body.winning_id,
                     losing_id: req.body.losing_id,
                     match_date: req.body.match_date
@@ -61,10 +63,20 @@ router.post("/createMatch", (req, res) => {
 router.get("/matches", (req, res) => {
 
   if ( isEmpty(req.query) ) {
-    Match.find().then(matches => res.json(matches)).catch(err => console.log(err));
+    Match.find().sort({match_date: 1}).then(matches => res.json(matches)).catch(err => console.log(err));
   } else {
-    Match.find({$or: [{ tournament_name: new RegExp(req.query.search) }, { home_team_name: new RegExp(req.query.search) }, { away_team_name: new RegExp(req.query.search) }] })
-      .then( matches => res.json(matches)).catch(err => console.log(err));
+    if (isNaN(Date.parse(req.query.search))) {
+      Match.find({$or: 
+        [
+          { tournament_name: new RegExp(req.query.search) }, 
+          { home_team_name: new RegExp(req.query.search) }, 
+          { away_team_name: new RegExp(req.query.search) }, 
+          { home_team_short_name: new RegExp(req.query.search) }, 
+          { away_team_short_name: new RegExp(req.query.search) }
+        ] }).sort({match_date: 1}).then( matches => res.json(matches)).catch(err => console.log(err));
+    } else {
+      Match.find({ match_date: Date.parse(req.query.search) }).sort({match_date: 1}).then( matches => res.json(matches)).catch(err => console.log(err));
+    }
   }
 
 });
@@ -77,13 +89,14 @@ router.get("/matchesByDate", (req, res) => {
   if ( isEmpty(req.query) ) {
     Match.find().then(matches => res.json(matches)).catch(err => console.log(err));
   } else if (isEmpty(req.query.end_date)) {
-    Match.find({$gt: [{ match_date: req.query.begin_date }] })
+    console.log(req.query.start_date);
+    Match.find({ match_date: { $gte: new Date(req.query.start_date) } }).sort({match_date: 1})
       .then( matches => res.json(matches)).catch(err => console.log(err));
-  } else if (isEmpty(req.query.begin_date)) {
-    Match.find({$lt: [{ match_date: req.query.end_date }] })
+  } else if (isEmpty(req.query.start_date)) {
+    Match.find({ match_date: { $lte: new Date(req.query.end_date) } }).sort({match_date: 1})
       .then( matches => res.json(matches)).catch(err => console.log(err));
   } else {
-    Match.find({$and: [{$gt: [{ match_date: req.query.begin_date }] }, {$lt: [{ match_date: req.query.end_date }] }] })
+    Match.find({$and: [{ match_date: { $gte: new Date(req.query.start_date) } }, { match_date: { $lte: new Date(req.query.end_date) } }] }).sort({match_date: 1})
       .then( matches => res.json(matches)).catch(err => console.log(err));
   }
 
@@ -134,8 +147,10 @@ router.put("/:id/updateMatch", (req, res) => {
       return res.status(404).json({ match: "That id does not exist, update failed" });
     } else {
       Match.updateOne({ _id: id }, {
-        money_line: req.body.money_line,
+        money_line_home: req.body.money_line_home,
+        money_line_away: req.body.money_line_away,
         spread: req.body.spread,
+        spread_favorite: req.body.spread_favorite,
         winning_id: req.body.winning_id,
         losing_id: req.body.losing_id
       }, function(err, affected, res) {
@@ -143,7 +158,7 @@ router.put("/:id/updateMatch", (req, res) => {
       })
       .then(() => {
         console.log("match updated");
-        return res.status(200).json(match);
+        res.status(200).send({ message: "match updated successfully"});
       });
     }
   });
