@@ -8,6 +8,7 @@ const users = require("./routes/api/users");
 const leagues = require("./routes/api/leagues");
 const tournaments = require("./routes/api/tournaments");
 const teams = require("./routes/api/teams");
+const matches = require("./routes/api/matches");
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/users", users);
 app.use("/api/leagues", leagues);
 app.use("/api/tournaments", tournaments);
 app.use("/api/teams", teams);
+app.use("/api/matches", matches);
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {

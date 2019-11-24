@@ -7,12 +7,32 @@ const MatchSchema = new Schema({
     type: String,
     required: true
   },
-  team_a_id: {
+  tournament_name: {
     type: String,
     required: true
   },
-  team_b_id: {
-    type: Array,
+  home_team_id: {
+    type: String,
+    required: true
+  },
+  home_team_name: {
+    type: String,
+    required: true
+  },
+  home_team_short_name: {
+    type: String,
+    required: true
+  },
+  away_team_id: {
+    type: String,
+    required: true
+  },
+  away_team_name: {
+    type: String,
+    required: true
+  },
+  away_team_short_name: {
+    type: String,
     required: true
   },   
   money_line: {
@@ -20,7 +40,7 @@ const MatchSchema = new Schema({
     required: false
   },
   spread: {
-    type: Array,
+    type: String,
     required: false
   }, 
   winning_id: {
