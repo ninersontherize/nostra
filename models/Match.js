@@ -3,38 +3,18 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const MatchSchema = new Schema({
-  tournament_id: {
-    type: String,
+  tournament: {
+    type: Object,
     required: true
   },
-  tournament_name: {
-    type: String,
+  home_team: {
+    type: Object,
     required: true
   },
-  home_team_id: {
-    type: String,
+  away_team: {
+    type: Object,
     required: true
-  },
-  home_team_name: {
-    type: String,
-    required: true
-  },
-  home_team_short_name: {
-    type: String,
-    required: true
-  },
-  away_team_id: {
-    type: String,
-    required: true
-  },
-  away_team_name: {
-    type: String,
-    required: true
-  },
-  away_team_short_name: {
-    type: String,
-    required: true
-  },   
+  },  
   money_line_home: {
     type: Number,
     required: false

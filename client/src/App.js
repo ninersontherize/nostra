@@ -17,6 +17,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import CreateLeague from "./components/league/CreateLeague";
 import SearchLeague from "./components/league/SearchLeague";
 import SearchMatch from "./components/match/SearchMatch";
+import ShowMatch from "./components/match/ShowMatch";
 
 import "./App.css";
 import ForgotPassword from './components/auth/ForgotPassword';
@@ -63,6 +64,7 @@ class App extends Component {
               <PrivateRoute exact path="/joinLeague/:league_id" component={JoinLeague} />
               <PrivateRoute exact path="/myLeagues" component={MyLeagues} />
               <PrivateRoute exact path="/searchMatch" component={SearchMatch} />
+              <PrivateRoute exact path="/showMatch/:match_id" component={ShowMatch} />
             </Switch>
           </div>
         </Router> 

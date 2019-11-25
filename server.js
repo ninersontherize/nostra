@@ -30,6 +30,7 @@ mongoose
   .catch(err => console.log(err));
 
 app.use(passport.initialize());
+app.use(express.static("client/public"));
 require("./config/passport")(passport);
 app.use("/api/users", users);
 app.use("/api/leagues", leagues);

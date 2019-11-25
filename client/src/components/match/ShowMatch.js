@@ -10,18 +10,17 @@ class ShowMatch extends Component {
     super();
 
     this.state = {
-      name: "",
-      game: "",
-      leagues_supported: [],
-      private: "",
-      current_player_count: "",
-      current_players: [],
-      max_players: "",
-      starting_cash: "",
-      in_progress: "",
-      season_in_progress: "",
-      private_league: "",
-      user_exists: false,
+      tournament: "",
+      home_team: "",
+      away_team: "",
+      money_line_home: "",
+      money_line_away: "",
+      spread: "",
+      spread_favorite: "",
+      winning_id: "",
+      losing_id: "",
+      match_date: "",
+      match_complete: false,
       errors: {}
     };
   }
@@ -32,66 +31,31 @@ class ShowMatch extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-
-    const joinData = {
-      league_id: this.props.match.params.league_id,
-      user_id: this.props.auth.user.id
-    };
-
-    this.props.joinLeague(joinData, this.props.history);
   };
 
   async componentDidMount() {
-    const userData = {
-      league_id: this.props.match.params.league_id,
-      user_id: this.props.auth.user.id
-    };
 
-    await this.props.showLeague(this.props.match.params.league_id).then(res => {
+    await this.props.showMatch(this.props.match.params.match_id).then(res => {
       this.setState({ 
-        name: res.name,
-        game: res.game,
-        leagues_supported: res.leagues_supported,
-        private: res.private,
-        max_players: res.max_players,
-        starting_cash: res.starting_cash,
-        in_progress: res.in_progress
+        tournament: res.tournament,
+        home_team: res.home_team,
+        away_team: res.away_team,
+        money_line_home: res.money_line_home,
+        money_line_away: res.money_line_away,
+        spread: res.spread,
+        spread_favorite: res.spread_favorite,
+        winning_id: res.winning_id,
+        losing_id: res.losing_id,
+        match_date: res.match_date
       });
     });
 
-    if (this.state.in_progress === true) {
+    if (this.state.winning_id) {
       this.setState({
-        season_in_progress: "Yes"
-      });
-    } else {
-      this.setState({
-        season_in_progress: "No"
+        match_complete: true
       });
     }
 
-    if (this.state.private === true) {
-      this.setState({
-        private_league: "Yes"
-      });
-    } else {
-      this.setState({
-        private_league: "No"
-      });
-    }
-
-    await this.props.getCurrentPlayers(this.props.match.params.league_id).then(res => {
-      this.setState({
-        current_players: res,
-        current_player_count: res.length
-      });
-      console.log(this.state.current_players.length);
-    });
-
-    await this.props.checkCurrentUserMembership(userData).then(res => {
-      this.setState({
-        user_exists: res
-      });
-    });
   };
 
   render() {
@@ -100,7 +64,7 @@ class ShowMatch extends Component {
     let button;
     let table;
 
-    if ((this.state.private === false) && (this.state.max_players >= this.state.current_players) && (this.state.in_progress === false) && (this.state.user_exists === false)) {
+    if ((this.state.match_complete === false)) {
       button = <button
                   style={{
                     width: "250px",
@@ -110,34 +74,8 @@ class ShowMatch extends Component {
                   }}
                   type="submit"
                   className="btn btn-large waves-effect waves-light hoverable blue accent-3">
-                    Join League
+                    Place Wager
                 </button>;
-    }
-
-    if ((this.state.current_players.length > 0)) {
-      table = <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <h5>
-                  <b>League</b> Users
-                </h5>
-                <table className="highlight minwidth: 650" aria-label="simple table">
-                  <thead>
-                    <tr>
-                      <th>Username</th>
-                      <th align="right">Current Bankroll</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.current_players.map(row => (
-                      <tr key={row.user_id}>
-                        <td component="th" scope="row">
-                            {row.username}
-                        </td>
-                        <td align="right">{row.user_bankroll}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
     }
 
     return (
@@ -149,115 +87,72 @@ class ShowMatch extends Component {
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4>
-                <b>League</b> Information
+                <b>Match</b> Information
               </h4>
             </div>
-            <form noValidate onSubmit={this.onSubmit}>
+            <form noValidate onSubmit={() => this.props.history.pushState("/")}>
+              <div class="home-team-container">
+
+
+                 {/*need to add logo attribute to teams in order for this to load properly for any given team*/}
+
+
+                <img src={process.env.PUBLIC_URL + "/Cloud9-logo.png"} alt="Home Team logo" width="100" height="100"/>
+                <div class="team-info">
+                  <span class="team-short-name" title="home-team">{this.state.home_team.short_name}</span> 
+                </div>
+                <div class="team-record">
+                  <span class="record" title="home-team-record">{this.state.home_team.wins}-{this.state.home_team.losses}</span>
+                </div>
+              </div>
+              <div class="away-team-container">
+                <img src={process.env.PUBLIC_URL + "/liquid.png"} alt="Away Team logo" width="100" height="100"/>
+                <div class="team-info">
+                  <span class="team-short-name" title="away-team">{this.state.away_team.short_name}</span>
+                </div>
+                <div class="team-record">
+                  <span class="record" title="away-team-record">{this.state.away_team.wins}-{this.state.away_team.losses}</span>
+                </div>
+              </div>
               <div className="input-field col s12">
                 <input
                   readOnly
-                  placeholder={this.state.name}
-                  value={this.state.name}
-                  error={errors.name}
-                  id="name"
+                  placeholder={this.state.tournament.name}
+                  value={this.state.tournament.name}
+                  error={errors.tournament_name}
+                  id="tournament.name"
                   type="text"
-                  className={classnames('', { invalid: errors.name })}
+                  className={classnames('', { invalid: errors.tournament_name })}
                 />
                 <label htmlFor="name">League Name</label>
-                <span className="red-text">{errors.name}</span>
+                <span className="red-text">{errors.tournament_name}</span>
               </div>
               <div className="input-field col s12">
                 <input
                   readOnly
-                  placeholder={this.state.game}
-                  value={this.state.game}
-                  error={errors.game}
-                  id="game"
+                  placeholder={this.state.home_team.name}
+                  value={this.state.home_team.name}
+                  error={errors.home_team_name}
+                  id="home_team.name"
                   type="text"
-                  className={classnames('', { invalid: errors.game })}
+                  className={classnames('', { invalid: errors.home_team_name })}
                 />
-                <label htmlFor="name">Games Covered</label>
-                <span className="red-text">{errors.game}</span>
+                <label htmlFor="name">Home Team</label>
+                <span className="red-text">{errors.home_team_name}</span>
               </div>
               <div className="input-field col s12">
                 <input
                   readOnly
-                  placeholder={this.state.leagues_supported}
-                  value={this.state.leagues_supported}
-                  error={errors.leagues_supported}
-                  id="leagues_supported"
+                  placeholder={this.state.away_team.name}
+                  value={this.state.away_team.name}
+                  error={errors.away_team_name}
+                  id="away_team.name"
                   type="text"
-                  className={classnames('', { invalid: errors.leagues_supported })}
+                  className={classnames('', { invalid: errors.away_team_name })}
                 />
-                <label htmlFor="name">Leagues Supported</label>
-                <span className="red-text">{errors.leagues_supported}</span>
+                <label htmlFor="name">Away Team</label>
+                <span className="red-text">{errors.away_team_name}</span>
               </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.current_player_count}
-                  value={this.state.current_player_count}
-                  error={errors.current_player_count}
-                  id="current_player_count"
-                  type="number"
-                  className={classnames('', { invalid: errors.current_player_count })}
-                />
-                <label htmlFor="name">Current Number of Players</label>
-                <span className="red-text">{errors.max_players}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.max_players}
-                  value={this.state.max_players}
-                  error={errors.max_players}
-                  id="max_players"
-                  type="number"
-                  className={classnames('', { invalid: errors.max_players })}
-                />
-                <label htmlFor="name">Max Number of Players</label>
-                <span className="red-text">{errors.max_players}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.starting_cash}
-                  value={this.state.starting_cash}
-                  error={errors.starting_cash}
-                  id="starting_cash"
-                  type="number"
-                  className={classnames('', { invalid: errors.starting_cash })}
-                />
-                <label htmlFor="name">Starting Bankroll</label>
-                <span className="red-text">{errors.starting_cash}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.private_league}
-                  value={this.state.private_league}
-                  error={errors.private_league}
-                  id="private_league"
-                  type="text"
-                  className={classnames('', { invalid: errors.private_league })}
-                />
-                <label htmlFor="name">Private League</label>
-                <span className="red-text">{errors.private_league}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.season_in_progress}
-                  value={this.state.season_in_progress}
-                  error={errors.season_in_progress}
-                  id="season_in_progress"
-                  type="text"
-                  className={classnames('', { invalid: errors.season_in_progress })}
-                />
-                <label htmlFor="name">Season in Progress</label>
-                <span className="red-text">{errors.season_in_progress}</span>
-              </div>
-              {table}
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 {button}
               </div>

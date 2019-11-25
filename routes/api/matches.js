@@ -26,14 +26,9 @@ router.post("/createMatch", (req, res) => {
                   return res.status(400).json({ league: "Match participants and date must be unique, please try again." });
                 } else {
                   const new_match = new Match({
-                    tournament_id: req.body.tournament_id,
-                    tournament_name: tournament.name,
-                    home_team_id: req.body.home_team_id,
-                    home_team_name: home_team.name,
-                    home_team_short_name: home_team.short_name,
-                    away_team_id: req.body.away_team_id,
-                    away_team_name: away_team.name,
-                    away_team_short_name: away_team.short_name,
+                    tournament: tournament,
+                    home_team: home_team,
+                    away_team: away_team,
                     money_line_home: req.body.money_line_home,
                     money_line_away: req.body.money_line_away,
                     spread: req.body.spread,

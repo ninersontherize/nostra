@@ -101,11 +101,11 @@ class SearchMatch extends Component {
                   <tr key={row._id}>
                     <td component="th" scope="row">
                       <Link to={`/showMatch/${row._id}`}>
-                        {row.home_team_short_name} v. {row.away_team_short_name}
+                        {row.home_team.short_name} v. {row.away_team.short_name}
                       </Link>
                     </td>
-                    <td align="right">{row.tournament_name}</td>
-                    <td align="right">{row.home_team_short_name}: {row.money_line_home} / {row.away_team_short_name}: {row.money_line_away}</td>
+                    <td align="right">{row.tournament.name}</td>
+                    <td align="right">{row.home_team.short_name}: {row.money_line_home} / {row.away_team.short_name}: {row.money_line_away}</td>
                     <td align="right">{row.spread} ({row.spread_favorite})</td>
                     <td align="right">{new Date(row.match_date).toDateString()}</td>
                   </tr>
