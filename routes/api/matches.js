@@ -13,11 +13,12 @@ router.post("/createMatch", (req, res) => {
     if (!tournament) {
       return res.status(404).json({ league: "Matches must take place in a valid tournament, please check tournament id and try again." });
     } else {
-      Team.findOne({ _id: req.body.home_team_id, tournament_id: tournament.id }).then(home_team => {
+      console.log(tournament);
+      Team.findOne({ _id: req.body.home_team_id, tournament: { id: tournament.id }}).then(home_team => {
         if (!home_team) {
           return res.status(404).json({ home_team: "Home team must be a valid team, please check home team id and try again" });
         } else {
-          Team.findOne({ _id: req.body.away_team_id, tournament_id: tournament.id }).then(away_team => {
+          Team.findOne({ _id: req.body.away_team_id, tournament: { id: tournament.id }}).then(away_team => {
             if (!away_team) {
               return res.status(404).json({ away_team: "Away team must be a valid team, please check away team id and try again"})
             } else {

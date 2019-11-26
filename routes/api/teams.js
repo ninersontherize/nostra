@@ -21,8 +21,9 @@ router.post("/createTeam", (req, res) => {
           const new_team = new Team({
             name: req.body.name,
             short_name: req.body.short_name,
-            tournament_id: req.body.tournament_id,
-            tournament_name: tournament.name,
+            tournament: tournament,
+            logo_large: req.body.logo_large,
+            logo_small: req.body.logo_small,
             wins: 0,
             losses: 0
           });
@@ -81,6 +82,8 @@ router.put("/:id/editTeam", (req, res) => {
       Team.updateOne({ _id: id }, {
         name: req.body.name,
         short_name: req.body.short_name,
+        logo_large: req.body.logo_large,
+        logo_small: req.body.logo_small,
         wins: req.body.wins,
         losses: req.body.losses
       }, function(err, affected, res) {

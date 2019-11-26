@@ -97,7 +97,7 @@ class ShowMatch extends Component {
                  {/*need to add logo attribute to teams in order for this to load properly for any given team*/}
 
 
-                <img src={process.env.PUBLIC_URL + "/Cloud9-logo.png"} alt="Home Team logo" width="100" height="100"/>
+                <img src={process.env.PUBLIC_URL + "/Cloud9-logo.png"} alt="Home Team logo" width="120" height="120"/>
                 <div class="team-info">
                   <span class="team-short-name" title="home-team">{this.state.home_team.short_name}</span> 
                 </div>
@@ -106,7 +106,7 @@ class ShowMatch extends Component {
                 </div>
               </div>
               <div class="away-team-container">
-                <img src={process.env.PUBLIC_URL + "/liquid.png"} alt="Away Team logo" width="100" height="100"/>
+                <img src={process.env.PUBLIC_URL + "/liquid.png"} alt="Away Team logo" width="120" height="120"/>
                 <div class="team-info">
                   <span class="team-short-name" title="away-team">{this.state.away_team.short_name}</span>
                 </div>

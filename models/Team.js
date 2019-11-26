@@ -11,11 +11,15 @@ const TeamSchema = new Schema({
     type: String,
     required: true
   },
-  tournament_id: {
+  tournament: {
+    type: Object,
+    required: true
+  },
+  logo_large: {
     type: String,
     required: true
   },
-  tournament_name: {
+  logo_small: {
     type: String,
     required: true
   },
