@@ -50,7 +50,7 @@ class SearchMatch extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col s8 offset-s2">
+          <div className="col s10 offset-s1">
             <Link to="/dashboard" className="btn-flat waves-effect">
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
@@ -86,11 +86,11 @@ class SearchMatch extends Component {
                   </button>
               </div>
             </form>
-            <table className="highlight minwidth: 650" aria-label="simple table">
+            <table className="highlight minwidth: 750" aria-label="simple table">
               <thead>
                 <tr>
-                  <th>Match</th>
                   <th align="right">League</th>
+                  <th align="right">Match</th>
                   <th align="right">Money Line</th>
                   <th align="right">Spread</th>
                   <th align="right">Match Date</th>
@@ -99,15 +99,14 @@ class SearchMatch extends Component {
               <tbody>
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
+                    <td align="right"><img src={process.env.PUBLIC_URL + "/lcs_logo.png"} /></td>
                     <td component="th" scope="row">
-                      <Link to={`/showMatch/${row._id}`}>
-                        {row.home_team.short_name} v. {row.away_team.short_name}
-                      </Link>
+                      <img src={process.env.PUBLIC_URL + row.home_team.logo_small} />v.<img src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                     </td>
-                    <td align="right">{row.tournament.name}</td>
                     <td align="right">{row.home_team.short_name}: {row.money_line_home} / {row.away_team.short_name}: {row.money_line_away}</td>
-                    <td align="right">{row.spread} ({row.spread_favorite})</td>
+                    <td align="right">{row.home_team.short_name}: {row.spread_home} / {row.away_team.short_name}: {row.spread_away}</td>
                     <td align="right">{new Date(row.match_date).toDateString()}</td>
+                    <td align="right"><Link to={`/showMatch/${row._id}`}>More Info</Link></td>
                   </tr>
                 ))}
               </tbody>

@@ -14,11 +14,11 @@ router.post("/createMatch", (req, res) => {
       return res.status(404).json({ league: "Matches must take place in a valid tournament, please check tournament id and try again." });
     } else {
       console.log(tournament);
-      Team.findOne({ _id: req.body.home_team_id, tournament: { id: tournament.id }}).then(home_team => {
+      Team.findOne({ _id: req.body.home_team_id, "tournament.name": tournament.name }).then(home_team => {
         if (!home_team) {
           return res.status(404).json({ home_team: "Home team must be a valid team, please check home team id and try again" });
         } else {
-          Team.findOne({ _id: req.body.away_team_id, tournament: { id: tournament.id }}).then(away_team => {
+          Team.findOne({ _id: req.body.away_team_id, "tournament.name": tournament.name }).then(away_team => {
             if (!away_team) {
               return res.status(404).json({ away_team: "Away team must be a valid team, please check away team id and try again"})
             } else {
@@ -32,8 +32,8 @@ router.post("/createMatch", (req, res) => {
                     away_team: away_team,
                     money_line_home: req.body.money_line_home,
                     money_line_away: req.body.money_line_away,
-                    spread: req.body.spread,
-                    spread_favorite: req.body.spread_favorite,
+                    spread_home: req.body.spread_home,
+                    spread_away: req.body.spread_away,
                     winning_id: req.body.winning_id,
                     losing_id: req.body.losing_id,
                     match_date: req.body.match_date
@@ -64,11 +64,11 @@ router.get("/matches", (req, res) => {
     if (isNaN(Date.parse(req.query.search))) {
       Match.find({$or: 
         [
-          { tournament_name: new RegExp(req.query.search) }, 
-          { home_team_name: new RegExp(req.query.search) }, 
-          { away_team_name: new RegExp(req.query.search) }, 
-          { home_team_short_name: new RegExp(req.query.search) }, 
-          { away_team_short_name: new RegExp(req.query.search) }
+          { "tournament.name": new RegExp(req.query.search) }, 
+          { "home_team.name": new RegExp(req.query.search) }, 
+          { "away_team.name": new RegExp(req.query.search) }, 
+          { "home_team.short_name": new RegExp(req.query.search) }, 
+          { "away_team.short_name": new RegExp(req.query.search) }
         ] }).sort({match_date: 1}).then( matches => res.json(matches)).catch(err => console.log(err));
     } else {
       Match.find({ match_date: Date.parse(req.query.search) }).sort({match_date: 1}).then( matches => res.json(matches)).catch(err => console.log(err));
@@ -145,8 +145,8 @@ router.put("/:id/updateMatch", (req, res) => {
       Match.updateOne({ _id: id }, {
         money_line_home: req.body.money_line_home,
         money_line_away: req.body.money_line_away,
-        spread: req.body.spread,
-        spread_favorite: req.body.spread_favorite,
+        spread_home: req.body.spread_home,
+        spread_away: req.body.spread_away,
         winning_id: req.body.winning_id,
         losing_id: req.body.losing_id
       }, function(err, affected, res) {

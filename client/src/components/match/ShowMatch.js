@@ -62,7 +62,8 @@ class ShowMatch extends Component {
     const{ errors } = this.state;
 
     let button;
-    let table;
+    let home_logo = process.env.PUBLIC_URL + this.state.home_team.logo_large;
+    let away_logo = process.env.PUBLIC_URL + this.state.away_team.logo_large;
 
     if ((this.state.match_complete === false)) {
       button = <button
@@ -92,12 +93,7 @@ class ShowMatch extends Component {
             </div>
             <form noValidate onSubmit={() => this.props.history.pushState("/")}>
               <div class="home-team-container">
-
-
-                 {/*need to add logo attribute to teams in order for this to load properly for any given team*/}
-
-
-                <img src={process.env.PUBLIC_URL + "/Cloud9-logo.png"} alt="Home Team logo" width="120" height="120"/>
+                <img src={home_logo} alt="Home Team logo" width="100" height="100"/>
                 <div class="team-info">
                   <span class="team-short-name" title="home-team">{this.state.home_team.short_name}</span> 
                 </div>
@@ -106,7 +102,7 @@ class ShowMatch extends Component {
                 </div>
               </div>
               <div class="away-team-container">
-                <img src={process.env.PUBLIC_URL + "/liquid.png"} alt="Away Team logo" width="120" height="120"/>
+                <img src={away_logo} alt="Away Team logo" width="100" height="100"/>
                 <div class="team-info">
                   <span class="team-short-name" title="away-team">{this.state.away_team.short_name}</span>
                 </div>
@@ -114,44 +110,11 @@ class ShowMatch extends Component {
                   <span class="record" title="away-team-record">{this.state.away_team.wins}-{this.state.away_team.losses}</span>
                 </div>
               </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.tournament.name}
-                  value={this.state.tournament.name}
-                  error={errors.tournament_name}
-                  id="tournament.name"
-                  type="text"
-                  className={classnames('', { invalid: errors.tournament_name })}
-                />
-                <label htmlFor="name">League Name</label>
-                <span className="red-text">{errors.tournament_name}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.home_team.name}
-                  value={this.state.home_team.name}
-                  error={errors.home_team_name}
-                  id="home_team.name"
-                  type="text"
-                  className={classnames('', { invalid: errors.home_team_name })}
-                />
-                <label htmlFor="name">Home Team</label>
-                <span className="red-text">{errors.home_team_name}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.away_team.name}
-                  value={this.state.away_team.name}
-                  error={errors.away_team_name}
-                  id="away_team.name"
-                  type="text"
-                  className={classnames('', { invalid: errors.away_team_name })}
-                />
-                <label htmlFor="name">Away Team</label>
-                <span className="red-text">{errors.away_team_name}</span>
+              <div class="home-odds-container">
+
+
+
+
               </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 {button}

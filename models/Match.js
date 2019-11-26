@@ -23,12 +23,12 @@ const MatchSchema = new Schema({
     type: Number,
     required: false
   },
-  spread: {
+  spread_home: {
     type: Number,
     required: false
   }, 
-  spread_favorite: {
-    type: String,
+  spread_away: {
+    type: Number,
     required: false
   },
   winning_id: {
