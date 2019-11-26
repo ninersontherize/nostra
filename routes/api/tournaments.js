@@ -16,7 +16,8 @@ router.post("/createTournament", (req, res) => {
       const new_tourney = new Tournament({
         name: req.body.name,
         game: req.body.game,
-        split: req.body.split
+        split: req.body.split,
+        tournament_logo: req.body.tournament_logo
       });
 
       console.log(new_tourney);
@@ -70,7 +71,8 @@ router.put("/:id/editTournament", (req, res) => {
       Tournament.updateOne({ _id: id }, {
         name: req.body.name,
         game: req.body.game,
-        split: req.body.split
+        split: req.body.split,
+        tournament_logo: req.body.tournament_logo
       }, function(err, affected, res) {
         console.log(res);
       })

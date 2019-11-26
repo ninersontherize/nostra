@@ -57,3 +57,27 @@ export const showMatch = searchData => dispatch => {
       })
     );
 };
+
+export const updateTeamRecords = teamId => dispatch => {
+  axios
+    .put(`api/teams/${teamId}/updateRecord`)
+    .then(res => res.data)
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+export const updateMatchTeams = matchId => dispatch => {
+  axios
+    .put(`/api/matches/${matchId}/getLatestTeams`)
+    .then(res => res.data)
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};

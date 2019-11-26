@@ -4,6 +4,7 @@ const isEmpty = require("is-empty");
 
 const Team = require("../../models/Team");
 const Tournament = require("../../models/Tournament");
+const Match = require("../../models/Match");
 
 // @route POST api/teams/createTeam
 // @desc Create Team
@@ -68,7 +69,7 @@ router.delete("/deleteTeam", (req, res) => {
 
 });
 
-// @route PUT api/tournaments/:id/editTeam
+// @route PUT api/teams/:id/editTeam
 // @desc Edit a team by id
 // @access private - backend only
 router.put("/:id/editTeam", (req, res) => {
@@ -83,9 +84,7 @@ router.put("/:id/editTeam", (req, res) => {
         name: req.body.name,
         short_name: req.body.short_name,
         logo_large: req.body.logo_large,
-        logo_small: req.body.logo_small,
-        wins: req.body.wins,
-        losses: req.body.losses
+        logo_small: req.body.logo_small
       }, function(err, affected, res) {
         console.log(res);
       })
@@ -97,5 +96,41 @@ router.put("/:id/editTeam", (req, res) => {
   });
 
 });
+
+// @route PUT api/teams/:id/updateRecord
+// @desc Update a team's record by id
+// @access private - backend only
+router.put("/:id/updateRecord", (req, res) => {
+  console.log(req.params.id);
+  
+  var team_id = req.params.id;
+  var wins;
+  var losses;
+
+  Team.findOne({ _id: team_id }).then( team => {
+    if (!team) {
+      return res.status(404).json({ team: "That id does not exist, update failed" });
+    } else { 
+      Match.find({ winning_id: team._id, "tournament.split": team.tournament.split }).count().then(count => {
+        wins = count;
+        Match.find({ losing_id: team._id, "tournament.split": team.tournament.split }).count().then(count => {
+          losses = count;
+          Team.updateOne({ _id: team._id }, {
+            wins: wins,
+            losses: losses
+          }, function(err, affected, res) {
+            console.log(res);
+          })
+          .then(() => {
+            console.log(wins);
+            console.log(losses);
+            res.status(200).send({ message: "record updated successfully"});
+          });
+        });
+      });
+    }
+  });
+
+}); 
 
 module.exports = router;

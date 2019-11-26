@@ -36,7 +36,9 @@ class SearchMatch extends Component {
               search: "",
               search_results: res 
             });
+            console.log(this.state.search_results);
           });
+          
   };
 
   componentDidMount() {
@@ -90,7 +92,7 @@ class SearchMatch extends Component {
               <thead>
                 <tr>
                   <th align="right">League</th>
-                  <th align="right">Match</th>
+                  <th align="right" margin-left="10">Match</th>
                   <th align="right">Money Line</th>
                   <th align="right">Spread</th>
                   <th align="right">Match Date</th>
@@ -99,9 +101,9 @@ class SearchMatch extends Component {
               <tbody>
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
-                    <td align="right"><img src={process.env.PUBLIC_URL + "/lcs_logo.png"} /></td>
+                    <td align="right"><img width="40px" height="40px" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} /></td>
                     <td component="th" scope="row">
-                      <img src={process.env.PUBLIC_URL + row.home_team.logo_small} />v.<img src={process.env.PUBLIC_URL + row.away_team.logo_small} />
+                      <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.home_team.logo_small} />v.<img width="60px" height="25px" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                     </td>
                     <td align="right">{row.home_team.short_name}: {row.money_line_home} / {row.away_team.short_name}: {row.money_line_away}</td>
                     <td align="right">{row.home_team.short_name}: {row.spread_home} / {row.away_team.short_name}: {row.spread_away}</td>

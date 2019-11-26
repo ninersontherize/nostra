@@ -3,6 +3,7 @@ const router = express.Router();
 const isEmpty = require("is-empty");
 
 const Match = require("../../models/Match");
+const Team = require("../../models/Team");
 
 // @route POST api/matchess/createMatch
 // @desc Create Match
@@ -107,7 +108,7 @@ router.get("/:id/match", (req, res) => {
 
   Match.findOne({ _id: id }).then( match => {
     if (!match) {
-      return res.status(404).json({ match: "Match cannot be found, please try again."});
+      return res.status(404).json({ match: "Match cannot be found, please try again." });
     } else {
       res.json(match);
     }
@@ -146,16 +147,70 @@ router.put("/:id/updateMatch", (req, res) => {
         money_line_home: req.body.money_line_home,
         money_line_away: req.body.money_line_away,
         spread_home: req.body.spread_home,
-        spread_away: req.body.spread_away,
+        spread_away: req.body.spread_away
+      }, function(err, affected, res) {
+        console.log(res);
+      })
+      .then(() => {
+        console.log("match updated");
+        res.status(200).send({ message: "match updated successfully" });
+      });
+    }
+  });
+
+});
+
+// @route PUT api/matches/getLatestTeams
+// @desc Update a match participants
+// @access public
+router.put("/:id/getLatestTeams", (req, res) => {
+
+  var id = req.params.id;
+
+  Match.findOne({ _id: id }).then( match => {
+    if (!match) {
+      return res.status(404).json({ match: "That id does not exist, update failed" });
+    } else {
+      Team.findOne({ name: match.home_team.name }).then( home_team => {
+        Team.findOne({ name: match.away_team.name }).then( away_team => {
+          Match.updateOne({ _id: id }, {
+            home_team: home_team,
+            away_team: away_team
+          }, function(err, affected, res) {
+            console.log(res);
+          })
+          .then(() => {
+            console.log("participants updated");
+            res.status(200).send({ message: "participants updated successfully" });
+          })
+        });
+      });
+    }
+  });
+
+});
+
+// @route PUT api/matches/:id/setResult
+// @desc Update a match result
+// @access public
+router.put("/:id/setResult", (req, res) => {
+  
+  var id = req.params.id;
+
+  Match.findOne({ _id: id }).then( match => {
+    if (!match) {
+      return res.status(404).json({ match: "That id does not exist, update failed" });
+    } else {
+      Match.updateOne({ _id: id }, {
         winning_id: req.body.winning_id,
         losing_id: req.body.losing_id
       }, function(err, affected, res) {
         console.log(res);
       })
       .then(() => {
-        console.log("match updated");
-        res.status(200).send({ message: "match updated successfully"});
-      });
+        console.log("result saved");
+        res.status(200).send({ message: "result saved successfully" });
+      })
     }
   });
 

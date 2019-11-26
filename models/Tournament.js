@@ -15,6 +15,10 @@ const TournamentSchema = new Schema({
     type: String,
     required: false
   },
+  tournament_logo: {
+    type: String,
+    requried: true
+  },
   created_date: {
     type: Date,
     default: Date.now

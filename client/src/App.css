@@ -28,8 +28,50 @@
   float: left;
 }
 
-.away-team-container {
+.versus-container {
+  height: 100;
+  width: 100;
+}
+
+.league-and-date-container {
+  height: 100;
+  width: 100;
+  margin-top: 5%;
+}
+
+.match-date {
+  font-size: 14px;
+}
+
+.versus {
+  font-style: italic;
+  font-weight: bolder;
+  font-size: 30px;
+}
+
+.odds {
+  font-weight: light;
+  font-size: 15px;
+}
+
+.odds-label {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.team-info {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.team-record {
+  font-weight: lighter;
+  font-size: 20px;
+}
+
+.odds-container {
   height: 500;
   width: 500;
-  margin-left: 45%;
+  margin-left: 20%;
 }
