@@ -81,10 +81,10 @@ class ShowMatch extends Component {
                     width: "200px",
                     borderRadius: "1px",
                     letterSpacing: "1px",
-                    marginTop: "1rem"
+                    marginTop: "20%"
                   }}
                   type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3">
+                  className="btn waves-effect waves-light hoverable blue accent-3">
                     Place Wager
                 </button>;
     }
