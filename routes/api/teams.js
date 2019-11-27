@@ -99,7 +99,7 @@ router.put("/:id/editTeam", (req, res) => {
 
 // @route PUT api/teams/:id/updateRecord
 // @desc Update a team's record by id
-// @access private - backend only
+// @access public
 router.put("/:id/updateRecord", (req, res) => {
   console.log(req.params.id);
   

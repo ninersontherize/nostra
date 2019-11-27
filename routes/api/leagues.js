@@ -42,7 +42,7 @@ router.post("/createLeague", (req, res) => {
         new_league.save().then(league => {
           const new_user_league = new UserLeague({
             user_id: creating_user_id,
-            league_id: league._id,
+            league: league,
             username: user.username,
             user_bankroll: league.starting_cash,
           });
@@ -240,7 +240,7 @@ router.post("/addUserLeague", (req, res) => {
             } else {
               const new_user_league = new UserLeague({
                 user_id: user_id,
-                league_id: league_id,
+                league: league,
                 username: user.username,
                 user_bankroll: league.starting_cash,
               });
@@ -258,12 +258,11 @@ router.post("/addUserLeague", (req, res) => {
 // @route DELETE api/leagues/:league_id/:user_id/removeUserLeague
 // @desc Remove a user from a league
 // @access public
-router.delete("/removeUserLeague", (req, res) => {
+router.delete("/:id/removeUserLeague", (req, res) => {
 
-  var league_id = req.body.league_id;
-  var user_id = req.body.user_id;
+  var user_league_id = req.params.id;
 
-  UserLeague.findOne({ league_id: league_id, user_id: user_id }).then( user_league => {
+  UserLeague.findOne({ _id: user_league_id }).then( user_league => {
     if (!user_league) {
       return res.status(404).json({ user_league: "Submitted user does not exist in that league." });
     } else {

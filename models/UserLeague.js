@@ -7,8 +7,8 @@ const UserLeagueSchema = new Schema({
     type: String,
     required: true
   },
-  league_id: {
-    type: String,
+  league: {
+    type: Object,
     required: true
   },
   username: {

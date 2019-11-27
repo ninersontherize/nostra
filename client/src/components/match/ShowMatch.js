@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { showMatch, updateTeamRecords, updateMatchTeams } from "../../actions/matchActions";
+import { showMatch } from "../../actions/matchActions";
+import { getMyLeagues } from "../../actions/leagueActions";
 import classnames from "classnames"
+import M from "materialize-css";
 
 class ShowMatch extends Component {
   constructor() {
@@ -20,6 +22,7 @@ class ShowMatch extends Component {
       winning_id: "",
       losing_id: "",
       match_date: "",
+      my_leauges: [],
       match_complete: false,
       errors: {}
     };
@@ -48,29 +51,21 @@ class ShowMatch extends Component {
         losing_id: res.losing_id,
         match_date: res.match_date
       });
-      //this.props.updateTeamRecords(res.home_team._id);
-      //this.props.updateTeamRecords(res.away_team._id);
     });
 
-
-    //TODO: Bugfix - for some reason this is not calling the api correctly, it returns 404 error.
-
-
-    //await this.props.updateMatchTeams(this.props.match.params.match_id);
-
-    //await this.props.showMatch(this.props.match.params.match_id).then(res => {
-    //  this.setState({ 
-    //    home_team: res.home_team,
-    //    away_team: res.away_team
-    //  });
-    //});
+    await this.props.getMyLeagues(this.props.auth.user.id).then(res => {
+      this.setState({
+        my_leauges: res
+      });
+      console.log(this.state.my_leauges);
+    });
 
     if (this.state.winning_id) {
       this.setState({
         match_complete: true
       });
     }
-
+    M.AutoInit();
   };
 
   render() {
@@ -83,9 +78,9 @@ class ShowMatch extends Component {
     if ((this.state.match_complete === false)) {
       button = <button
                   style={{
-                    width: "250px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
+                    width: "200px",
+                    borderRadius: "1px",
+                    letterSpacing: "1px",
                     marginTop: "1rem"
                   }}
                   type="submit"
@@ -107,106 +102,147 @@ class ShowMatch extends Component {
               </h4>
             </div>
             <form noValidate onSubmit={() => this.props.history.pushState("/")}>
-              <div class="row">
-                <div class="section">
-                  <div class="col s4">
-                    <div class="section">
+              <div className="row">
+                <div className="section">
+                  <div className="col s4">
+                    <div className="section">
                       <img src={home_logo} alt="Home Team logo" width="100" height="100"/>
-                      <div class="team-info">
-                        <span class="team-short-name" title="home-team">{this.state.home_team.short_name}</span> 
+                      <div className="team-info">
+                        <span className="team-short-name" title="home-team">{this.state.home_team.short_name}</span> 
                       </div>
-                      <div class="team-record">
-                        <span class="record" title="home-team-record">{this.state.home_team.wins}-{this.state.home_team.losses}</span>
+                      <div className="team-record">
+                        <span className="record" title="home-team-record">{this.state.home_team.wins}-{this.state.home_team.losses}</span>
                       </div>
                     </div>
                   </div>
-                  <div class="col s4">
-                    <div class="section">
-                      <div class="league-and-date-container">
+                  <div className="col s4">
+                    <div className="section">
+                      <div className="league-and-date-container">
                         <img height="50px" width="50px" src={process.env.PUBLIC_URL + this.state.tournament.tournament_logo} />
-                        <div class="match-date">
+                        <div className="match-date">
                           {new Date(this.state.match_date).toDateString()}
                         </div>
                       </div>
                     </div>
-                    <div class="divider"></div>
-                    <div class="section">
-                      <div class="versus-container">
-                        <span class="versus">vs.</span>
+                    <div className="divider"></div>
+                    <div className="section">
+                      <div className="versus-container">
+                        <span className="versus">vs.</span>
                       </div> 
                     </div>
                   </div>
-                  <div class="col s4">
-                    <div class="section">
+                  <div className="col s4">
+                    <div className="section">
                       <img src={away_logo} alt="Away Team logo" width="100" height="100"/>
-                      <div class="team-info">
-                        <span class="team-short-name" title="away-team">{this.state.away_team.short_name}</span>
+                      <div className="team-info">
+                        <span className="team-short-name" title="away-team">{this.state.away_team.short_name}</span>
                       </div>
-                      <div class="team-record">
-                        <span class="record" title="away-team-record">{this.state.away_team.wins}-{this.state.away_team.losses}</span>
+                      <div className="team-record">
+                        <span className="record" title="away-team-record">{this.state.away_team.wins}-{this.state.away_team.losses}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="divider"></div>
-              <div class="row">
+              <div className="divider"></div>
+              <div className="row">
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <h5>
                   <b>Current Odds</b>
                 </h5>
               </div>
-                <div class="odds-container">
-                  <div class="col s3">
-                    <div class="section">
-                      <div class="odds">
-                        <div class="money-line">
-                          <span class="money-line-odds" title="money-line-odds">{this.state.money_line_home}</span>
+                <div className="odds-container">
+                  <div className="col s3">
+                    <div className="section">
+                      <div className="odds">
+                        <div className="money-line">
+                          <span className="money-line-odds" title="money-line-odds">{this.state.money_line_home}</span>
                         </div>
                       </div> 
                     </div>                   
-                    <div class="section">
-                      <div class="odds">
-                        <div class="spread">
-                          <span class="spread-odds" title="spread-odds">{this.state.spread_home}</span>
+                    <div className="section">
+                      <div className="odds">
+                        <div className="spread">
+                          <span className="spread-odds" title="spread-odds">{this.state.spread_home}</span>
                         </div>
                       </div> 
                     </div>
                   </div>
-                  <div class="col s3">
-                    <div class="section"> 
-                      <div class="odds-label">
-                        <span class="money-line">Money Line</span>
+                  <div className="col s3">
+                    <div className="section"> 
+                      <div className="odds-label">
+                        <span className="money-line">Money Line</span>
                       </div>
                     </div>                   
-                    <div class="section">
-                      <div class="odds-label">
-                        <span class="spread">Spread</span>
+                    <div className="section">
+                      <div className="odds-label">
+                        <span className="spread">Spread</span>
                       </div>
                     </div> 
                   </div>
-                  <div class="col s3">
-                    <div class="section">
-                      <div class="odds">
-                        <div class="money-line">
-                          <span class="money-line-odds" title="money-line-odds">{this.state.money_line_away}</span>
+                  <div className="col s3">
+                    <div className="section">
+                      <div className="odds">
+                        <div className="money-line">
+                          <span className="money-line-odds" title="money-line-odds">{this.state.money_line_away}</span>
                         </div>
                       </div> 
                     </div>
-                    <div class="section">
-                      <div class="odds">
-                        <div class="spread">
-                          <span class="spread-odds" title="spread-odds">{this.state.spread_away}</span>
+                    <div className="section">
+                      <div className="odds">
+                        <div className="spread">
+                          <span className="spread-odds" title="spread-odds">{this.state.spread_away}</span>
                         </div>
                       </div> 
                     </div>
                   </div>
                 </div>
               </div>
-              
-              
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                {button}
+              <div className="divider"></div>
+              <div className="section">
+                <div className="row">
+                  <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                    <h5>
+                      <b>Place a wager</b>
+                    </h5>
+                  </div>
+                  <div className="input-field col s3">
+                    <select>
+                      <optgroup label="Money-Line">
+                        <option value={this.state.home_team.short_name + "/MoneyLine"}>{this.state.home_team.short_name}</option>
+                        <option value={this.state.away_team.short_name + "/MoneyLine"}>{this.state.away_team.short_name}</option>
+                      </optgroup>
+                      <optgroup label="Spread">
+                        <option value={this.state.home_team.short_name + "/Spread"}>{this.state.home_team.short_name}</option>
+                        <option value={this.state.home_team.short_name + "/Spread"}>{this.state.away_team.short_name}</option>
+                      </optgroup>
+                    </select>
+                    <label>Team and Type of Wager</label>
+                  </div>
+                  <div className="input-field col s3">
+                    <select>
+                      {this.state.my_leauges.map(row => (
+                        <option value={row._id}>{row.league.name}</option>
+                      ))}
+                    </select> 
+                    <label>League</label>
+                  </div>
+                  <div className="input-field inline col s3">
+                    <input
+                      onChange={this.onChange}
+                      value={this.state.amount}
+                      error={errors.amount}
+                      id="amount"
+                      type="number"
+                      className={classnames('', { invalid: errors.amount })}
+                    />
+                    <label htmlFor="amount">Amount</label>
+                    <span className="red-text">{errors.amount}</span>
+                  </div>
+                  <div className="col s3" style={{ paddingLeft: "30px" }}>
+                    {button}
+                  </div>
+                </div>
               </div>
             </form>
           </div>
@@ -218,8 +254,7 @@ class ShowMatch extends Component {
 
 ShowMatch.propTypes = {
   showMatch: PropTypes.func.isRequired,
-  updateMatchTeams: PropTypes.func.isRequired,
-  updateTeamRecords: PropTypes.func.isRequired,
+  getMyLeagues: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -229,4 +264,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { showMatch, updateTeamRecords, updateMatchTeams })(withRouter(ShowMatch));
+export default connect(mapStateToProps, { showMatch, getMyLeagues })(withRouter(ShowMatch));
