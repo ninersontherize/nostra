@@ -40,7 +40,7 @@
 }
 
 .match-date {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .versus {
@@ -49,15 +49,29 @@
   font-size: 30px;
 }
 
-.odds {
-  font-weight: light;
+.versus-small {
+  font-style: italic;
+  font-weight: bolder;
   font-size: 15px;
+  float: top;
+}
+
+.odds-green {
+  font-weight: bold;
+  font-size: 20px;
+  color: green;
+}
+
+.odds-red {
+  font-weight: bold;
+  font-size: 20px;
+  color: red;
 }
 
 .odds-label {
   font-style: italic;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .team-info {
@@ -74,4 +88,101 @@
   height: 500;
   width: 500;
   margin-left: 20%;
+}
+
+.vertical-divider {
+  left: 50%;
+  top: 10%;
+  bottom: 10%;
+  border-left: 1px solid lightgrey;
+}
+
+.league-info-label {
+  font-weight: bold;
+  font-size: 15px;
+  float: right;
+}
+
+.search-info-label {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.search-info-value-green {
+  font-weight: lighter;
+  font-size: 15px;
+  margin-left: 1%;
+  color: green;
+}
+
+.search-info-value-red {
+  font-weight: lighter;
+  font-size: 15px;
+  margin-left: 1%;
+  color: red;
+}
+
+.search-info-row-container, .parenthesis, .row-input-field {
+  padding: 0;
+  height: 0;
+}
+
+.row-input-field-bottom {
+  padding: 0;
+}
+
+.league-label-container {
+  font-weight: bold;
+  font-size: 15px;
+  border-left: 1px solid lightgray;
+  float: right;
+}
+
+.league-info-value-container {
+  font-weight: light;
+  font-size: 15px;
+  float: left;
+}
+
+.league-info-value {
+  font-weight: lighter;
+  font-size: 15px;
+  float: left;
+  margin-left: 3%;
+}
+
+.sub-title {
+  font-weight: lighter;
+  font-size: 33px;
+}
+
+.sub-title-show-match {
+  font-weight: light;
+  font-size: 30px;
+}
+
+.create-league-checkbox-container {
+  float: center;
+}
+
+.winner-label {
+  font-weight: bolder;
+  font-size: 40px;
+  float: right;
+}
+
+.winner-image {
+  float: left;
+}
+
+.gold-diff {
+  float: left;
+  font-style: italic;
+  font-size: 30px;
+  margin-left: 10%;
+  margin-top: 1%;
+}
+
+.search-title {
+  float: right;
 }

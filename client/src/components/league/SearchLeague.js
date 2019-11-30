@@ -47,6 +47,15 @@ class SearchLeague extends Component {
 
   render() {
     const{ errors } = this.state;
+
+    function checkPrivate(value) {
+      if( value === true) {
+        return "Yes"
+      } else {
+        return "No"
+      }
+    }
+
     return (
       <div className="container">
         <div className="row">
@@ -56,44 +65,48 @@ class SearchLeague extends Component {
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4>
-                <b>Search</b> for a league
+                <b>League</b> Search
               </h4>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.search}
-                  error={errors.search}
-                  id="search"
-                  type="text"
-                  className={classnames('', { invalid: errors.search })}
-                />
-                <label htmlFor="name">Search</label>
-                <span className="red-text">{errors.search}</span>
-              </div>
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <button
-                  style={{
-                    width: "150px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem"
-                  }}
-                  type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3">
-                    Search
-                  </button>
+              <div className="section">
+                <div className="row">
+                  <div className="input-field col s6 offset-s1">
+                    <input
+                      onChange={this.onChange}
+                      value={this.state.search}
+                      error={errors.search}
+                      id="search"
+                      type="text"
+                      className={classnames('', { invalid: errors.search })}
+                    />
+                    <label htmlFor="name">Search</label>
+                    <span className="red-text">{errors.search}</span>
+                  </div>
+                  <div className="col s4" style={{ paddingLeft: "11.250px" }}>
+                    <button
+                      style={{
+                        width: "150px",
+                        borderRadius: "3px",
+                        letterSpacing: "1.5px",
+                        marginTop: "1rem"
+                      }}
+                      type="submit"
+                      className="btn waves-effect waves-light hoverable blue accent-3">
+                        Search
+                      </button>
+                  </div>
+                </div>
               </div>
             </form>
             <table className="highlight minwidth: 650" aria-label="simple table">
               <thead>
                 <tr>
                   <th>League Name</th>
-                  <th align="right">Max Players</th>
-                  <th align="right">Starting Bankroll</th>
-                  <th align="right">Leagues Supported</th>
-                  <th align="right">Private</th>
+                  <th className="right-align">Max Players</th>
+                  <th className="right-align">Starting Bankroll</th>
+                  <th className="right-align">Leagues Supported</th>
+                  <th className="right-align">Private</th>
                 </tr>
               </thead>
               <tbody>
@@ -104,10 +117,14 @@ class SearchLeague extends Component {
                         {row.name}
                       </Link>
                     </td>
-                    <td align="right">{row.max_players}</td>
-                    <td align="right">{row.starting_cash}</td>
-                    <td align="right">{row.leagues_supported}</td>
-                    <td align="right">{row.private}</td>
+                    <td className="right-align">{row.max_players}</td>
+                    <td className="right-align">{row.starting_cash}</td>
+                    <td className="center-align">
+                      {row.leagues_supported.map(sub_row => (
+                        <span><img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" /> </span>
+                      ))}
+                    </td>
+                    <td className="right-align">{checkPrivate(row.private)}</td>
                   </tr>
                 ))}
               </tbody>

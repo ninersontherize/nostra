@@ -21,6 +21,7 @@ class ShowMatch extends Component {
       spread_favorite: "",
       winning_id: "",
       losing_id: "",
+      gold_difference: "",
       match_date: "",
       my_leauges: [],
       match_complete: false,
@@ -36,6 +37,22 @@ class ShowMatch extends Component {
     e.preventDefault();
   };
 
+  getWinner = id => {
+    if (id === this.state.home_team._id) {
+      return this.state.home_team.logo_large;
+    } else {
+      return this.state.away_team.logo_large;
+    }
+  };
+
+  renderPositiveOdds = odd => {
+    if(odd > 0) {
+      return `+${odd}`
+    } else {
+      return odd
+    }
+  };
+
   async componentDidMount() {
 
     await this.props.showMatch(this.props.match.params.match_id).then(res => {
@@ -49,6 +66,7 @@ class ShowMatch extends Component {
         spread_away: res.spread_away,
         winning_id: res.winning_id,
         losing_id: res.losing_id,
+        gold_difference: res.gold_difference,
         match_date: res.match_date
       });
     });
@@ -71,22 +89,82 @@ class ShowMatch extends Component {
   render() {
     const{ errors } = this.state;
 
-    let button;
+    let wager_section;
     let home_logo = process.env.PUBLIC_URL + this.state.home_team.logo_large;
     let away_logo = process.env.PUBLIC_URL + this.state.away_team.logo_large;
 
     if ((this.state.match_complete === false)) {
-      button = <button
-                  style={{
-                    width: "200px",
-                    borderRadius: "1px",
-                    letterSpacing: "1px",
-                    marginTop: "20%"
-                  }}
-                  type="submit"
-                  className="btn waves-effect waves-light hoverable blue accent-3">
-                    Place Wager
-                </button>;
+      wager_section = 
+      <div className="section">
+        <div className="row">
+          <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+            <h5>
+              <b>Place a wager</b>
+            </h5>
+          </div>
+          <div className="input-field col s3">
+            <select>
+              <optgroup label="Money-Line">
+                <option value={this.state.home_team.short_name + "/MoneyLine"}>{this.state.home_team.short_name}</option>
+                <option value={this.state.away_team.short_name + "/MoneyLine"}>{this.state.away_team.short_name}</option>
+              </optgroup>
+              <optgroup label="Spread">
+                <option value={this.state.home_team.short_name + "/Spread"}>{this.state.home_team.short_name}</option>
+                <option value={this.state.home_team.short_name + "/Spread"}>{this.state.away_team.short_name}</option>
+              </optgroup>
+            </select>
+            <label>Team and Type of Wager</label>
+          </div>
+          <div className="input-field col s3">
+            <select>
+              {this.state.my_leauges.map(row => (
+                <option value={row._id}>{row.league.name}</option>
+              ))}
+            </select> 
+            <label>League</label>
+          </div>
+          <div className="input-field inline col s3">
+            <input
+              onChange={this.onChange}
+              value={this.state.amount}
+              error={errors.amount}
+              id="amount"
+              type="number"
+              className={classnames('', { invalid: errors.amount })}
+            />
+            <label htmlFor="amount">Amount</label>
+            <span className="red-text">{errors.amount}</span>
+          </div>
+          <div className="col s3" style={{ paddingLeft: "30px" }}>
+            <button
+              style={{
+              width: "200px",
+              borderRadius: "1px",
+              letterSpacing: "1px",
+              marginTop: "20%"
+            }}
+            type="submit"
+            className="btn waves-effect waves-light hoverable blue accent-3">
+              Place Wager
+            </button>
+          </div>
+        </div>
+      </div>
+    } else {
+      wager_section = 
+      <div className="section">
+        <div className="row">
+          <div className="col s7 winner-label">
+            <span className="winner-label">Match Winner: </span>
+          </div>
+          <div className="col s1 winner-image">
+            <span className="winner-image"><img src={process.env.PUBLIC_URL + this.getWinner(this.state.winning_id)} height="70px" width="70px" /></span>
+          </div>
+          <div className="col s4 gold-diff">
+            <span className="gold-diff"> ({this.renderPositiveOdds(this.state.gold_difference)})</span>
+          </div>
+        </div>
+      </div>
     }
 
     return (
@@ -145,105 +223,68 @@ class ShowMatch extends Component {
                 </div>
               </div>
               <div className="divider"></div>
-              <div className="row">
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <h5>
-                  <b>Current Odds</b>
-                </h5>
-              </div>
-                <div className="odds-container">
-                  <div className="col s3">
-                    <div className="section">
-                      <div className="odds">
-                        <div className="money-line">
-                          <span className="money-line-odds" title="money-line-odds">{this.state.money_line_home}</span>
-                        </div>
-                      </div> 
-                    </div>                   
-                    <div className="section">
-                      <div className="odds">
-                        <div className="spread">
-                          <span className="spread-odds" title="spread-odds">{this.state.spread_home}</span>
-                        </div>
-                      </div> 
-                    </div>
-                  </div>
-                  <div className="col s3">
-                    <div className="section"> 
-                      <div className="odds-label">
-                        <span className="money-line">Money Line</span>
-                      </div>
-                    </div>                   
-                    <div className="section">
-                      <div className="odds-label">
-                        <span className="spread">Spread</span>
-                      </div>
-                    </div> 
-                  </div>
-                  <div className="col s3">
-                    <div className="section">
-                      <div className="odds">
-                        <div className="money-line">
-                          <span className="money-line-odds" title="money-line-odds">{this.state.money_line_away}</span>
-                        </div>
-                      </div> 
-                    </div>
-                    <div className="section">
-                      <div className="odds">
-                        <div className="spread">
-                          <span className="spread-odds" title="spread-odds">{this.state.spread_away}</span>
-                        </div>
-                      </div> 
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="divider"></div>
               <div className="section">
                 <div className="row">
-                  <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                    <h5>
-                      <b>Place a wager</b>
-                    </h5>
+                  <div className="col s12">
+                    <span className="sub-title-show-match"><b>Latest</b> Odds</span>
                   </div>
-                  <div className="input-field col s3">
-                    <select>
-                      <optgroup label="Money-Line">
-                        <option value={this.state.home_team.short_name + "/MoneyLine"}>{this.state.home_team.short_name}</option>
-                        <option value={this.state.away_team.short_name + "/MoneyLine"}>{this.state.away_team.short_name}</option>
-                      </optgroup>
-                      <optgroup label="Spread">
-                        <option value={this.state.home_team.short_name + "/Spread"}>{this.state.home_team.short_name}</option>
-                        <option value={this.state.home_team.short_name + "/Spread"}>{this.state.away_team.short_name}</option>
-                      </optgroup>
-                    </select>
-                    <label>Team and Type of Wager</label>
-                  </div>
-                  <div className="input-field col s3">
-                    <select>
-                      {this.state.my_leauges.map(row => (
-                        <option value={row._id}>{row.league.name}</option>
-                      ))}
-                    </select> 
-                    <label>League</label>
-                  </div>
-                  <div className="input-field inline col s3">
-                    <input
-                      onChange={this.onChange}
-                      value={this.state.amount}
-                      error={errors.amount}
-                      id="amount"
-                      type="number"
-                      className={classnames('', { invalid: errors.amount })}
-                    />
-                    <label htmlFor="amount">Amount</label>
-                    <span className="red-text">{errors.amount}</span>
-                  </div>
-                  <div className="col s3" style={{ paddingLeft: "30px" }}>
-                    {button}
+                  <div className="odds-container">
+                    <div className="col s3">
+                      <div className="section">
+                        <div className={this.state.money_line_home > 0 ? "odds-green" : "odds-red"}>
+                          <div className="money-line">
+                            <span className="money-line-odds" title="money-line-odds">{this.renderPositiveOdds(this.state.money_line_home)}</span>
+                          </div>
+                        </div> 
+                      </div>                   
+                      <div className="section">
+                        <div className={this.state.spread_home > 0 ? "odds-green" : "odds-red"}>
+                          <div className="spread">
+                            <span className="spread-odds" title="spread-odds">{this.renderPositiveOdds(this.state.spread_home/1000)} K</span>
+                          </div>
+                        </div> 
+                      </div>
+                    </div>
+                    <div className="col s3">
+                      <div className="section"> 
+                        <div className="odds-label">
+                          <span className="money-line">Money Line</span>
+                        </div>
+                      </div>                   
+                      <div className="section">
+                        <div className="odds-label">
+                          <div className="row parenthesis">
+                            <span className="spread">Spread</span>
+                          </div> 
+                          <div className="row parenthesis">
+                            <span className="spread">(Total Gold)</span>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+                    <div className="col s3">
+                      <div className="section">
+                        <div className={this.state.money_line_away > 0 ? "odds-green" : "odds-red"}>
+                          <div className="money-line">
+                            <span className="money-line-odds">{this.renderPositiveOdds(this.state.money_line_away)}</span>
+                          </div>
+                        </div> 
+                      </div>
+                      <div className="section">
+                        <div className={this.state.spread_away > 0 ? "odds-green" : "odds-red"}>
+                          <div className="spread">
+                            <span className="spread-odds">{this.renderPositiveOdds(this.state.spread_away/1000)} K</span>
+                          </div>
+                        </div> 
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+              
+                
+              <div className="divider"></div>
+              {wager_section}
             </form>
           </div>
         </div>

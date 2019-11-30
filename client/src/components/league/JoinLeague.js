@@ -84,7 +84,6 @@ class JoinLeague extends Component {
         current_players: res,
         current_player_count: res.length
       });
-      console.log(this.state.current_players.length);
     });
 
     await this.props.checkCurrentUserMembership(userData).then(res => {
@@ -115,28 +114,32 @@ class JoinLeague extends Component {
     }
 
     if ((this.state.current_players.length > 0)) {
-      table = <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <h5>
-                  <b>League</b> Users
-                </h5>
-                <table className="highlight minwidth: 650" aria-label="simple table">
-                  <thead>
-                    <tr>
-                      <th>Username</th>
-                      <th align="right">Current Bankroll</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.current_players.map(row => (
-                      <tr key={row.user_id}>
-                        <td component="th" scope="row">
-                            {row.username}
-                        </td>
-                        <td align="right">{row.user_bankroll}</td>
+      table = <div className="section">
+                <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                  <h5>
+                    <span className="sub-title">Leaderboard</span>
+                  </h5>
+                </div>
+                <div className="col s6 offset-s3">
+                  <table className="highlight minwidth: 650" aria-label="simple table">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th className="right-align">Current Bankroll</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {this.state.current_players.map(row => (
+                        <tr key={row.user_id}>
+                          <td component="th" scope="row" align="right">
+                              {row.username}
+                          </td>
+                          <td className="right-align">{row.user_bankroll}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
     }
 
@@ -152,116 +155,104 @@ class JoinLeague extends Component {
                 <b>League</b> Information
               </h4>
             </div>
-            <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.name}
-                  value={this.state.name}
-                  error={errors.name}
-                  id="name"
-                  type="text"
-                  className={classnames('', { invalid: errors.name })}
-                />
-                <label htmlFor="name">League Name</label>
-                <span className="red-text">{errors.name}</span>
+            <div className="section">
+              <div className="row">
+                {table}
               </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.game}
-                  value={this.state.game}
-                  error={errors.game}
-                  id="game"
-                  type="text"
-                  className={classnames('', { invalid: errors.game })}
-                />
-                <label htmlFor="name">Games Covered</label>
-                <span className="red-text">{errors.game}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.leagues_supported}
-                  value={this.state.leagues_supported}
-                  error={errors.leagues_supported}
-                  id="leagues_supported"
-                  type="text"
-                  className={classnames('', { invalid: errors.leagues_supported })}
-                />
-                <label htmlFor="name">Leagues Supported</label>
-                <span className="red-text">{errors.leagues_supported}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.current_player_count}
-                  value={this.state.current_player_count}
-                  error={errors.current_player_count}
-                  id="current_player_count"
-                  type="number"
-                  className={classnames('', { invalid: errors.current_player_count })}
-                />
-                <label htmlFor="name">Current Number of Players</label>
-                <span className="red-text">{errors.max_players}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.max_players}
-                  value={this.state.max_players}
-                  error={errors.max_players}
-                  id="max_players"
-                  type="number"
-                  className={classnames('', { invalid: errors.max_players })}
-                />
-                <label htmlFor="name">Max Number of Players</label>
-                <span className="red-text">{errors.max_players}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.starting_cash}
-                  value={this.state.starting_cash}
-                  error={errors.starting_cash}
-                  id="starting_cash"
-                  type="number"
-                  className={classnames('', { invalid: errors.starting_cash })}
-                />
-                <label htmlFor="name">Starting Bankroll</label>
-                <span className="red-text">{errors.starting_cash}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.private_league}
-                  value={this.state.private_league}
-                  error={errors.private_league}
-                  id="private_league"
-                  type="text"
-                  className={classnames('', { invalid: errors.private_league })}
-                />
-                <label htmlFor="name">Private League</label>
-                <span className="red-text">{errors.private_league}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  readOnly
-                  placeholder={this.state.season_in_progress}
-                  value={this.state.season_in_progress}
-                  error={errors.season_in_progress}
-                  id="season_in_progress"
-                  type="text"
-                  className={classnames('', { invalid: errors.season_in_progress })}
-                />
-                <label htmlFor="name">Season in Progress</label>
-                <span className="red-text">{errors.season_in_progress}</span>
-              </div>
-              {table}
+            </div>
+            <div className="divider"></div>
+            <div className="section">
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                {button}
+                <h5>
+                  <span className="sub-title">Details</span>
+                </h5>
               </div>
-            </form>
+              <div className="league-info">
+                <div className="col s2">
+                  <div className="row">
+                    <span className="league-info-label">
+                      Name:
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-label">
+                      Game:
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-label">
+                      Tournaments:
+                    </span>
+                  </div>
+                </div>
+                <div className="col s4 league-info-value-container">
+                  <div className="row">
+                    <span className="league-info-value">
+                      {this.state.name}
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-value">
+                      {this.state.game}
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-value">
+                      {this.state.leagues_supported.map(row => (
+                        <img src={process.env.PUBLIC_URL + row.tournament_logo} height="25px" width="25px" />
+                      ))}
+                    </span>
+                  </div>
+                </div>
+                <div className="col s3 league-label-container">
+                  <div className="row">
+                    <span className="league-info-label">
+                      Players:
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-label">
+                      Starting Bankroll:
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-label">
+                      Private:
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-label">
+                      In-Progress:
+                    </span>
+                  </div>
+                </div>
+                <div className="col s3 league-info-value-container">
+                  <div className="row">
+                    <span className="league-info-value">
+                      {this.state.current_player_count} / {this.state.max_players}
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-value">
+                      ${this.state.starting_cash}
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-value">
+                      {this.state.private_league}
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="league-info-value">
+                      {this.state.season_in_progress}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+              {button}
+            </div>
           </div>
         </div>
       </div>

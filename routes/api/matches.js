@@ -37,6 +37,7 @@ router.post("/createMatch", (req, res) => {
                     spread_away: req.body.spread_away,
                     winning_id: req.body.winning_id,
                     losing_id: req.body.losing_id,
+                    gold_difference: req.body.gold_difference,
                     match_date: req.body.match_date
                   });
             
@@ -132,10 +133,10 @@ router.delete("/deleteMatch", (req, res) => {
 
 });
 
-// @route PUT api/matches/:id/updateMatch
+// @route PUT api/matches/:id/updateMatchOdds
 // @desc Update a match by id
 // @access public
-router.put("/:id/updateMatch", (req, res) => {
+router.put("/:id/updateMatchOdds", (req, res) => {
 
   var id = req.params.id;
   
@@ -203,7 +204,8 @@ router.put("/:id/setResult", (req, res) => {
     } else {
       Match.updateOne({ _id: id }, {
         winning_id: req.body.winning_id,
-        losing_id: req.body.losing_id
+        losing_id: req.body.losing_id,
+        gold_difference: req.body.gold_difference
       }, function(err, affected, res) {
         console.log(res);
       })

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getMyLeagues, showLeague } from "../../actions/leagueActions";
+import { getMyLeagues, showLeague, getCurrentPlayers } from "../../actions/leagueActions";
 
 
 const isEmpty = require("is-empty");
@@ -19,16 +19,19 @@ class MyLeagues extends Component {
 
   async componentDidMount() {
     var current_bankroll;
+    var current_player_count;
     await this.props.getMyLeagues(this.props.auth.user.id).then(res => {
       res.forEach(row => {
-        current_bankroll = row.user_bankroll
-        this.props.showLeague(row.league_id).then(res => {
-          res.bankroll = current_bankroll;
-          this.setState({ 
-            search_results: this.state.search_results.concat(res)
+        this.props.getCurrentPlayers(row.league._id).then(player_res => {
+          this.props.showLeague(row.league._id).then(res => {
+            res.bankroll = row.user_bankroll;
+            res.current_player_count = player_res.length;
+            this.setState({ 
+              search_results: this.state.search_results.concat(res)
+            });
           });
         });
-      })
+      });
     });
   };
 
@@ -64,9 +67,13 @@ class MyLeagues extends Component {
                         {row.name}
                       </Link>
                     </td>
-                    <td align="right">{row.max_players}</td>
+                    <td align="right">{row.current_player_count}</td>
                     <td align="right">{row.game}</td>
-                    <td align="right">{row.leagues_supported}</td>
+                    <td align="right">
+                      {row.leagues_supported.map(sub_row => (
+                        <img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" />
+                      ))}
+                    </td>
                     <td align="right">{row.bankroll}</td>
                   </tr>
                 ))}
@@ -82,6 +89,7 @@ class MyLeagues extends Component {
 MyLeagues.propTypes = {
   getMyLeagues: PropTypes.func.isRequired,
   showLeague: PropTypes.func.isRequired,
+  getCurrentPlayers: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -89,4 +97,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getMyLeagues, showLeague })(MyLeagues);
+export default connect(mapStateToProps, { getMyLeagues, showLeague, getCurrentPlayers })(MyLeagues);

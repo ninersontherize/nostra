@@ -39,6 +39,10 @@ const MatchSchema = new Schema({
     type: String,
     required: false
   },
+  gold_difference: {
+    type: Number,
+    required: false
+  },
   match_date: {
     type: Date,
     required: true

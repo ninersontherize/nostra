@@ -104,83 +104,98 @@ class CreateLeague extends Component {
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4>
-                <b>Create</b> your league below
+                <b>Create</b> a league
               </h4>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.name}
-                  error={errors.name}
-                  id="name"
-                  type="text"
-                  className={classnames('', { invalid: errors.name })}
-                />
-                <label htmlFor="name">League Name</label>
-                <span className="red-text">{errors.name}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.max_players}
-                  error={errors.max_players}
-                  id="max_players"
-                  type="number"
-                  className={classnames('', { invalid: errors.max_players })}
-                />
-                <label htmlFor="name">Number of Players</label>
-                <span className="red-text">{errors.max_players}</span>
-              </div>
-              <div>
-              <label component="legend">Choose which leagues you'll be able to place bets on</label>
-                <p>
-                  <label>
-                    <input type="checkbox" color="primary" name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />
-                    <span>LCS</span>
-                  </label>
-                </p>
-                <p>
-                  <label>
-                    <input type="checkbox" color="primary" name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />
-                    <span>LEC</span>
-                  </label>
-                </p>
-              </div>
-              <div className="switch">
-                <label>
-                  Public
-                  <input type="checkbox" color="primary" name="private" checked={this.state.private} onChange={this.handleSwitchChange} value="private" 
-                  label="Private" />
-                  <span className="lever"></span>
-                  Private
-                </label>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  placeholder={this.starting_cash}
-                  onChange={this.onChange}
-                  value={this.state.starting_cash}
-                  error={errors.starting_cash}
-                  id="starting_cash"
-                  type="number"
-                  className={classnames('', { invalid: errors.starting_cash })}
-                />
-                <label htmlFor="name">Starting Bankroll</label>
-                <span className="red-text">{errors.starting_cash}</span>
-              </div>
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <button
-                  style={{
-                    width: "250px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem"
-                  }}
-                  type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3">
-                    Create League
-                  </button>
+              <div className="section">
+                <div className="row row-input-field">
+                  <div className="input-field col s8 offset-s2">
+                    <input
+                      onChange={this.onChange}
+                      value={this.state.name}
+                      error={errors.name}
+                      id="name"
+                      type="text"
+                      className={classnames('', { invalid: errors.name })}
+                    />
+                    <label htmlFor="name">League Name</label>
+                    <span className="red-text">{errors.name}</span>
+                  </div>
+                </div>
+                <div className="row row-input-field-bottom">
+                  <div className="input-field col s8 offset-s2">
+                    <input
+                      onChange={this.onChange}
+                      value={this.state.max_players}
+                      error={errors.max_players}
+                      id="max_players"
+                      type="number"
+                      className={classnames('', { invalid: errors.max_players })}
+                    />
+                    <label htmlFor="name">Number of Players</label>
+                    <span className="red-text">{errors.max_players}</span>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="create-league-checkbox-container">
+                    <label component="legend">Select which leagues you'll be able to place bets on</label>
+                      <p>
+                        <label>
+                          <input type="checkbox" color="primary" name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />
+                          <span><img src={process.env.PUBLIC_URL + "/lcs/lcs_logo.png"} height="25px" width="25px" /></span>
+                        </label>
+                      </p>
+                      <p>
+                        <label>
+                          <input type="checkbox" color="primary" name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />
+                          <span><img src={process.env.PUBLIC_URL + "/lec/lec_logo.png"} height="25px" width="25px" /></span>
+                        </label>
+                      </p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="switch">
+                    <label>
+                      Public
+                      <input type="checkbox" color="primary" name="private" checked={this.state.private} onChange={this.handleSwitchChange} value="private" 
+                      label="Private" />
+                      <span className="lever"></span>
+                      Private
+                    </label>
+                  </div>
+                </div>
+                <div className="row row-input-field">
+                  <div className="input-field col s8 offset-s2">
+                    <input
+                      placeholder={this.starting_cash}
+                      onChange={this.onChange}
+                      value={this.state.starting_cash}
+                      error={errors.starting_cash}
+                      id="starting_cash"
+                      type="number"
+                      className={classnames('', { invalid: errors.starting_cash })}
+                    />
+                    <label htmlFor="name">Starting Bankroll</label>
+                    <span className="red-text">{errors.starting_cash}</span>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                    <button
+                      style={{
+                        width: "250px",
+                        borderRadius: "3px",
+                        letterSpacing: "1.5px",
+                        marginTop: "1rem"
+                      }}
+                      type="submit"
+                      className="btn waves-effect waves-light hoverable blue accent-3">
+                        Create League
+                      </button>
+                  </div>
+                </div>
+
               </div>
             </form>
           </div>
