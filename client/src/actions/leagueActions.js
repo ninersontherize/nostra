@@ -120,4 +120,4 @@ export const checkCurrentUserMembership = userData => dispatch => {
         payload: err.response.data
       })
     );
-}
+};

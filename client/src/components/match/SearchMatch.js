@@ -104,7 +104,7 @@ class SearchMatch extends Component {
               <thead>
                 <tr>
                   <th align="right">League</th>
-                  <th className="align-left" marginLeft="60px">Match</th>
+                  <th className="align-left">Match</th>
                   <th className="align-left">Money Line</th>
                   <th className="align-left">Spread</th>
                   <th className="align-left">Match Date</th>
