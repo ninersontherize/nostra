@@ -210,9 +210,23 @@ router.put("/:id/setResult", (req, res) => {
         console.log(res);
       })
       .then(() => {
-        console.log("result saved");
-        res.status(200).send({ message: "result saved successfully" });
-      })
+        Team.findOne({ _id: req.body.winning_id }).then( winning_team => {
+          Team.updateOne({ _id: req.body.winning_id }, {
+            wins: winning_team.wins+1 
+          }, function(err, affected, res) {
+            console.log(res);
+          });
+          Team.findOne({ _id: req.body.losing_id }).then( losing_team => {
+            Team.updateOne({ _id: req.body.losing_id }, {
+              losses: losing_team.losses+1
+            }, function(err, affected, res) {
+              console.log(res);
+            });
+            console.log("result saved");
+            res.status(200).send({ message: "result saved successfully" });
+          });
+        });   
+      });
     }
   });
 

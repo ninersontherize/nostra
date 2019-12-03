@@ -33,6 +33,9 @@ class Dashboard extends Component {
               <p className="flow-text grey-text text-darken-1">
                   <Link to="/myLeagues"><b>My</b> Leagues</Link>
               </p>
+              <p className="flow-text grey-text text-darken-1">
+                  <Link to="/myWagers"><b>My</b> Wagers</Link>
+              </p>
             </h4>
             <button
               style={{

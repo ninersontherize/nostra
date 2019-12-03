@@ -3,20 +3,24 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const WagerSchema = new Schema({
-  user_league: {
-    type: Object,
+  user_league_id: {
+    type: String,
+    required: true
+  },
+  match_id: {
+    type: String,
     required: true
   },
   match: {
     type: Object,
     required: true
-  }, 
+  },
   team_id: {
     type: String,
     required: true
   },
   amount: {
-    type: String,
+    type: Number,
     required: true
   },
   wager_type: {

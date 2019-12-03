@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { showMatch } from "../../actions/matchActions";
+import { showMatch, updateMatchTeams } from "../../actions/matchActions";
 import { getMyLeagues } from "../../actions/leagueActions";
 import { createWager } from "../../actions/wagerActions";
 import classnames from "classnames"
@@ -87,6 +87,8 @@ class ShowMatch extends Component {
   };
 
   async componentDidMount() {
+
+    await this.props.updateMatchTeams(this.props.match.params.match_id);
 
     await this.props.showMatch(this.props.match.params.match_id).then(res => {
       this.setState({ 
@@ -328,6 +330,7 @@ class ShowMatch extends Component {
 ShowMatch.propTypes = {
   showMatch: PropTypes.func.isRequired,
   getMyLeagues: PropTypes.func.isRequired,
+  updateMatchTeams: PropTypes.func.isRequired,
   createWager: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
@@ -338,4 +341,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager })(withRouter(ShowMatch));
+export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager, updateMatchTeams })(withRouter(ShowMatch));

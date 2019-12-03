@@ -23,7 +23,6 @@ router.post("/createLeague", (req, res) => {
   var items_processed = 0;
   var tournaments = [];
   var new_league = {};
-  var req_leagues = [];
   req_leauges = req.body.leagues_supported;
 
   User.findOne({ _id: creating_user_id }).then(user => {
@@ -34,9 +33,7 @@ router.post("/createLeague", (req, res) => {
         req.body.leagues_supported.forEach(element => {
           Tournament.findOne({ name: element }).then( tournament => {
             items_processed++;
-            console.log(tournament);
             tournaments = tournaments.concat(tournament);
-            console.log(tournaments);
 
             if(items_processed === req.body.leagues_supported.length) {
               console.log(items_processed);
@@ -187,22 +184,25 @@ router.put("/:id/startSeason", (req, res) => {
     if (!league) {
       return res.status(404).json({ league: "That id does not exist, season start failed" });
     } else {
-      league_starting_cash = league.starting_cash;
-      UserLeague.updateMany({ league_id: id }, {
-        user_bankroll: league_starting_cash
-      }, function(err, affected, res) {
-        console.log(res);
-      });
+      if (league.in_progress === true) {
+        return res.status(400).json({ league: "League is already in progress!" });
+      } else {
+        UserLeague.updateMany({ "league.name": league.name }, {
+          user_bankroll: league.starting_cash
+        }, function(err, affected, res) {
+          console.log(res);
+        });
 
-      League.updateOne({ _id: id }, {
-        in_progress: true
-      }, function(err, affected, res) {
-        console.log(res);
-      })
-      .then(() => {
-        console.log("Season Started!");
-        res.status(200).send({ message: "Season started successfully!" });
-      });
+        League.updateOne({ _id: id }, {
+          in_progress: true
+        }, function(err, affected, res) {
+          console.log(res);
+        })
+        .then(() => {
+          console.log("Season Started!");
+          res.status(200).send({ message: "Season started successfully!" });
+        });
+      }
     }
   });
 
@@ -310,7 +310,7 @@ router.get("/getCurrentPlayers", (req, res) => {
   console.log(league_id);
 
   League.findOne({ _id: league_id }).then(league => {
-    UserLeague.find({ "league.name": league.name }).then(players => {
+    UserLeague.find({ "league.name": league.name }).sort({user_bankroll: -1}).then(players => {
       return res.status(200).json(players);
     });
   });
@@ -372,6 +372,23 @@ router.put("/updateBankroll", (req, res) => {
     }
   });
   
+});
+
+// @route GET api/leagues/:id/userLeagues
+// @desc show a single user_league given an id
+// @access public
+router.get("/:id/userLeague", (req, res) => {
+
+  var id = req.params.id;
+
+  UserLeague.findOne({ _id: id }).then( user_league => {
+    if (!user_league) {
+      return res.status(404).json({ user_league: "UserLeague cannot be found, please try again."});
+    } else {
+      res.json(user_league);
+    }
+  }).catch(err => console.log(err));
+
 });
 
 module.exports = router;
