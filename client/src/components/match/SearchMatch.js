@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { searchMatch, searchMatchByDateRange } from "../../actions/matchActions";
 import classnames from "classnames"
+import queryString from "query-string"
 
 const isEmpty = require("is-empty");
 
@@ -49,8 +50,19 @@ class SearchMatch extends Component {
     }
   };
 
+  UNSAFE_componentWillReceiveProps = nextProps => {
+    if(nextProps.location.key !== this.props.location.key) {
+      window.location.reload();
+    }
+  }
+
   componentDidMount() {
-    this.props.searchMatch().then(res => {
+    const search_values = queryString.parse(this.props.location.search);
+    var search;
+
+    search_values.search === undefined ? search = null : search = search_values.search;
+    
+    this.props.searchMatch(search).then(res => {
       this.setState({ search_results: res });
     });
   };
@@ -103,28 +115,36 @@ class SearchMatch extends Component {
             <table className="highlight minwidth: 750" aria-label="simple table">
               <thead>
                 <tr>
-                  <th align="right">League</th>
-                  <th className="align-left">Match</th>
-                  <th className="align-left">Money Line</th>
-                  <th className="align-left">Spread</th>
-                  <th className="align-left">Match Date</th>
-                  <th className="align-left"></th>
+                  <th>League</th>
+                  <th className="center-align">Match</th>
+                  <th className="right-align">Money Line</th>
+                  <th className="right-align">Spread</th>
+                  <th className="right-align">Match Date</th>
+                  <th className="right-align"></th>
                 </tr>
               </thead>
               <tbody>
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
-                    <td align="right"><img width="40px" height="40px" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} /></td>
-                    <td component="th" scope="row">
+                    <td>
+                    <Link to={`/searchMatch?search=${row.tournament.name}`}>   
+                      <img width="40px" height="40px" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
+                    </Link>
+                    </td>
+                    <td className="center-align" component="th" scope="row">
                       <span>
-                      <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                      <Link to={`/searchMatch?search=${row.home_team.short_name}`}> 
+                        <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                      </Link>
                       </span>
                       <span className="versus-small">vs.</span>
                       <span>
+                      <Link to={`/searchMatch?search=${row.away_team.short_name}`}>   
                         <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
+                      </Link>
                       </span>
                     </td>
-                    <td className="align-right">
+                    <td className="right-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.home_team.short_name}: </span> 
                         <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.money_line_home)}</span> 
@@ -134,18 +154,18 @@ class SearchMatch extends Component {
                         <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.money_line_away)}</span>
                       </div>
                     </td>
-                    <td className="align-right">
+                    <td className="right-align">
                       <div className="row search-info-row-container">
-                          <span className="search-info-label">{row.home_team.short_name}: </span> 
-                          <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.spread_home/1000)} K</span> 
-                        </div>
-                        <div className="row search-info-row-container">
-                          <span className="search-info-label">{row.away_team.short_name}: </span>
-                          <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.spread_away/1000)} K</span>
-                        </div>
-                      </td>
-                    <td className="align-right">{new Date(row.match_date).toDateString()}</td>
-                    <td className="align-right"><Link to={`/showMatch/${row._id}`}>More Info</Link></td>
+                        <span className="search-info-label">{row.home_team.short_name}: </span> 
+                        <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.spread_home/1000)} K</span> 
+                      </div>
+                      <div className="row search-info-row-container">
+                        <span className="search-info-label">{row.away_team.short_name}: </span>
+                        <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.spread_away/1000)} K</span>
+                      </div>
+                    </td>
+                    <td className="right-align">{new Date(row.match_date).toDateString()}</td>
+                    <td className="right-align"><Link to={`/showMatch/${row._id}`}>More Info</Link></td>
                   </tr>
                 ))}
               </tbody>

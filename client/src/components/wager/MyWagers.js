@@ -84,11 +84,11 @@ class MyWagers extends Component {
               <thead>
                 <tr>
                   <th>League Name</th>
-                  <th className="align-right">Match</th>
-                  <th className="align-right">Amount</th>
-                  <th className="align-right">Team</th>
-                  <th className="align-right">Odds</th>
-                  <th className="align-right">Win</th>
+                  <th className="center-align">Match</th>
+                  <th className="right-align">Amount</th>
+                  <th className="right-align">Team</th>
+                  <th className="right-align">Odds</th>
+                  <th className="right-align">Win</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,7 +99,7 @@ class MyWagers extends Component {
                         {row.league_name}
                       </Link>
                     </td>
-                    <td component="th" scope="row">
+                    <td className="center-align" component="th" scope="row">
                       <Link to={`showMatch/${row.match_id}`}>
                         <span>
                           <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
@@ -110,9 +110,9 @@ class MyWagers extends Component {
                         </span>
                       </Link>
                     </td>
-                    <td className="align-right">${row.amount}</td>
-                    <td align="right"><img width="60px" height="25px" src={process.env.PUBLIC_URL + row.team_logo} /></td>
-                    <td className="align-right">
+                    <td className="right-align">${row.amount}</td>
+                    <td className="right-align"><img width="60px" height="25px" src={process.env.PUBLIC_URL + row.team_logo} /></td>
+                    <td className="right-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{this.renderOddType(row.wager_type)}</span>
                       </div>
@@ -120,7 +120,7 @@ class MyWagers extends Component {
                         <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
                       </div>
                     </td>
-                    <td className="align-right">{this.renderWin(row.win, row.closed)}</td>
+                    <td className="right-align">{this.renderWin(row.win, row.closed)}</td>
                   </tr>
                 ))}
               </tbody>

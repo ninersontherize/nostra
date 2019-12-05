@@ -186,3 +186,61 @@
 .search-title {
   float: right;
 }
+
+.dash-sub-title {
+  font-weight: lighter;
+  font-size: 28px;
+}
+
+.dash-table {
+  font-size: 14px;
+  font-weight: lighter;
+}
+
+.dash-table-center {
+  font-size: 14px;
+  font-weight: lighter;
+}
+
+.dash-text-container {
+  height: 0;
+  padding: 0;
+}
+
+.dash-info-label {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.dash-info-value-green {
+  font-weight: lighter;
+  font-size: 14px;
+  color: green;
+}
+
+.dash-info-value-red {
+  font-weight: lighter;
+  font-size: 14px;
+  color: red;
+}
+
+.dash-table-container {
+  border-left: 1px solid lightgray;
+  height: 500px;
+}
+
+.dash-link {
+  color: black;
+}
+
+.dash-link:hover {
+  color: lightblue;
+}
+
+.dash-league-name {
+  font-size: 12px;
+}
+
+.dash-row {
+  line-height: 12px;
+}

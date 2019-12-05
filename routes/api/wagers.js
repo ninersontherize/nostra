@@ -40,7 +40,8 @@ router.post("/createWager", (req, res) => {
   
               new_wager.save().then(wager => {
                 UserLeague.updateOne({_id: user_league._id}, {
-                  user_bankroll: user_league.user_bankroll - req.body.wager_amount
+                  user_bankroll: (user_league.user_bankroll - req.body.wager_amount),
+                  bankroll_percent_change: ((((user_league.user_bankroll - req.body.wager_amount)/user_league.league.starting_cash)*100)-100)
                 }, function(err, affected, res) {
                   console.log(res);
                 });
@@ -132,7 +133,8 @@ router.delete("/:id/deleteWager", (req, res) => {
           UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
             var new_bankroll = user_league.user_bankroll + wager.amount;
             UserLeague.updateOne({ _id: user_league._id }, {
-              user_bankroll: new_bankroll
+              user_bankroll: new_bankroll,
+              bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100)
             }, function(err, affected, res) {
                     console.log(res);
             });
@@ -176,7 +178,8 @@ router.put("/:id/resolveWagers", (req, res) => {
                   var new_bankroll = user_league.user_bankroll + payout;
                   
                   UserLeague.updateOne({ _id: user_league.id}, {
-                    user_bankroll: new_bankroll
+                    user_bankroll: new_bankroll,
+                    bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100)
                   }, function(err, affected, res) {
                     console.log(res);
                   });
@@ -208,7 +211,8 @@ router.put("/:id/resolveWagers", (req, res) => {
                   var new_bankroll = user_league.user_bankroll + payout;
                   
                   UserLeague.updateOne({ _id: user_league.id}, {
-                    user_bankroll: new_bankroll
+                    user_bankroll: new_bankroll,
+                    bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100)
                   }, function(err, affected, res) {
                     console.log(res);
                   });
@@ -242,7 +246,8 @@ router.put("/:id/resolveWagers", (req, res) => {
                   var new_bankroll = user_league.user_bankroll + payout;
                   
                   UserLeague.updateOne({ _id: user_league.id}, {
-                    user_bankroll: new_bankroll
+                    user_bankroll: new_bankroll,
+                    bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100)
                   }, function(err, affected, res) {
                     console.log(res);
                   });
@@ -273,7 +278,8 @@ router.put("/:id/resolveWagers", (req, res) => {
                   var new_bankroll = user_league.user_bankroll + payout;
                   
                   UserLeague.updateOne({ _id: user_league.id}, {
-                    user_bankroll: new_bankroll
+                    user_bankroll: new_bankroll,
+                    bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100)
                   }, function(err, affected, res) {
                     console.log(res);
                   });
@@ -293,7 +299,8 @@ router.put("/:id/resolveWagers", (req, res) => {
                   var new_bankroll = user_league.user_bankroll + payout;
                   
                   UserLeague.updateOne({ _id: user_league.id}, {
-                    user_bankroll: new_bankroll
+                    user_bankroll: new_bankroll,
+                    bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100)
                   }, function(err, affected, res) {
                     console.log(res);
                   });

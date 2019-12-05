@@ -18,16 +18,15 @@ class MyLeagues extends Component {
   }
 
   async componentDidMount() {
-    var current_bankroll;
-    var current_player_count;
     await this.props.getMyLeagues(this.props.auth.user.id).then(res => {
       res.forEach(row => {
         this.props.getCurrentPlayers(row.league._id).then(player_res => {
           this.props.showLeague(row.league._id).then(res => {
             res.bankroll = row.user_bankroll;
+            res.bankroll_percent_change = row.bankroll_percent_change;
             res.current_player_count = player_res.length;
             this.setState({ 
-              search_results: this.state.search_results.concat(res)
+              search_results: this.state.search_results.concat(res).sort((a, b) => (a.bankroll_percent_change < b.bankroll_percent_change) ? 1 : -1)
             });
           });
         });
@@ -53,10 +52,11 @@ class MyLeagues extends Component {
               <thead>
                 <tr>
                   <th>League Name</th>
-                  <th align="right">Number of Players</th>
-                  <th align="right">Game</th>
-                  <th align="right">Leagues Supported</th>
-                  <th align="right">Current Bankroll</th>
+                  <th className="right-align">Number of Players</th>
+                  <th className="right-align">Game</th>
+                  <th className="right-align">Leagues Supported</th>
+                  <th className="right-align">Current Bankroll</th>
+                  <th className="right-align">Percent Change</th>
                 </tr>
               </thead>
               <tbody>
@@ -67,14 +67,15 @@ class MyLeagues extends Component {
                         {row.name}
                       </Link>
                     </td>
-                    <td align="right">{row.current_player_count}</td>
-                    <td align="right">{row.game}</td>
-                    <td align="right">
+                    <td className="right-align">{row.current_player_count}</td>
+                    <td className="right-align">{row.game}</td>
+                    <td className="right-align">
                       {row.leagues_supported.map(sub_row => (
-                        <img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" />
+                        <span><img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" /> </span>
                       ))}
                     </td>
-                    <td align="right">{row.bankroll}</td>
+                    <td className="right-align">{row.bankroll}</td>
+                    <td className={row.bankroll_percent_change > 0 ? "search-info-value-green right-align" : "search-info-value-red right-align"}>{row.bankroll_percent_change}%</td>
                   </tr>
                 ))}
               </tbody>

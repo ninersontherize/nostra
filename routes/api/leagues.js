@@ -54,6 +54,7 @@ router.post("/createLeague", (req, res) => {
                   league: league,
                   username: user.username,
                   user_bankroll: league.starting_cash,
+                  bankroll_percent_change: 0
                 });
         
                 new_user_league.save().then(user_league => res.json(user_league)).catch(err => console.log(err));
@@ -271,6 +272,7 @@ router.post("/addUserLeague", (req, res) => {
                 league: league,
                 username: user.username,
                 user_bankroll: league.starting_cash,
+                bankroll_percent_change: 0
               });
     
               new_user_league.save().then(user_league => res.json(user_league)).catch(err => console.log(err));
@@ -351,18 +353,18 @@ router.get("/getMyLeagues", (req, res) => {
 // @route PUT api/leagues/updateBankroll
 // @desc Update bankroll after given win or loss
 // @access public
-router.put("/updateBankroll", (req, res) => {
+router.put("/:id/updateBankroll", (req, res) => {
 
-  var league_id = req.body.league_id;
-  var user_id = req.body.user_id;
   var change = req.body.change;
+  var id = req.params.id;
 
-  UserLeague.findOne({ league_id: league_id, user_id: user_id }).then( user_league => {
+  UserLeague.findOne({ _id: id }).then( user_league => {
     if (!user_league) {
       return res.status(404).json({ user_league: "Submitted user does not exist in that league." });
     } else {
       UserLeague.updateOne({ _id: user_league.id }, { 
-        user_bankroll: (user_league.user_bankroll + change)
+        user_bankroll: (user_league.user_bankroll + change),
+        bankroll_percent_change: ((((user_league.user_bankroll + change)/user_league.league.starting_cash)*100)-100)
       }, function(err, affected, res) {
         console.log(res);
       }).then( user_league => {

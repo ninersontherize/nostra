@@ -125,6 +125,7 @@ class JoinLeague extends Component {
                     <thead>
                       <tr>
                         <th>Username</th>
+                        <th className="right-align">% Change</th>
                         <th className="right-align">Current Bankroll</th>
                       </tr>
                     </thead>
@@ -134,6 +135,7 @@ class JoinLeague extends Component {
                           <td component="th" scope="row" align="right">
                               {row.username}
                           </td>
+                          <td className={row.bankroll_percent_change > 0 ? "search-info-value-green right-align" : "search-info-value-red right-align"}>{row.bankroll_percent_change}%</td>
                           <td className="right-align">{row.user_bankroll}</td>
                         </tr>
                       ))}

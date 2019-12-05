@@ -7,9 +7,9 @@ class Landing extends Component {
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row">
           <div className="col s12 center-align">
-            <h4>
+            <h5>
               Ever feel like you just <b>know</b> who's going to win?
-            </h4>
+            </h5>
             <p className="flow-text grey-text text-darken-1">
               Use strategy and game knowledge to predict wins, bank money, and beat your friends.
             </p>

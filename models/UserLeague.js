@@ -18,6 +18,10 @@ const UserLeagueSchema = new Schema({
   user_bankroll: {
     type: Number,
     required: true
+  },
+  bankroll_percent_change: {
+    type: Number,
+    required: true
   },   
   created_date: {
     type: Date,
