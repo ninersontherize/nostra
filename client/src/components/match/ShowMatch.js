@@ -99,6 +99,14 @@ class ShowMatch extends Component {
     }
   };
 
+  renderMoney = money => {
+    if (money === "") {
+      return
+    } else {
+      return `$${money}`
+    }
+  }
+
   async componentDidMount() {
 
     await this.props.updateMatchTeams(this.props.match.params.match_id);
@@ -163,7 +171,7 @@ class ShowMatch extends Component {
             </h5>
           </div>
           <form noValidate onSubmit={this.onSubmit}>
-            <div className="row">
+            <div className="row wager-info-container">
               <div className="input-field col s3">
                 <select id="wager_info" value={this.state.wager_info} onChange={this.onChange}>
                   <option value="" disabled selected>Team</option>
@@ -199,22 +207,23 @@ class ShowMatch extends Component {
                 <label htmlFor="amount">Amount</label>
                 <span className="red-text">{errors.amount}</span>
               </div>
-              <div className="col s3">
-                  <span className="available-funds">Available Funds: {this.state.available_funds}</span>
+              <div className="input-field inline col s3 available-funds">
+                  <span className="available-funds">Available Funds: {this.renderMoney(this.state.available_funds)}</span>
               </div>
             </div>
-              <div className="col s12" style={{ paddingLeft: "30px" }}>
+            <div className="row">
+              <div className="col s12 wager-submit-button">
                 <button
                   style={{
                   width: "200px",
                   borderRadius: "1px",
                   letterSpacing: "1px",
-                  marginTop: "20%"
                 }}
                 type="submit"
                 className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                   Place Wager
                 </button>
+              </div>
             </div>
           </form>
         </div>

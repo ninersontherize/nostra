@@ -304,3 +304,19 @@
   color: black;
   background-color: white;
 }
+
+.available-funds {
+  font-size: 15px;
+  font-weight: 250;
+  float: left;
+  height: 0%;
+  margin-top: 4%;
+}
+
+.wager-info-container {
+  height: 20px;
+}
+
+.wager-submit-button {
+  padding-top: 0;
+}
