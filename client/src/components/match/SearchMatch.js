@@ -165,7 +165,7 @@ class SearchMatch extends Component {
                       </div>
                     </td>
                     <td className="right-align">{new Date(row.match_date).toDateString()}</td>
-                    <td className="right-align"><Link to={`/showMatch/${row._id}`}>More Info</Link></td>
+                    <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>
                   </tr>
                 ))}
               </tbody>

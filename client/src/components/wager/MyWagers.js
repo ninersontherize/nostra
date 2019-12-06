@@ -95,12 +95,12 @@ class MyWagers extends Component {
                 {this.state.search_results.map(row => (
                   <tr key={row.league_id}>
                     <td component="th" scope="row">
-                      <Link to={`/joinLeague/${row.league_id}`}>
+                      <Link to={`/joinLeague/${row.league_id}`} className="dash-link">
                         {row.league_name}
                       </Link>
                     </td>
                     <td className="center-align" component="th" scope="row">
-                      <Link to={`showMatch/${row.match_id}`}>
+                      <Link to={`showMatch/${row.match_id}`} className="dash-link">
                         <span>
                           <img width="58px" height="24px" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
                         </span>

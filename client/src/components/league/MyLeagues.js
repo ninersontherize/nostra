@@ -76,7 +76,7 @@ class MyLeagues extends Component {
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
                     <td component="th" scope="row">
-                      <Link to={`/joinLeague/${row._id}`}>
+                      <Link to={`/joinLeague/${row._id}`} className="dash-link">
                         {row.name}
                       </Link>
                     </td>

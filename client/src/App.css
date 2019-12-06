@@ -159,13 +159,18 @@
 }
 
 .sub-title {
-  font-weight: 250;
+  font-weight: 200;
   font-size: 33px;
 }
 
 .sub-title-show-match {
-  font-weight: light;
+  font-weight: 200;
   font-size: 30px;
+}
+
+.sub-title-show-match-wager {
+  font-weight: 200;
+  font-size: 25px;
 }
 
 .create-league-checkbox-container {

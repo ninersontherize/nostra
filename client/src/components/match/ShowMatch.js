@@ -165,9 +165,9 @@ class ShowMatch extends Component {
       wager_section = 
       <div className="section">
         <div className="row">
-          <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-            <h5>
-              <b>Place a wager</b>
+          <div className="col s12">
+            <h5 className="sub-title-show-match-wager">
+              Place a wager
             </h5>
           </div>
           <form noValidate onSubmit={this.onSubmit}>
