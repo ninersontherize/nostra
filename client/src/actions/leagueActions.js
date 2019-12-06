@@ -71,6 +71,21 @@ export const getMyLeagues = searchData => dispatch => {
     );
 };
 
+//show info for one specific league
+export const showUserLeague = searchData => dispatch => {
+  return axios
+    .get(`/api/leagues/${searchData}/userLeague`)
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Join a league
 export const joinLeague = (joinData, history) => dispatch => {
   axios

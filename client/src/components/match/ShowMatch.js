@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { showMatch, updateMatchTeams } from "../../actions/matchActions";
-import { getMyLeagues } from "../../actions/leagueActions";
+import { getMyLeagues, showUserLeague } from "../../actions/leagueActions";
 import { createWager } from "../../actions/wagerActions";
 import classnames from "classnames"
 import M from "materialize-css";
@@ -24,11 +24,12 @@ class ShowMatch extends Component {
       losing_id: "",
       gold_difference: "",
       match_date: "",
-      my_leauges: [],
+      my_leagues: [],
       match_complete: false,
       wager_info: "",
       wager_league: "",
       wager_amount: "",
+      available_funds: "",
       errors: {}
     };
   }
@@ -36,6 +37,18 @@ class ShowMatch extends Component {
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
+
+  onLeagueChange = e => {
+    this.setState({ 
+      [e.target.id]: e.target.value
+    });
+
+    this.props.showUserLeague(e.target.value).then(res => {
+      this.setState({
+        available_funds: res.user_bankroll
+      });
+    });
+  }
 
   onSubmit = e => {
     e.preventDefault();
@@ -107,9 +120,21 @@ class ShowMatch extends Component {
     });
 
     await this.props.getMyLeagues(this.props.auth.user.id).then(res => {
-      this.setState({
-        my_leauges: res
-      });
+      res.forEach(row => {
+        var items_processed = 0;
+        var leagues_supported =[];
+        row.league.leagues_supported.forEach(league_row => {
+          items_processed++;
+          leagues_supported = leagues_supported.concat(league_row.name);
+          if (items_processed === row.league.leagues_supported.length) {
+            if (leagues_supported.includes(this.state.tournament.name)) {
+              this.setState({
+                my_leagues: this.state.my_leagues.concat(row)
+              })
+            }
+          }
+        })
+      })
     });
 
     if (this.state.winning_id) {
@@ -124,10 +149,11 @@ class ShowMatch extends Component {
     const{ errors } = this.state;
 
     let wager_section;
+    let available_funds;
     let home_logo = process.env.PUBLIC_URL + this.state.home_team.logo_large;
     let away_logo = process.env.PUBLIC_URL + this.state.away_team.logo_large;
 
-    if ((this.state.match_complete === false)) {
+    if (this.state.match_complete === false) {
       wager_section = 
       <div className="section">
         <div className="row">
@@ -137,53 +163,58 @@ class ShowMatch extends Component {
             </h5>
           </div>
           <form noValidate onSubmit={this.onSubmit}>
-            <div className="input-field col s3">
-              <select id="wager_info" value={this.state.wager_info} onChange={this.onChange}>
-                <option value="" disabled selected>Team</option>
-                <optgroup label="Money-Line">
-                  <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
-                  <option value={this.state.away_team._id + "/money_line"}>{this.state.away_team.short_name}</option>
-                </optgroup>
-                <optgroup label="Spread">
-                  <option value={this.state.home_team._id + "/spread"}>{this.state.home_team.short_name}</option>
-                  <option value={this.state.home_team._id + "/spread"}>{this.state.away_team.short_name}</option>
-                </optgroup>
-              </select>
-              <label>Team and Type of Wager</label>
+            <div className="row">
+              <div className="input-field col s3">
+                <select id="wager_info" value={this.state.wager_info} onChange={this.onChange}>
+                  <option value="" disabled selected>Team</option>
+                  <optgroup label="Money-Line">
+                    <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
+                    <option value={this.state.away_team._id + "/money_line"}>{this.state.away_team.short_name}</option>
+                  </optgroup>
+                  <optgroup label="Spread">
+                    <option value={this.state.home_team._id + "/spread"}>{this.state.home_team.short_name}</option>
+                    <option value={this.state.home_team._id + "/spread"}>{this.state.away_team.short_name}</option>
+                  </optgroup>
+                </select>
+                <label>Team and Type of Wager</label>
+              </div>
+              <div className="input-field col s3">
+                <select id="wager_league" value={this.state.wager_league} onChange={this.onLeagueChange}>
+                  <option value="" disabled selected>League</option>
+                  {this.state.my_leagues.map(row => (
+                    <option value={row._id}>{row.league.name}</option>
+                  ))}
+                </select> 
+                <label>League</label>
+              </div>
+              <div className="input-field inline col s3">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.wager_amount}
+                  error={errors.wager_amount}
+                  id="wager_amount"
+                  type="number"
+                  className={classnames('', { invalid: errors.wager_amount })}
+                />
+                <label htmlFor="amount">Amount</label>
+                <span className="red-text">{errors.amount}</span>
+              </div>
+              <div className="col s3">
+                  <span className="available-funds">Available Funds: {this.state.available_funds}</span>
+              </div>
             </div>
-            <div className="input-field col s3">
-              <select id="wager_league" value={this.state.wager_league} onChange={this.onChange}>
-                <option value="" disabled selected>League</option>
-                {this.state.my_leauges.map(row => (
-                  <option value={row._id}>{row.league.name}</option>
-                ))}
-              </select> 
-              <label>League</label>
-            </div>
-            <div className="input-field inline col s3">
-              <input
-                onChange={this.onChange}
-                value={this.state.wager_amount}
-                error={errors.wager_amount}
-                id="wager_amount"
-                type="number"
-                className={classnames('', { invalid: errors.wager_amount })}
-              />
-              <label htmlFor="amount">Amount</label>
-              <span className="red-text">{errors.amount}</span>
-            </div>
-            <div className="col s3" style={{ paddingLeft: "30px" }}>
-              <button
-                style={{
-                width: "200px",
-                borderRadius: "1px",
-                letterSpacing: "1px",
-                marginTop: "20%"
-              }}
-              type="submit"
-              className="btn waves-effect waves-light hoverable blue accent-3">
-                Place Wager
-              </button>
+              <div className="col s12" style={{ paddingLeft: "30px" }}>
+                <button
+                  style={{
+                  width: "200px",
+                  borderRadius: "1px",
+                  letterSpacing: "1px",
+                  marginTop: "20%"
+                }}
+                type="submit"
+                className="btn btn-flat waves-effect waves-light hoverable nostra-button">
+                  Place Wager
+                </button>
             </div>
           </form>
         </div>
@@ -213,7 +244,7 @@ class ShowMatch extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>Match</b> Information
               </h4>
             </div>
@@ -332,6 +363,7 @@ ShowMatch.propTypes = {
   getMyLeagues: PropTypes.func.isRequired,
   updateMatchTeams: PropTypes.func.isRequired,
   createWager: PropTypes.func.isRequired,
+  showUserLeague: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -341,4 +373,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager, updateMatchTeams })(withRouter(ShowMatch));
+export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager, updateMatchTeams, showUserLeague })(withRouter(ShowMatch));

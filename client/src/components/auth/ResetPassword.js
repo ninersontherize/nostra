@@ -66,7 +66,7 @@ class ResetPassword extends Component {
                 <i className="material-icons left">keyboard_backspace</i> Back to Home
               </Link>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <h4>
+                <h4 className="header-text">
                   <b>Oops</b> Something went wrong
                 </h4>
                 <p className="grey-text text-darken-1">
@@ -86,7 +86,7 @@ class ResetPassword extends Component {
                 <i className="material-icons left">keyboard_backspace</i> Back to Home
               </Link>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <h4>
+                <h4 className="header-text">
                   <b>Enter</b> a new password
                 </h4>
                 <p className="grey-text text-darken-1">
@@ -131,7 +131,7 @@ class ResetPassword extends Component {
                       marginTop: "1rem"
                     }}
                     type="submit"
-                    className="btn btn-large waves-effect waves-light hoverable blue accent-3">
+                    className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                       Confirm Password
                     </button>
                 </div>

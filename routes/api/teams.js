@@ -44,7 +44,7 @@ router.post("/createTeam", (req, res) => {
 // @access public
 router.get("/teams", (req, res) => {
 
-  if ( isEmpty(req.query) ) {
+  if ( isEmpty(req.query || req.query.search === "" ) ) {
     Team.find().then( teams => res.json(teams)).catch(err => console.log(err));
   } else {
     Team.find({$or: [{ name: new RegExp(req.query.search) }, { tournament_name: new RegExp(req.query.search) }] })

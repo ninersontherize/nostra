@@ -81,7 +81,7 @@ router.post("/createLeague", (req, res) => {
 // @access public
 router.get("/leagues", (req, res) => {
 
-  if ( isEmpty(req.query) ) {
+  if ( isEmpty(req.query) || req.query.search === "" ) {
     League.find().then( leagues => res.json(leagues)).catch(err => console.log(err));
   } else {
     League.find({ name: new RegExp(req.query.search) }).then( leagues => res.json(leagues)).catch(err => console.log(err));
@@ -244,6 +244,23 @@ router.get("/userLeagues", (req, res) => {
   } else {
     UserLeague.find({ league_id: req.query.search }).then( user_leagues => res.json(user_leagues)).catch(err => console.log(err));
   }
+
+});
+
+// @route GET api/leagues/:id/leagues
+// @desc show a single userLeague through id
+// @access public
+router.get("/:id/userLeague", (req, res) => {
+
+  var id = req.params.id;
+
+  UserLeague.findOne({ _id: id }).then( user_league => {
+    if (!user_league) {
+      return res.status(404).json({ user_league: "League cannot be found, please try again."});
+    } else {
+      res.json(user_league);
+    }
+  }).catch(err => console.log(err));
 
 });
 

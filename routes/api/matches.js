@@ -60,7 +60,7 @@ router.post("/createMatch", (req, res) => {
 // @access public
 router.get("/matches", (req, res) => {
 
-  if ( isEmpty(req.query) ) {
+  if ( isEmpty(req.query || req.query.search === "" ) ) {
     Match.find().sort({match_date: 1}).then(matches => res.json(matches)).catch(err => console.log(err));
   } else {
     if (isNaN(Date.parse(req.query.search))) {

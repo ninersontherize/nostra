@@ -43,23 +43,36 @@ class MyLeagues extends Component {
             <Link to="/dashboard" className="btn-flat waves-effect">
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
-            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+            <div className="row col s12">
+              <h4 className="header-text">
                 <b>My</b> Leagues
               </h4>
+            </div> 
+            <div className="row">
+              <div className="col s4 offset-s2">
+                <Link to="/searchLeague" className="btn btn-flat waves-light waves-effect hoverable nostra-button">
+                  Search for League
+                </Link>
+              </div>
+              <div className="col s4">
+                <Link to="/createLeague" className="btn btn-flat waves-light waves-effect hoverable nostra-button">
+                  Create League
+                </Link>
+              </div>
             </div>
-            <table className="highlight minwidth: 650" aria-label="simple table">
-              <thead>
+            <div className="divider"></div>
+            <table className="highlight long-table">
+              <thead className="long-table">
                 <tr>
                   <th>League Name</th>
-                  <th className="right-align">Number of Players</th>
-                  <th className="right-align">Game</th>
-                  <th className="right-align">Leagues Supported</th>
-                  <th className="right-align">Current Bankroll</th>
+                  <th className="center-align">Number of Players</th>
+                  <th className="center-align">Game</th>
+                  <th className="center-align">Leagues Supported</th>
+                  <th className="center-align">Current Bankroll</th>
                   <th className="right-align">Percent Change</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="long-table">
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
                     <td component="th" scope="row">
@@ -67,14 +80,14 @@ class MyLeagues extends Component {
                         {row.name}
                       </Link>
                     </td>
-                    <td className="right-align">{row.current_player_count}</td>
-                    <td className="right-align">{row.game}</td>
-                    <td className="right-align">
+                    <td className="center-align">{row.current_player_count}</td>
+                    <td className="center-align">{row.game}</td>
+                    <td className="center-align">
                       {row.leagues_supported.map(sub_row => (
                         <span><img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" /> </span>
                       ))}
                     </td>
-                    <td className="right-align">{row.bankroll}</td>
+                    <td className="center-align">{row.bankroll}</td>
                     <td className={row.bankroll_percent_change > 0 ? "search-info-value-green right-align" : "search-info-value-red right-align"}>{row.bankroll_percent_change}%</td>
                   </tr>
                 ))}

@@ -21,7 +21,7 @@ const User = require("../../models/User");
 // @access public
 router.get("/users", (req, res) => {
 
-  if ( isEmpty(req.query) ) {
+  if ( isEmpty(req.query || req.query.search === "" ) ) {
     User.find().then( users => res.json(users)).catch(err => console.log(err));
   } else {
     User.find({ name: req.query.search }).then( users => res.json(users)).catch(err => console.log(err));

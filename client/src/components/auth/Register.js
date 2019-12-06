@@ -60,7 +60,7 @@ class Register extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>Register</b> below
               </h4>
               <p className="grey-text text-darken-1">
@@ -68,7 +68,7 @@ class Register extends Component {
               </p>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
-            <div className="input-field col s12">
+            <div className="input-field col s8 offset-s2">
                 <input
                   onChange={this.onChange}
                   value={this.state.name}
@@ -80,7 +80,7 @@ class Register extends Component {
                 <label htmlFor="name">Name</label>
                 <span className="red-text">{errors.name}</span>
               </div>
-              <div className="input-field col s12">
+              <div className="input-field col s8 offset-s2">
                 <input
                   onChange={this.onChange}
                   value={this.state.email}
@@ -92,7 +92,7 @@ class Register extends Component {
                 <label htmlFor="email">Email</label>
                 <span className="red-text">{errors.email}</span>
               </div>
-              <div className="input-field col s12">
+              <div className="input-field col s8 offset-s2">
                 <input
                   onChange={this.onChange}
                   value={this.state.username}
@@ -104,7 +104,7 @@ class Register extends Component {
                 <label htmlFor="username">Username</label>
                 <span className="red-text">{errors.username}</span>
               </div>
-              <div className="input-field col s12">
+              <div className="input-field col s8 offset-s2">
                 <input
                   onChange={this.onChange}
                   value={this.state.password}
@@ -116,7 +116,7 @@ class Register extends Component {
                 <label htmlFor="password">Password</label>
                 <span className="red-text">{errors.password}</span>
               </div>
-              <div className="input-field col s12">
+              <div className="input-field col s8 offset-s2">
                 <input
                   onChange={this.onChange}
                   value={this.state.password2}
@@ -137,7 +137,7 @@ class Register extends Component {
                     marginTop: "1rem"
                   }}
                   type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3">
+                  className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                     Sign up
                   </button>
               </div>

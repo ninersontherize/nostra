@@ -25,7 +25,7 @@ class SearchLeague extends Component {
   onSubmit = async e => {
     e.preventDefault();
 
-    var searchData = {}
+    var searchData;
 
     if (!isEmpty(this.state.search)) {
       searchData = this.state.search;
@@ -64,7 +64,7 @@ class SearchLeague extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>League</b> Search
               </h4>
             </div>
@@ -92,7 +92,7 @@ class SearchLeague extends Component {
                         marginTop: "1rem"
                       }}
                       type="submit"
-                      className="btn waves-effect waves-light hoverable blue accent-3">
+                      className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                         Search
                       </button>
                   </div>

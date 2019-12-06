@@ -71,17 +71,17 @@ class MyWagers extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col s8 offset-s2">
+          <div className="col s10 offset-s1">
             <Link to="/dashboard" className="btn-flat waves-effect">
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>My</b> Wagers
               </h4>
             </div>
-            <table className="highlight minwidth: 1000" aria-label="simple table">
-              <thead>
+            <table className="highlight long-table">
+              <thead className="long-table">
                 <tr>
                   <th>League Name</th>
                   <th className="center-align">Match</th>
@@ -91,7 +91,7 @@ class MyWagers extends Component {
                   <th className="right-align">Win</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="long-table">
                 {this.state.search_results.map(row => (
                   <tr key={row.league_id}>
                     <td component="th" scope="row">
@@ -102,11 +102,11 @@ class MyWagers extends Component {
                     <td className="center-align" component="th" scope="row">
                       <Link to={`showMatch/${row.match_id}`}>
                         <span>
-                          <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
+                          <img width="58px" height="24px" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
                         </span>
                         <span className="versus-small">vs.</span>
                         <span>
-                          <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
+                          <img width="58px" height="24px" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
                         </span>
                       </Link>
                     </td>

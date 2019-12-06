@@ -26,7 +26,7 @@ class SearchMatch extends Component {
   onSubmit = async e => {
     e.preventDefault();
 
-    var searchData = {}
+    var searchData;
 
     if (!isEmpty(this.state.search)) {
       searchData = this.state.search;
@@ -77,7 +77,7 @@ class SearchMatch extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>Match</b> Search
               </h4>
             </div>
@@ -105,15 +105,15 @@ class SearchMatch extends Component {
                         marginTop: "1rem"
                       }}
                       type="submit"
-                      className="btn waves-effect waves-light hoverable blue accent-3">
+                      className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                         Search
                       </button>
                   </div>
                 </div>
               </div>
             </form>
-            <table className="highlight minwidth: 750" aria-label="simple table">
-              <thead>
+            <table className="long-table highlight">
+              <thead className="long-table">
                 <tr>
                   <th>League</th>
                   <th className="center-align">Match</th>
@@ -123,7 +123,7 @@ class SearchMatch extends Component {
                   <th className="right-align"></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="long-table">
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
                     <td>
@@ -134,13 +134,13 @@ class SearchMatch extends Component {
                     <td className="center-align" component="th" scope="row">
                       <span>
                       <Link to={`/searchMatch?search=${row.home_team.short_name}`}> 
-                        <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                        <img width="55px" height="23px" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
                       </Link>
                       </span>
                       <span className="versus-small">vs.</span>
                       <span>
                       <Link to={`/searchMatch?search=${row.away_team.short_name}`}>   
-                        <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
+                        <img width="55px" height="23px" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                       </Link>
                       </span>
                     </td>

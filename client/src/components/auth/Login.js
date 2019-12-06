@@ -59,7 +59,7 @@ class Login extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to Home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>Login</b> below
               </h4>
               <p className="grey-text text-darken-1">
@@ -70,7 +70,7 @@ class Login extends Component {
               </p>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
+              <div className="input-field col s8 offset-s2">
                 <input
                   onChange={this.onChange}
                   value={this.state.email}
@@ -85,7 +85,7 @@ class Login extends Component {
                   {errors.emailnotfound}
                 </span>
               </div>
-              <div className="input-field col s12">
+              <div className="input-field col s8 offset-s2">
                 <input
                   onChange={this.onChange}
                   value={this.state.password}
@@ -109,7 +109,7 @@ class Login extends Component {
                     marginTop: "1rem"
                   }}
                   type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3">
+                  className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                     Login
                   </button>
               </div>

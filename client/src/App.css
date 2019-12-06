@@ -56,6 +56,13 @@
   float: top;
 }
 
+.versus-dash {
+  font-style: italic;
+  font-weight: bolder;
+  font-size: 12px;
+  float: top;
+}
+
 .odds-green {
   font-weight: bold;
   font-size: 20px;
@@ -80,7 +87,7 @@
 }
 
 .team-record {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 20px;
 }
 
@@ -109,14 +116,14 @@
 }
 
 .search-info-value-green {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 15px;
   margin-left: 1%;
   color: green;
 }
 
 .search-info-value-red {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 15px;
   margin-left: 1%;
   color: red;
@@ -145,14 +152,14 @@
 }
 
 .league-info-value {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 15px;
   float: left;
   margin-left: 3%;
 }
 
 .sub-title {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 33px;
 }
 
@@ -188,23 +195,38 @@
 }
 
 .dash-sub-title {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 28px;
 }
 
 .dash-table {
   font-size: 14px;
-  font-weight: lighter;
+  font-weight: 250;
 }
 
 .dash-table-center {
   font-size: 14px;
-  font-weight: lighter;
+  font-weight: 250;
 }
 
 .dash-text-container {
   height: 0;
   padding: 0;
+  font-weight: 225;
+  font-size: 20px;
+  color: black
+}
+
+.dash-info-text {
+  height: 0;
+  padding: 0;
+  font-weight: 200;
+  font-size: 20px;
+  color: black;
+}
+
+.header-text {
+  font-weight: 300;
 }
 
 .dash-info-label {
@@ -213,20 +235,20 @@
 }
 
 .dash-info-value-green {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 14px;
   color: green;
 }
 
 .dash-info-value-red {
-  font-weight: lighter;
+  font-weight: 250;
   font-size: 14px;
   color: red;
 }
 
 .dash-table-container {
   border-left: 1px solid lightgray;
-  height: 500px;
+  height: 60vh;
 }
 
 .dash-link {
@@ -234,7 +256,7 @@
 }
 
 .dash-link:hover {
-  color: lightblue;
+  color: rgb(54, 173, 247);
 }
 
 .dash-league-name {
@@ -243,4 +265,42 @@
 
 .dash-row {
   line-height: 12px;
+}
+
+.long-table tbody {
+  display: block;
+  height: 50vh;
+  overflow: auto;
+  font-weight: 250;
+}
+
+.long-table thead, tbody, tr {
+  display: table;
+  width: 100%;
+  font-weight: 250;
+  table-layout: fixed;
+}
+
+.long-table thead {
+  width: calc (100%-1em);
+  font-weight: 250;
+}
+
+.long-table table {
+  width: 1000px;
+}
+
+.nostra-button {
+  color: white;
+  background-color: rgb(64, 191, 241);
+}
+
+.nostra-button:hover {
+  color: white;
+  background-color: rgb(54, 173, 247);
+}
+
+.nostra-nav:active {
+  color: black;
+  background-color: white;
 }

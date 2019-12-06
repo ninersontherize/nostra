@@ -103,7 +103,7 @@ class CreateLeague extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>Create</b> a league
               </h4>
             </div>
@@ -190,7 +190,7 @@ class CreateLeague extends Component {
                         marginTop: "1rem"
                       }}
                       type="submit"
-                      className="btn waves-effect waves-light hoverable blue accent-3">
+                      className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                         Create League
                       </button>
                   </div>

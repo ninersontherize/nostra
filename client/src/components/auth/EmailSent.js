@@ -14,7 +14,7 @@ class EmailSent extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to Home
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>Email</b> sent successfully!
               </h4>
               <p className="grey-text text-darken-1">

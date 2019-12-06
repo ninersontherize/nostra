@@ -47,7 +47,7 @@ class ForgotPassword extends Component {
               <i className="material-icons left">keyboard_backspace</i> Back to Login
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
+              <h4 className="header-text">
                 <b>Reset</b> your password
               </h4>
             </div>
@@ -76,7 +76,7 @@ class ForgotPassword extends Component {
                     marginTop: "1rem"
                   }}
                   type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3">
+                  className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                     Reset
                   </button>
               </div>
