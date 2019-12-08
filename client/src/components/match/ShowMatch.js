@@ -103,7 +103,7 @@ class ShowMatch extends Component {
     if (money === "") {
       return
     } else {
-      return `$${money}`
+      return `${money}g`
     }
   }
 

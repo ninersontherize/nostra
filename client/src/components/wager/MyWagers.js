@@ -113,7 +113,7 @@ class MyWagers extends Component {
                         <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
                       </Link>
                     </td>
-                    <td className="right-align">${row.amount}</td>
+                    <td className="right-align">{row.amount}g</td>
                     <td className="right-align"><img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} /></td>
                     <td className="right-align">
                       <div className="row search-info-row-container">

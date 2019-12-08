@@ -158,7 +158,7 @@ class Dashboard extends Component {
                                 <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
                               </Link>
                             </td>
-                            <td className="center-align">${row.amount}</td>
+                            <td className="center-align">{row.amount}g</td>
                             <td className="center-align">
                               <div className="row dash-text-container">
                                 <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
@@ -197,7 +197,7 @@ class Dashboard extends Component {
                           <tr>
                             <th>Name</th>
                             <th className="center-align">Leagues</th>
-                            <th className="right-align">Bankroll</th>
+                            <th className="right-align">Gold</th>
                             <th className="right-align">%</th>
                           </tr>
                         </thead>
@@ -214,7 +214,7 @@ class Dashboard extends Component {
                                   <img className="dash-tournament-img" src={process.env.PUBLIC_URL + sub_row.tournament_logo} />
                                 ))}
                               </td>
-                              <td className="right-align">{row.bankroll}</td>
+                              <td className="right-align">{row.bankroll}g</td>
                               <td className={row.bankroll_percent_change > 0 ? "dash-info-value-green right-align" : "dash-info-value-red right-align"}>{row.bankroll_percent_change}%</td>
                             </tr>
                           ))}

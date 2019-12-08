@@ -11,7 +11,7 @@ class Landing extends Component {
               Ever feel like you just <b>know</b> who's going to win?
             </h5>
             <p className="flow-text grey-text text-darken-1">
-              Use strategy and game knowledge to predict wins, bank money, and beat your friends.
+              Use strategy and game knowledge to predict wins, bank gold, and beat your friends.
             </p>
             <br />
             <div className="col s6">
