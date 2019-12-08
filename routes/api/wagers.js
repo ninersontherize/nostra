@@ -128,7 +128,7 @@ router.delete("/:id/deleteWager", (req, res) => {
     } else {
       Match.findOne({ _id: wager.match_id }).then( match => {
         if (match.match_date < Date.now() || wager.closed === true) {
-          return res.status(400).json({ wager: "Sorry, cannot delete a wager that has already been closed." });
+          return res.status(400).json({ wager: "Sorry, cannot delete a wager for a match that has begun." });
         } else {
           UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
             var new_bankroll = user_league.user_bankroll + wager.amount;

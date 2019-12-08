@@ -60,9 +60,6 @@ class SearchLeague extends Component {
       <div className="container">
         <div className="row">
           <div className="col s8 offset-s2">
-            <Link to="/dashboard" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to home
-            </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4 className="header-text">
                 <b>League</b> Search
@@ -71,7 +68,7 @@ class SearchLeague extends Component {
             <form noValidate onSubmit={this.onSubmit}>
               <div className="section">
                 <div className="row">
-                  <div className="input-field col s6 offset-s1">
+                  <div className="input-field col s6 offset-s2">
                     <input
                       onChange={this.onChange}
                       value={this.state.search}
@@ -83,7 +80,7 @@ class SearchLeague extends Component {
                     <label htmlFor="name">Search</label>
                     <span className="red-text">{errors.search}</span>
                   </div>
-                  <div className="col s4" style={{ paddingLeft: "11.250px" }}>
+                  <div className="col s1" style={{ paddingLeft: "11.250px" }}>
                     <button
                       style={{
                         width: "150px",
@@ -103,9 +100,9 @@ class SearchLeague extends Component {
               <thead>
                 <tr>
                   <th>League Name</th>
-                  <th className="right-align">Max Players</th>
-                  <th className="right-align">Starting Bankroll</th>
-                  <th className="right-align">Leagues Supported</th>
+                  <th className="center-align">Max Players</th>
+                  <th className="center-align">Starting Bankroll</th>
+                  <th className="center-align">Leagues Supported</th>
                   <th className="right-align">Private</th>
                 </tr>
               </thead>
@@ -113,15 +110,15 @@ class SearchLeague extends Component {
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
                     <td component="th" scope="row">
-                      <Link to={`/joinLeague/${row._id}`}>
+                      <Link to={`/joinLeague/${row._id}`} className="dash-link">
                         {row.name}
                       </Link>
                     </td>
-                    <td className="right-align">{row.max_players}</td>
-                    <td className="right-align">{row.starting_cash}</td>
+                    <td className="center-align">{row.max_players}</td>
+                    <td className="center-align">{row.starting_cash}</td>
                     <td className="center-align">
                       {row.leagues_supported.map(sub_row => (
-                        <span><img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" /> </span>
+                        <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + sub_row.tournament_logo} />
                       ))}
                     </td>
                     <td className="right-align">{checkPrivate(row.private)}</td>

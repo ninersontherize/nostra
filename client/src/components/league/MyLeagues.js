@@ -40,9 +40,6 @@ class MyLeagues extends Component {
       <div className="container">
         <div className="row">
           <div className="col s8 offset-s2">
-            <Link to="/dashboard" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to home
-            </Link>
             <div className="row col s12">
               <h4 className="header-text">
                 <b>My</b> Leagues
@@ -84,7 +81,7 @@ class MyLeagues extends Component {
                     <td className="center-align">{row.game}</td>
                     <td className="center-align">
                       {row.leagues_supported.map(sub_row => (
-                        <span><img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" /> </span>
+                        <span><img className="search-match-tournament-img" src={process.env.PUBLIC_URL + sub_row.tournament_logo} /> </span>
                       ))}
                     </td>
                     <td className="center-align">{row.bankroll}</td>

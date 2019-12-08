@@ -50,6 +50,13 @@ class SearchMatch extends Component {
     }
   };
 
+  renderMatchTime = datetime => {
+    let match_hour = (datetime.getHours() % 12);
+    let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
+    let match_trailer = (datetime.getHours() > 11) ? " PM" : " AM";
+    return match_hour + ":" + match_minute + match_trailer;
+  }
+
   UNSAFE_componentWillReceiveProps = nextProps => {
     if(nextProps.location.key !== this.props.location.key) {
       window.location.reload();
@@ -68,23 +75,26 @@ class SearchMatch extends Component {
   };
 
   render() {
+
+    let match_date = new Date(this.state.match_date);
+    let match_hour = (match_date.getHours() % 12);
+    let match_minute = (match_date.getMinutes() < 10) ? "0" + match_date.getMinutes() : match_date.getMinutes();
+    let match_trailer = (match_date.getHours() > 11) ? " PM" : " AM";
+    let match_time = match_hour + ":" + match_minute + match_trailer;
+
     const{ errors } = this.state;
     return (
       <div className="container">
         <div className="row">
           <div className="col s10 offset-s1">
-            <Link to="/dashboard" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to home
-            </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4 className="header-text">
                 <b>Match</b> Search
               </h4>
             </div>
-            <form noValidate onSubmit={this.onSubmit}>
-              <div className="section">
+            <form noValidate onSubmit={this.onSubmit}>         
                 <div className="row">
-                  <div className="input-field col s5 offset-s2">
+                  <div className="input-field col s6 offset-s2">
                     <input
                       onChange={this.onChange}
                       value={this.state.search}
@@ -96,7 +106,7 @@ class SearchMatch extends Component {
                     <label htmlFor="name">Search for a team, league, or match date</label>
                     <span className="red-text">{errors.search}</span>
                   </div>
-                  <div className="col s4" style={{ paddingLeft: "11.250px", float: "left" }}>
+                  <div className="col s1">
                     <button
                       style={{
                         width: "150px",
@@ -110,16 +120,17 @@ class SearchMatch extends Component {
                       </button>
                   </div>
                 </div>
-              </div>
             </form>
             <table className="long-table highlight">
               <thead className="long-table">
                 <tr>
                   <th>League</th>
+                  <th className="left-align">Match Date</th>
+                  <th></th>
                   <th className="center-align">Match</th>
+                  <th></th>
                   <th className="right-align">Money Line</th>
                   <th className="right-align">Spread</th>
-                  <th className="right-align">Match Date</th>
                   <th className="right-align"></th>
                 </tr>
               </thead>
@@ -127,22 +138,30 @@ class SearchMatch extends Component {
                 {this.state.search_results.map(row => (
                   <tr key={row._id}>
                     <td>
-                    <Link to={`/searchMatch?search=${row.tournament.name}`}>   
-                      <img width="40px" height="40px" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
-                    </Link>
+                      <Link to={`/searchMatch?search=${row.tournament.name}`}>   
+                        <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
+                      </Link>
+                    </td>
+                    <td>
+                      <div className="row search-info-row-container">
+                        <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
+                      </div>
+                      <div className="row search-info-row-container">
+                        <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
+                      </div>
+                    </td>
+                    <td className="right-align" component="th" scope="row">           
+                      <Link to={`/searchMatch?search=${row.home_team.short_name}`}> 
+                        <img className="search-match-img" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                      </Link>
                     </td>
                     <td className="center-align" component="th" scope="row">
-                      <span>
-                      <Link to={`/searchMatch?search=${row.home_team.short_name}`}> 
-                        <img width="55px" height="23px" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
-                      </Link>
-                      </span>
-                      <span className="versus-small">vs.</span>
-                      <span>
+                      <span className="versus-small"> vs. </span>
+                    </td>
+                    <td className="left-align" component="th" scope="row">
                       <Link to={`/searchMatch?search=${row.away_team.short_name}`}>   
-                        <img width="55px" height="23px" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
+                        <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                       </Link>
-                      </span>
                     </td>
                     <td className="right-align">
                       <div className="row search-info-row-container">
@@ -164,7 +183,6 @@ class SearchMatch extends Component {
                         <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.spread_away/1000)} K</span>
                       </div>
                     </td>
-                    <td className="right-align">{new Date(row.match_date).toDateString()}</td>
                     <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>
                   </tr>
                 ))}

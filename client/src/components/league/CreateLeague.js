@@ -99,9 +99,6 @@ class CreateLeague extends Component {
       <div className="container">
         <div className="row">
           <div className="col s8 offset-s2">
-            <Link to="/dashboard" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to home
-            </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4 className="header-text">
                 <b>Create</b> a league
@@ -140,18 +137,22 @@ class CreateLeague extends Component {
                 <div className="row">
                   <div className="create-league-checkbox-container">
                     <label component="legend">Select which leagues you'll be able to place bets on</label>
-                      <p>
-                        <label>
-                          <input type="checkbox" color="primary" name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />
-                          <span><img src={process.env.PUBLIC_URL + "/lcs/lcs_logo.png"} height="25px" width="25px" /></span>
-                        </label>
-                      </p>
-                      <p>
-                        <label>
-                          <input type="checkbox" color="primary" name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />
-                          <span><img src={process.env.PUBLIC_URL + "/lec/lec_logo.png"} height="25px" width="25px" /></span>
-                        </label>
-                      </p>
+                    <div className="section">
+                      <div className="row">
+                        <div className="col s3 offset-s3">
+                          <label>
+                            <input type="checkbox" color="primary" name="LCS" checked={this.state.checkboxes["LCS"]} onChange={this.handleCheckboxChange} value="lcs" />
+                            <span><img className="search-match-tournament-img" src={process.env.PUBLIC_URL + "/lcs/lcs_logo.png"} /></span>
+                          </label>
+                        </div>
+                        <div className="col s3">
+                          <label>
+                            <input type="checkbox" color="primary" name="LEC" checked={this.state.checkboxes["LEC"]} onChange={this.handleCheckboxChange} value="lec" />
+                            <span><img className="search-match-tournament-img" src={process.env.PUBLIC_URL + "/lec/lec_logo.png"} /></span>
+                          </label>
+                        </div>
+                      </div>         
+                    </div>            
                   </div>
                 </div>
                 <div className="row">

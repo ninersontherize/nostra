@@ -72,26 +72,25 @@ class MyWagers extends Component {
       <div className="container">
         <div className="row">
           <div className="col s10 offset-s1">
-            <Link to="/dashboard" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to home
-            </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4 className="header-text">
                 <b>My</b> Wagers
               </h4>
             </div>
-            <table className="highlight long-table">
-              <thead className="long-table">
+            <table className="highlight long-table-wager">
+              <thead className="long-table-wager">
                 <tr>
                   <th>League Name</th>
+                  <th></th>
                   <th className="center-align">Match</th>
+                  <th></th>
                   <th className="right-align">Amount</th>
                   <th className="right-align">Team</th>
                   <th className="right-align">Odds</th>
                   <th className="right-align">Win</th>
                 </tr>
               </thead>
-              <tbody className="long-table">
+              <tbody className="long-table-wager">
                 {this.state.search_results.map(row => (
                   <tr key={row.league_id}>
                     <td component="th" scope="row">
@@ -99,19 +98,23 @@ class MyWagers extends Component {
                         {row.league_name}
                       </Link>
                     </td>
-                    <td className="center-align" component="th" scope="row">
+                    <td className="right-align" component="th" scope="row">
                       <Link to={`showMatch/${row.match_id}`} className="dash-link">
-                        <span>
-                          <img width="58px" height="24px" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
-                        </span>
+                        <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
+                      </Link>
+                    </td>
+                    <td className="center-align" conponent="th" scopt="row">
+                      <Link to={`showMatch/${row.match_id}`} className="dash-link">
                         <span className="versus-small">vs.</span>
-                        <span>
-                          <img width="58px" height="24px" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
-                        </span>
+                      </Link>
+                    </td>
+                    <td className="left-align" component="th" scope="row">
+                      <Link to={`showMatch/${row.match_id}`} className="dash-link">
+                        <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
                       </Link>
                     </td>
                     <td className="right-align">${row.amount}</td>
-                    <td className="right-align"><img width="60px" height="25px" src={process.env.PUBLIC_URL + row.team_logo} /></td>
+                    <td className="right-align"><img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} /></td>
                     <td className="right-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{this.renderOddType(row.wager_type)}</span>

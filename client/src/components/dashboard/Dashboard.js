@@ -155,13 +155,13 @@ class Dashboard extends Component {
                             </td>
                             <td className="center-align">
                               <Link to={`showMatch/${row.match_id}`}>
-                                <img width="60px" height="25px" src={process.env.PUBLIC_URL + row.team_logo} />
+                                <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
                               </Link>
                             </td>
                             <td className="center-align">${row.amount}</td>
                             <td className="center-align">
                               <div className="row dash-text-container">
-                                <span className="dash-info-label">{this.renderOddType(row.wager_type)}</span>
+                                <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
                               </div>
                               <div className="row dash-text-container"> 
                                 <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
@@ -211,7 +211,7 @@ class Dashboard extends Component {
                               </td>
                               <td className="center-align">
                                 {row.leagues_supported.map(sub_row => (
-                                  <span><img src={process.env.PUBLIC_URL + sub_row.tournament_logo} height="25px" width="25px" /> </span>
+                                  <img className="dash-tournament-img" src={process.env.PUBLIC_URL + sub_row.tournament_logo} />
                                 ))}
                               </td>
                               <td className="right-align">{row.bankroll}</td>
@@ -272,8 +272,10 @@ class Dashboard extends Component {
                     <table className="highlight dash-table-center long-table" pageSize={(this.state.match_search_results.length > 3) ? 3 : this.state.match_search_results.length}>
                       <thead className="long-table">
                         <tr>
-                          <th className="center-align">League</th>
+                          <th className="left-align">League</th>
+                          <th></th>
                           <th className="center-align">Match</th>
+                          <th></th>
                           <th className="center-align">Spread</th>
                         </tr>
                       </thead>
@@ -281,29 +283,33 @@ class Dashboard extends Component {
                         {this.state.match_search_results.map(row => (
                           <tr className="dash-row" key={row._id}>
                             <td className="center-align">
-                            <Link to={`/searchMatch?search=${row.tournament.name}`}>   
-                              <img width="25px" height="25px" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
-                            </Link>
+                              <Link to={`/searchMatch?search=${row.tournament.name}`}>   
+                                <img className="dash-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
+                              </Link>
+                            </td>
+                            <td className="right-align" component="th" scope="row">
+                              <Link to={`showMatch/${row._id}`}>
+                                  <img className="dash-match-img" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                              </Link>
+                            </td>
+                            <td className="center-align" component="th" scope="row">
+                              <Link className="dash-link" to={`showMatch/${row._id}`}>
+                                <span className="versus-dash">vs.</span>
+                              </Link>
                             </td>
                             <td className="left-align" component="th" scope="row">
                               <Link to={`showMatch/${row._id}`}>
-                                <span>
-                                  <img width="40px" height="18px" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
-                                </span>
-                                <span className="versus-dash">vs.</span>
-                                <span>
-                                  <img width="40px" height="18px" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
-                                </span>
+                                <img className="dash-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                               </Link>
                             </td>
-                            <td className="center-align">
+                            <td className="left-align">
                               <div className="row search-info-row-container">
-                                <span className="search-info-label">{row.home_team.short_name}: </span> 
-                                <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds('spread', row.spread_home)}</span> 
+                                <span className="dash-spread-label">{row.home_team.short_name}: </span> 
+                                <span className={row.spread_home > 0 ? "dash-spread-value-green" : "dash-spread-value-red"}>{this.renderOdds('spread', row.spread_home)}</span> 
                               </div>
                               <div className="row search-info-row-container">
-                                <span className="search-info-label">{row.away_team.short_name}: </span>
-                                <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds('spread', row.spread_away)}</span>
+                                <span className="dash-spread-label">{row.away_team.short_name}: </span>
+                                <span className={row.spread_away > 0 ? "dash-spread-value-green" : "dash-spread-value-red"}>{this.renderOdds('spread', row.spread_away)}</span>
                               </div>
                             </td>
                           </tr>

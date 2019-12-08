@@ -161,6 +161,31 @@ router.put("/:id/updateMatchOdds", (req, res) => {
 
 });
 
+// @route PUT api/matches/:id/updateMatchOdds
+// @desc Update a match by id
+// @access public
+router.put("/:id/updateMatchTime", (req, res) => {
+
+  var id = req.params.id;
+  
+  Match.findOne({ _id: id }).then( match => {
+    if (!match) {
+      return res.status(404).json({ match: "That id does not exist, update failed" });
+    } else {
+      Match.updateOne({ _id: id }, {
+        match_date: req.body.match_date
+      }, function(err, affected, res) {
+        console.log(res);
+      })
+      .then(() => {
+        console.log("match updated");
+        res.status(200).send({ message: "match updated successfully" });
+      });
+    }
+  });
+
+});
+
 // @route PUT api/matches/getLatestTeams
 // @desc Update a match participants
 // @access public

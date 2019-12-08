@@ -28,11 +28,6 @@
   float: left;
 }
 
-.versus-container {
-  height: 100;
-  width: 100;
-}
-
 .league-and-date-container {
   height: 100;
   width: 100;
@@ -64,20 +59,20 @@
 }
 
 .odds-green {
-  font-weight: bold;
+  font-weight: 300;
   font-size: 20px;
   color: green;
 }
 
 .odds-red {
-  font-weight: bold;
+  font-weight: 300;
   font-size: 20px;
   color: red;
 }
 
 .odds-label {
   font-style: italic;
-  font-weight: bold;
+  font-weight: 300;
   font-size: 20px;
 }
 
@@ -91,10 +86,8 @@
   font-size: 20px;
 }
 
-.odds-container {
-  height: 500;
-  width: 500;
-  margin-left: 20%;
+table.striped > tbody > tr:nth-child(odd) {
+  background-color: rgb(255, 255, 255);
 }
 
 .vertical-divider {
@@ -178,20 +171,17 @@
 }
 
 .winner-label {
-  font-weight: bolder;
+  font-weight: 500;
+  font-style: italic;
   font-size: 40px;
   float: right;
-}
-
-.winner-image {
-  float: left;
 }
 
 .gold-diff {
   float: left;
   font-style: italic;
   font-size: 30px;
-  margin-left: 10%;
+  margin-left: 15%;
   margin-top: 1%;
 }
 
@@ -234,11 +224,6 @@
   font-weight: 300;
 }
 
-.dash-info-label {
-  font-weight: bold;
-  font-size: 13px;
-}
-
 .dash-info-value-green {
   font-weight: 250;
   font-size: 14px;
@@ -248,6 +233,23 @@
 .dash-info-value-red {
   font-weight: 250;
   font-size: 14px;
+  color: red;
+}
+
+.dash-spread-label {
+  font-weight: 375;
+  font-size: 12px;
+}
+
+.dash-spread-value-green {
+  font-weight: 250;
+  font-size: 12px;
+  color: green;
+}
+
+.dash-spread-value-red {
+  font-weight: 250;
+  font-size: 12px;
   color: red;
 }
 
@@ -274,8 +276,10 @@
 
 .long-table tbody {
   display: block;
+  table-layout: fixed;
   height: 50vh;
   overflow: auto;
+  overflow-x: hidden;
   font-weight: 250;
 }
 
@@ -293,6 +297,13 @@
 
 .long-table table {
   width: 1000px;
+}
+
+.long-table-wager tbody {
+  display: block;
+  height: 70vh;
+  overflow: auto;
+  font-weight: 250;
 }
 
 .nostra-button {
@@ -324,4 +335,68 @@
 
 .wager-submit-button {
   padding-top: 0;
+}
+
+.search-match-img {
+  display: inline-table;
+  max-width:40px;
+  max-height:40px;
+  width: auto;
+  height: auto;
+}
+
+.search-match-tournament-img {
+  display: inline-table;
+  max-width:65px;
+  max-height:40px;
+  width: auto;
+  height: auto;
+}
+
+.show-match-tournament-img {
+  display: inline-table;
+  max-width:200px;
+  max-height:110px;
+  width: auto;
+  height: auto;
+}
+
+.show-match-img {
+  display: inline-table;
+  max-width:250px;
+  max-height:200px;
+  width: auto;
+  height: auto;
+}
+
+.show-match-winner-img {
+  display: inline-table;
+  max-width:100px;
+  max-height:75px;
+  width: auto;
+  height: auto;
+}
+
+.dash-match-img {
+  display: inline-table;
+  max-width:30px;
+  max-height:30px;
+  width: auto;
+  height: auto;
+}
+
+.dash-tournament-img {
+  display: inline-table;
+  max-width:45px;
+  max-height:25px;
+  width: auto;
+  height: auto;
+}
+
+.dash-match-tournament-img {
+  display: inline-table;
+  max-width:55px;
+  max-height:35px;
+  width: auto;
+  height: auto;
 }
