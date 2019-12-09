@@ -177,7 +177,7 @@ class CreateLeague extends Component {
                       type="number"
                       className={classnames('', { invalid: errors.starting_cash })}
                     />
-                    <label htmlFor="name">Starting Bankroll</label>
+                    <label htmlFor="name">Starting Gold</label>
                     <span className="red-text">{errors.starting_cash}</span>
                   </div>
                 </div>

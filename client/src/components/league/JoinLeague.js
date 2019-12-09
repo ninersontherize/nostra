@@ -126,7 +126,7 @@ class JoinLeague extends Component {
                       <tr>
                         <th>Username</th>
                         <th className="right-align">% Change</th>
-                        <th className="right-align">Current Bankroll</th>
+                        <th className="right-align">Current Gold</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -136,7 +136,7 @@ class JoinLeague extends Component {
                               {row.username}
                           </td>
                           <td className={row.bankroll_percent_change > 0 ? "search-info-value-green right-align" : "search-info-value-red right-align"}>{row.bankroll_percent_change}%</td>
-                          <td className="right-align">{row.user_bankroll}</td>
+                          <td className="right-align">{row.user_bankroll}g</td>
                         </tr>
                       ))}
                     </tbody>
@@ -214,7 +214,7 @@ class JoinLeague extends Component {
                   </div>
                   <div className="row">
                     <span className="league-info-label">
-                      Starting Bankroll:
+                      Starting Gold:
                     </span>
                   </div>
                   <div className="row">
@@ -236,7 +236,7 @@ class JoinLeague extends Component {
                   </div>
                   <div className="row">
                     <span className="league-info-value">
-                      ${this.state.starting_cash}
+                      {this.state.starting_cash}g
                     </span>
                   </div>
                   <div className="row">
