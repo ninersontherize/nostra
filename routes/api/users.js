@@ -246,7 +246,7 @@ router.put("/updatePassword", (req, res) => {
   
 });
 
-// @route GET api/users/users
+// @route GET api/users/userInformation
 // @desc retrieve a list of registered users -- optional body param search
 // @access private
 router.get("/userInformation", (req, res) => {
@@ -260,5 +260,33 @@ router.get("/userInformation", (req, res) => {
   }
 
 });
+
+// @route PUT api/users/editUser
+// @desc edit user information - used for user settings
+// @access public
+router.put("/:id/editUser", (req, res) => {
+
+  var id = req.params.id;
+
+  User.findOne({ _id: id }).then( user => {
+    if (!user) {
+      return res.status(404).json({ user: "That id does not exist."});
+    } else {
+      User.updateOne({ _id: id }, {
+        status: req.body.status,
+        favorite_team: req.body.favorite_team,
+        site_admin: req.body.site_admin
+      }, function(err, affected, res) {
+        console.log(res);
+      })
+      .then(() => {
+        console.log("user updated");
+        res.status(200).send({ message: "user updated successfully" });
+      });
+    }
+  });
+
+});
+
 
 module.exports = router;

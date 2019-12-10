@@ -18,7 +18,6 @@ class Dashboard extends Component {
       league_search_results: [],
       leagues_empty: false,
       match_search_results: [],
-      leader_search_results: [],
       errors: {}
     };
   }

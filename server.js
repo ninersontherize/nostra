@@ -10,6 +10,7 @@ const tournaments = require("./routes/api/tournaments");
 const teams = require("./routes/api/teams");
 const matches = require("./routes/api/matches");
 const wagers = require("./routes/api/wagers");
+const followers = require("./routes/api/followers");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/tournaments", tournaments);
 app.use("/api/teams", teams);
 app.use("/api/matches", matches);
 app.use("/api/wagers", wagers);
+app.use("/api/followers", followers);
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {

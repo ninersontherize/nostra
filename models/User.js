@@ -26,7 +26,19 @@ const UserSchema = new Schema({
   resetPasswordExpires: {
     type: Date,
     required: false
-  },      
+  }, 
+  status: {
+    type: String,
+    required: false
+  },
+  favorite_team: {
+    type: String,
+    required: false
+  },
+  site_admin: {
+    type: Boolean,
+    required: false
+  },     
   created_date: {
     type: Date,
     default: Date.now
