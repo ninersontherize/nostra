@@ -56,6 +56,13 @@ router.get("/followers", (req, res) => {
 
 });
 
+// @route GET api/followers/checkFollowed
+// @desc return true if user is following a given user
+// @access public
+router.get("/checkFollowed", (req, res) => {
+  Follower.find({ follower_id: req.query.follower, followee_id: req.query.followee }).count().then(follower_count => res.json(follower_count)).catch(err => console.log(err));
+});
+
 // @route DELETE api/followers/deleteFollower
 // @desc Delete a follower by id
 // @access private - backend only
