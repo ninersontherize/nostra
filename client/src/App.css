@@ -316,6 +316,16 @@ table.striped > tbody > tr:nth-child(odd) {
   background-color: rgb(54, 173, 247);
 }
 
+.nostra-button-unfollow {
+  color: darkgray;
+  background-color: rgb(246, 249, 250);
+}
+
+.nostra-button-unfollow:hover {
+  color: white;
+  background-color: rgb(241, 92, 92);
+}
+
 .nostra-nav:active {
   color: black;
   background-color: white;
@@ -422,6 +432,11 @@ table.striped > tbody > tr:nth-child(odd) {
 .profile-sub-title {
   font-weight: 250;
   font-size: 22px;
+}
+
+.dash-sub-title {
+  font-weight: 250;
+  font-size: 28px;
 }
 
 .profile-team-img {

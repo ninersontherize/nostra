@@ -3,50 +3,31 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getMyLeagues, showLeague } from "../../actions/leagueActions";
-import { getTopWins, getTopLosses, getLeagueInfo } from "../../actions/wagerActions";
-import { showUser, getFollowers, checkFollowed, followUser, unfollowUser } from "../../actions/userActions";
+import { getMyWagers, getLeagueInfo } from "../../actions/wagerActions";
+import { showUser, getFollowing, favoriteUser } from "../../actions/userActions";
 import { showTeam } from "../../actions/teamActions";
+import { searchMatch } from "../../actions/matchActions";
 
 
-class UserProfile extends Component {
+class NewDashboard extends Component {
   constructor() {
     super();
 
     this.state = {
-      wager_wins_search_results: [],
-      wager_wins_empty: false,
-      wager_losses_search_results: [],
-      wager_losses_empty: false,
+      wager_search_results: [],
+      wager_empty: false,
       league_search_results: [],
       leagues_empty: false,
+      match_search_results: [],
       follower_results: [],
       username: "",
       status: "",
       earnings: "",
       favorite_team_logo: "",
-      is_followed: false,
       lifetime_earnings_cash: "",
       lifetime_earnings_pct: "",
       errors: {}
     };
-  }
-
-  onFollowClick = e => {
-    e.preventDefault();
-    const followData = {
-      follower_id: this.props.auth.user.id,
-      followee_id: this.props.match.params.user_id
-    };
-    this.props.followUser(followData, this.props.history);
-  }
-
-  onUnfollowClick = e => {
-    e.preventDefault();
-    const followData = {
-      follower_id: this.props.auth.user.id,
-      followee_id: this.props.match.params.user_id
-    };
-    this.props.unfollowUser(followData, this.props.history);
   }
 
   renderOdds = (odd_type, odd) => {
@@ -61,12 +42,23 @@ class UserProfile extends Component {
     }
   };
 
+  onFavoriteClick = id => {
+    this.props.favoriteUser(id, this.props.history);
+  }
+
   renderOddType = odd_type => {
     if (odd_type === "spread") {
       return "Spread";
     } else {
       return "Money Line";
     }
+  };
+
+  renderMatchTime = datetime => {
+    let match_hour = (datetime.getHours() % 12);
+    let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
+    let match_trailer = (datetime.getHours() > 11) ? " PM" : " AM";
+    return match_hour + ":" + match_minute + match_trailer;
   };
 
   getOpponent = (id, home_team, home_team_logo, away_team_logo) => {
@@ -81,23 +73,11 @@ class UserProfile extends Component {
     if(nextProps.location.key !== this.props.location.key) {
       window.location.reload();
     }
-  }
+  };
 
   componentDidMount() {
 
-    this.props.checkFollowed(this.props.auth.user.id, this.props.match.params.user_id).then(res => {
-      if (res > 0) {
-        this.setState({
-          is_followed: true
-        });
-      } else if (this.props.auth.user.id === this.props.match.params.user_id) {
-        this.setState({
-          is_followed: null
-        });
-      }
-    });
-
-    this.props.showUser(this.props.match.params.user_id).then(res => {
+    this.props.showUser(this.props.auth.user.id).then(res => {
       if (res.favorite_team === null || res.favorite_team === undefined) {
         this.setState({
           username: res.username,
@@ -115,11 +95,12 @@ class UserProfile extends Component {
       }
     });
 
-    this.props.getFollowers(this.props.match.params.user_id).then(res => {
+    this.props.getFollowing(this.props.auth.user.id).then(res => {
       console.log(res);
       res.forEach(row => {
-        this.props.showUser(row.follower_id).then(user_info => {
+        this.props.showUser(row.followee_id).then(user_info => {
           user_info.favorite = row.favorite
+          user_info.follower_id = row._id
           this.setState({
             follower_results: this.state.follower_results.concat(user_info).sort((a, b) => (a.favorite < b.favorite) ? 1 : -1)
           });
@@ -127,7 +108,7 @@ class UserProfile extends Component {
       });
     });
 
-    this.props.getMyLeagues(this.props.match.params.user_id).then(res => {
+    this.props.getMyLeagues(this.props.auth.user.id).then(res => {
       if (res.length === 0) {
         this.setState({
           leagues_empty: true
@@ -152,10 +133,10 @@ class UserProfile extends Component {
       });
     });
 
-    this.props.getTopWins(this.props.match.params.user_id).then(res => {
+    this.props.getMyWagers(this.props.auth.user.id).then(res => {
       if (res.length === 0) {
         this.setState({
-          wager_wins_empty: true
+          wagers_empty: true
         });
       }
       res.forEach(row => {
@@ -167,73 +148,36 @@ class UserProfile extends Component {
           } else {
             row.team_logo = row.match.away_team.logo_small;
           }
-          this.setState({
-            wager_wins_search_results: this.state.wager_wins_search_results.concat(row)
-          });
+          if (row.closed === null) {
+            this.setState({
+              wager_search_results: this.state.wager_search_results.concat(row)
+            });
+          }
         });
       });
     });
 
-    this.props.getTopLosses(this.props.match.params.user_id).then(res => {
-      if (res.length === 0) {
-        this.setState({
-          wager_losses_empty: true
-        });
-      }
+    this.props.searchMatch().then(res => {
       res.forEach(row => {
-        this.props.getLeagueInfo(row.user_league_id).then(user_league => {
-          row.league_name = user_league.league.name;
-          row.league_id = user_league.league._id;
-          if (row.team_id === row.match.home_team._id) {
-            row.team_logo = row.match.home_team.logo_small;
-          } else {
-            row.team_logo = row.match.away_team.logo_small;
-          }
+        if (row.winning_id === null) {
           this.setState({
-            wager_losses_search_results: this.state.wager_losses_search_results.concat(row)
+            match_search_results: this.state.match_search_results.concat(row)
           });
-        });
+        }
       });
     });
 
   };
 
   render() {
+    const { user } = this.props.auth;
+
     var league_table;
-    var wager_win_table;
-    var wager_loss_table;
+    var wager_table;
     var follow_button;
 
-    if (this.state.is_followed === false) {
-      follow_button =
-                    <button
-                      style={{
-                        width: "200px",
-                        borderRadius: "3px",
-                        letterSpacing: "1.5px",
-                        marginTop: "1rem"
-                      }}
-                      onClick={this.onFollowClick}
-                      className="btn btn-flat waves-effect waves-light hoverable nostra-button">
-                        Follow User
-                    </button>;
-    } else if (this.state.is_followed === true) {
-      follow_button =
-                    <button
-                      style={{
-                        width: "200px",
-                        borderRadius: "3px",
-                        letterSpacing: "1.5px",
-                        marginTop: "1rem"
-                      }}
-                      onClick={this.onUnfollowClick}
-                      className="btn btn-flat waves-effect waves-light hoverable nostra-button-unfollow">
-                        Unfollow User
-                    </button>;
-    }
-
-    if (this.state.wager_wins_empty === true) {
-      wager_win_table = 
+    if (this.state.wager_empty === true) {
+      wager_table = 
                     <div className="section">
                       <div className="row">
                         <span className="flow-text dash-info-text">
@@ -242,22 +186,27 @@ class UserProfile extends Component {
                       </div>
                     </div>
     } else {      
-      wager_win_table = <table className="highlight dash-table-center">
+      wager_table = <table className={(this.state.wager_search_results.length < 5) ? "highlight dash-table-center" : "highlight dash-table-center long-table"}>
                       <thead>
                         <tr>
-                          <th>Pick</th>
+                          <th>League</th>
+                          <th className="center-align">Pick</th>
                           <th className="center-align">Amount</th>
                           <th></th>
                           <th className="center-align">Match</th>
                           <th></th>
                           <th className="center-align">Odds</th>
-                          <th className="right-align">Payout</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {this.state.wager_wins_search_results.map(row => (
+                        {this.state.wager_search_results.map(row => (
                           <tr className="dash-row" key={row._id}>
-                            <td className="left-align">
+                            <td className="dash-league-name" component="th" scope="row">
+                              <Link className="dash-link" to={`/joinLeague/${row.league_id}`}>
+                                {row.league_name}
+                              </Link>
+                            </td>
+                            <td className="center-align">
                               <Link to={`/showMatch/${row.match_id}`}>
                                 <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
                               </Link>
@@ -286,68 +235,6 @@ class UserProfile extends Component {
                                 <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
                               </div>
                             </td>
-                            <td className="right-align">{(row.payout-row.amount)}g</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>;
-    }
-
-    if (this.state.wager_losses_empty === true) {
-      wager_loss_table = 
-                    <div className="section">
-                      <div className="row">
-                        <span className="flow-text dash-info-text">
-                          This user hasn't lost any wagers yet, ask them for a tip!
-                        </span>
-                      </div>
-                    </div>
-    } else {      
-      wager_loss_table = <table className="highlight dash-table-center">
-                      <thead>
-                        <tr>
-                          <th>Pick</th>
-                          <th className="center-align">Amount</th>
-                          <th></th>
-                          <th className="center-align">Match</th>
-                          <th></th>
-                          <th className="center-align">Odds</th>
-                          <th className="right-align">Loss</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {this.state.wager_losses_search_results.map(row => (
-                          <tr className="dash-row" key={row._id}>
-                            <td className="left-align">
-                              <Link to={`/showMatch/${row.match_id}`}>
-                                <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
-                              </Link>
-                            </td>
-                            <td className="center-align">{row.amount}g</td>
-                            <td className="right-align" component="th" scope="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
-                                <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
-                              </Link>
-                            </td>
-                            <td className="center-align" conponent="th" scopt="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
-                                <span className="versus-small">vs.</span>
-                              </Link>
-                            </td>
-                            <td className="left-align" component="th" scope="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
-                                <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
-                              </Link>
-                            </td>
-                            <td className="center-align">
-                              <div className="row dash-text-container">
-                                <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
-                              </div>
-                              <div className="row dash-text-container"> 
-                                <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
-                              </div>
-                            </td>
-                            <td className="right-align dash-info-value-red">-({row.amount})g</td>
                           </tr>
                         ))}
                       </tbody>
@@ -383,7 +270,7 @@ class UserProfile extends Component {
         <div className="row">
           <div className="col s12 center-align">
             <h4 className="header-text">
-              <b>User</b> Profile
+              <b>Hey there,</b> {user.name.split(" ")[0]}
             </h4>
             <div className="divider"></div>
             <div className="section">
@@ -405,15 +292,12 @@ class UserProfile extends Component {
                       <b>Total Earnings:</b> <span className={this.state.lifetime_earnings_cash > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds("none", this.state.lifetime_earnings_cash)}g <br/>({this.renderOdds("none", this.state.lifetime_earnings_pct)}%)</span>
                     </span>
                   </div>
-                  <div className="row">
-                    {follow_button}
-                  </div>
                   <div className="divider" />
                   {league_table}
                   <div className="divider" />
                   <div className="row">
                     <h4 className="profile-sub-title">
-                      Followers
+                      Following
                     </h4>
                     <div className="follower-table-container">
                       <table className="striped long-table">
@@ -428,7 +312,11 @@ class UserProfile extends Component {
                                 </Link>
                               </td>
                               <td className="center-align">
-                                {(row.favorite === true) ? <i class="material-icons">star</i> : <i class="material-icons">star_border</i>}
+                              <button
+                                className="btn-flat"
+                                onClick={() => this.onFavoriteClick(row.follower_id)}>
+                                  {(row.favorite === true) ? <i class="material-icons">star</i> : <i class="material-icons">star_border</i>}
+                              </button>
                               </td>
                             </tr>
                           ))}
@@ -438,15 +326,83 @@ class UserProfile extends Component {
                   </div>
                 </div>
                 <div className="user-profile-table-container col s9">
-                  <h4 className="profile-sub-title">
-                    Biggest Wins
+                  <h4 className="dash-sub-title">
+                    <Link className="dash-link" to="/myWagers">
+                      <b>Open</b> Wagers
+                    </Link>
                   </h4>
-                  {wager_win_table}
+                  {wager_table}
                   <div className="divider"></div>
-                  <h4 className="profile-sub-title">
-                    Biggest Losses
+                  <h4 className="dash-sub-title">
+                    <Link className="dash-link" to="/searchMatch">
+                      <span><b>Upcoming</b> Matches</span>
+                    </Link>
                   </h4>                 
-                  {wager_loss_table}
+                  <table className="highlight dash-table-center long-table" pageSize={(this.state.match_search_results.length > 3) ? 3 : this.state.match_search_results.length}>
+                    <thead className="long-table">
+                      <tr>
+                        <th>League</th>
+                        <th className="left-align">Match Date</th>
+                        <th></th>
+                        <th className="center-align">Match</th>
+                        <th></th>
+                        <th className="left-align">Money Line</th>
+                        <th className="left-align">Spread</th>
+                      </tr>
+                    </thead>
+                    <tbody className="long-table">
+                      {this.state.match_search_results.map(row => (
+                        <tr className="dash-row" key={row._id}>
+                          <td>
+                            <Link to={`/searchMatch?search=${row.tournament.name}`}>   
+                              <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
+                            </Link>
+                          </td>
+                          <td>
+                            <div className="row search-info-row-container">
+                              <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
+                            </div>
+                            <div className="row search-info-row-container">
+                              <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
+                            </div>
+                          </td>
+                          <td className="right-align" component="th" scope="row">           
+                            <Link to={`/searchMatch?search=${row.home_team.short_name}`}> 
+                              <img className="search-match-img" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                            </Link>
+                          </td>
+                          <td className="center-align" component="th" scope="row">
+                            <span className="versus-small"> vs. </span>
+                          </td>
+                          <td className="left-align" component="th" scope="row">
+                            <Link to={`/searchMatch?search=${row.away_team.short_name}`}>   
+                              <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
+                            </Link>
+                          </td>
+                          <td className="left-align">
+                            <div className="row search-info-row-container">
+                              <span className="search-info-label">{row.home_team.short_name}: </span> 
+                              <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_home)}</span> 
+                            </div>
+                            <div className="row search-info-row-container">
+                              <span className="search-info-label">{row.away_team.short_name}: </span>
+                              <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_away)}</span>
+                            </div>
+                          </td>
+                          <td className="left-align">
+                            <div className="row search-info-row-container">
+                              <span className="search-info-label">{row.home_team.short_name}: </span> 
+                              <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_home)}</span> 
+                            </div>
+                            <div className="row search-info-row-container">
+                              <span className="search-info-label">{row.away_team.short_name}: </span>
+                              <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -459,18 +415,16 @@ class UserProfile extends Component {
 
 }
 
-UserProfile.propTypes = {
+NewDashboard.propTypes = {
   getMyLeagues: PropTypes.func.isRequired,
   showLeague: PropTypes.func.isRequired,
   getLeagueInfo: PropTypes.func.isRequired,
-  getTopWins: PropTypes.func.isRequired,
-  getTopLosses: PropTypes.func.isRequired,
   showUser: PropTypes.func.isRequired,
   showTeam: PropTypes.func.isRequired,
-  checkFollowed: PropTypes.func.isRequired,
-  followUser: PropTypes.func.isRequired,
-  unfollowUser: PropTypes.func.isRequired,
-  getFollowers: PropTypes.func.isRequired,
+  getMyWagers: PropTypes.func.isRequired,
+  getFollowing: PropTypes.func.isRequired,
+  searchMatch: PropTypes.func.isRequired,
+  favoriteUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -478,4 +432,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getMyLeagues, showLeague, getTopWins, getTopLosses, getLeagueInfo, showTeam, showUser, getFollowers, checkFollowed, followUser, unfollowUser })(withRouter(UserProfile));
+export default connect(mapStateToProps, { getMyLeagues, showLeague, getLeagueInfo, showTeam, showUser, getMyWagers, getFollowing, searchMatch, favoriteUser})(withRouter(NewDashboard));

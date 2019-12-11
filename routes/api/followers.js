@@ -66,13 +66,30 @@ router.get("/checkFollowed", (req, res) => {
 // @route DELETE api/followers/deleteFollower
 // @desc Delete a follower by id
 // @access private - backend only
-router.delete("/deleteFollower", (req, res) => {
+router.delete("/adminDeleteFollower", (req, res) => {
 
   Follower.findOne({ _id: req.body.id }).then( follower => {
     if (!follower) {
       return res.status(404).json({ follower: "That id does not exist, delete failed" });
     } else {
       Follower.deleteOne({ _id: req.body.id }).then( follower => console.log(follower));
+      return res.status(200).json({ follower: "Follower successfully deleted" });
+    }
+  });
+
+});
+
+// @route DELETE api/followers/deleteFollower
+// @desc Delete a follower by id
+// @access private - backend only
+router.delete("/deleteFollower", (req, res) => {
+
+  Follower.findOne({ follower_id: req.query.follower_id, followee_id: req.query.followee_id }).then( follower => {
+    if (!follower) {
+      return res.status(404).json({ follower: "That id does not exist, delete failed" });
+    } else {
+      console.log(follower)
+      Follower.deleteOne({ _id: follower._id }).then( follower => console.log(follower));
       return res.status(200).json({ follower: "Follower successfully deleted" });
     }
   });

@@ -55,13 +55,13 @@ class SearchMatch extends Component {
     let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
     let match_trailer = (datetime.getHours() > 11) ? " PM" : " AM";
     return match_hour + ":" + match_minute + match_trailer;
-  }
+  };
 
   UNSAFE_componentWillReceiveProps = nextProps => {
     if(nextProps.location.key !== this.props.location.key) {
       window.location.reload();
     }
-  }
+  };
 
   componentDidMount() {
     const search_values = queryString.parse(this.props.location.search);

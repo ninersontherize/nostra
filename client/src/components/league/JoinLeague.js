@@ -201,7 +201,7 @@ class JoinLeague extends Component {
                   <div className="row">
                     <span className="league-info-value">
                       {this.state.leagues_supported.map(row => (
-                        <img src={process.env.PUBLIC_URL + row.tournament_logo} height="25px" width="25px" />
+                        <img src={process.env.PUBLIC_URL + row.tournament_logo} className="dash-tournament-img" />
                       ))}
                     </span>
                   </div>
