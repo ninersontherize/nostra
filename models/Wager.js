@@ -35,6 +35,10 @@ const WagerSchema = new Schema({
     type: Boolean,
     required: false
   },
+  payout: {
+    type: Number,
+    required: false
+  },
   closed: {
     type: Boolean,
     required: false

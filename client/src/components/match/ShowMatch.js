@@ -185,7 +185,7 @@ class ShowMatch extends Component {
                   </optgroup>
                   <optgroup label="Spread">
                     <option value={this.state.home_team._id + "/spread"}>{this.state.home_team.short_name}</option>
-                    <option value={this.state.home_team._id + "/spread"}>{this.state.away_team.short_name}</option>
+                    <option value={this.state.away_team._id + "/spread"}>{this.state.away_team.short_name}</option>
                   </optgroup>
                 </select>
                 <label>Team and Type of Wager</label>

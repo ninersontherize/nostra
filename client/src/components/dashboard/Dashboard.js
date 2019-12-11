@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
 import { getMyLeagues, showLeague } from "../../actions/leagueActions";
 import { getMyWagers, getLeagueInfo } from "../../actions/wagerActions";
 import { searchMatch } from "../../actions/matchActions";
@@ -52,12 +51,6 @@ class Dashboard extends Component {
         return "No"
       }
     }
-  };
-
-
-  onLogoutClick = e => {
-    e.preventDefault();
-    this.props.logoutUser();
   };
 
   async componentDidMount() {
@@ -327,7 +320,6 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
   getMyLeagues: PropTypes.func.isRequired,
   showLeague: PropTypes.func.isRequired,
   getMyWagers: PropTypes.func.isRequired,
@@ -340,4 +332,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { logoutUser, getMyLeagues, showLeague, getMyWagers, getLeagueInfo, searchMatch })(Dashboard);
+export default connect(mapStateToProps, { getMyLeagues, showLeague, getMyWagers, getLeagueInfo, searchMatch })(Dashboard);

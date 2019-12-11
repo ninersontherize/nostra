@@ -400,3 +400,36 @@ table.striped > tbody > tr:nth-child(odd) {
   width: auto;
   height: auto;
 }
+
+.username-header {
+  font-size: 30px;
+  font-weight: 350;
+  float: center;
+}
+
+.user-status {
+  font-size: 15px;
+  float: center;
+  font-weight: 250;
+  text-align: left;
+}
+
+.profile-info-container {
+  border-right: 1px solid lightgrey;
+  width: 200px;
+}
+
+.profile-sub-title {
+  font-weight: 250;
+  font-size: 22px;
+}
+
+.profile-team-img {
+  display: inline-table;
+  max-width:175px;
+  max-height:175px;
+  width: auto;
+  height: auto;
+  padding: 0;
+  float: top;
+}

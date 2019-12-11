@@ -29,6 +29,16 @@ router.get("/users", (req, res) => {
 
 });
 
+// @route GET api/users/:id/showUser
+// @desc retrieve info about user for user page
+// @access public
+router.get("/:id/showUser", (req, res) => {
+
+  var id = req.params.id;
+  User.findOne({ _id: id }, {username: 1, favorite_team: 1, status: 1}).then(user => res.json(user)).catch(err => console.log(err));
+
+});
+
 // @route DELETE api/users/deleteUser
 // @desc Delete a user by id
 // @access public

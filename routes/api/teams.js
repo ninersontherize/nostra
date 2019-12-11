@@ -53,6 +53,16 @@ router.get("/teams", (req, res) => {
 
 });
 
+// @route GET api/teams/:id/team
+// @desc show a single team
+// @access public
+router.get("/:id/showTeam", (req, res) => {
+  
+  var id = req.params.id;
+  Team.findOne({ _id: id }).then(team => res.json(team)).catch(err => console.log(err));
+
+});
+
 // @route DELETE api/teams/deleteTeam
 // @desc Delete a team by id
 // @access private - backend only

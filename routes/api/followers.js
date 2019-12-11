@@ -44,12 +44,14 @@ router.post("/createFollower", (req, res) => {
 // @access public
 router.get("/followers", (req, res) => {
 
+  console.log(req.query);
+
   if ( isEmpty(req.query || req.query.search === "" ) ) {
     Follower.find().then( followers => res.json(followers)).catch(err => console.log(err));
   } else if (req.query.type === "followers") {
     Follower.find({ followee_id: req.query.search }).then( followers => res.json(followers)).catch(err => console.log(err));
   } else {
-    Follower.find({ follower_id: req.body.search }).then( followees => res.json(followees)).catch(err => console.log(err));
+    Follower.find({ follower_id: req.query.search }).then( followees => res.json(followees)).catch(err => console.log(err));
   }
 
 });

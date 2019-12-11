@@ -133,7 +133,7 @@ class JoinLeague extends Component {
                       {this.state.current_players.map(row => (
                         <tr key={row.user_id}>
                           <td component="th" scope="row" align="right">
-                              {row.username}
+                              <Link to={`/userProfile/${row.user_id}`}>{row.username}</Link>
                           </td>
                           <td className={row.bankroll_percent_change > 0 ? "search-info-value-green right-align" : "search-info-value-red right-align"}>{row.bankroll_percent_change}%</td>
                           <td className="right-align">{row.user_bankroll}g</td>
