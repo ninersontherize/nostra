@@ -55,7 +55,7 @@ class App extends Component {
         <Router basename={process.env.PUBLIC_URL}>
           <div className="App">
             <Navbar />
-            <Route path="/" component={Landing} />
+            <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/forgotPassword" component={ForgotPassword} />
