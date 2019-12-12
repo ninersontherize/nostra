@@ -23,7 +23,7 @@
     "eject": "react-scripts eject"
   },
   "proxy": "http://www.nostra.gg:5000",
-  "homepage": "http://www.nostra.gg",
+  "homepage": "http://www.nostra.gg/client/",
   "eslintConfig": {
     "extends": "react-app"
   },
