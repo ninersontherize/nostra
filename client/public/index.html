@@ -20,11 +20,22 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>nostra.gg</title>
   </head>
-  <% if (window.location.pathname = "/") then %>
-  <body onload="window.location.replace('http://www.nostra.gg/home')">
-  <% else 
-    <body>
-  %>
+  <body>
+    <script type='text/javascript'>
+      (function()
+      {
+        if( window.localStorage )
+        {
+          if( !localStorage.getItem('firstLoad') )
+          {
+            localStorage['firstLoad'] = true;
+            window.location.assign('http://www.nostra.gg/home');
+          }  
+          else
+            localStorage.removeItem('firstLoad');
+        }
+      })();
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!-- Compiled and minified JavaScript -->
