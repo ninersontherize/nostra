@@ -20,7 +20,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>nostra.gg</title>
   </head>
+  <% if (window.location.pathname = "/") then %>
   <body onload="window.location.replace('http://www.nostra.gg/home')">
+  <% else 
+    <body>
+  %>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!-- Compiled and minified JavaScript -->
