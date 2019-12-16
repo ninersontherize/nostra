@@ -22,17 +22,18 @@
   </head>
   <body>
     <script type='text/javascript'>
-      (function()
-      {
-        if( window.localStorage )
-        {
-          if( !localStorage.getItem('firstLoad') )
-          {
+      (function() {
+        if( window.localStorage ) {
+          if( !localStorage.getItem('firstLoad') && window.location.pathname === "/") {
             localStorage['firstLoad'] = true;
-            window.location.assign('http://www.nostra.gg/home');
-          }  
-          else
+            if (localStorage["jwtToken"]) {
+              window.location.assign('http://www.nostra.gg/dashboard');
+            } else {
+              window.location.assign('http://www.nostra.gg/home');
+            }
+          } else {
             localStorage.removeItem('firstLoad');
+          }
         }
       })();
     </script>
