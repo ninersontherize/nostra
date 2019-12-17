@@ -22,9 +22,9 @@ const User = require("../../models/User");
 router.get("/users", (req, res) => {
 
   if ( isEmpty(req.query || req.query.search === "" ) ) {
-    User.find().then( users => res.json(users)).catch(err => console.log(err));
+    User.find({}, {_id: 1, username: 1, favorite_team: 1}).then( users => res.json(users)).catch(err => console.log(err));
   } else {
-    User.find({ name: req.query.search }).then( users => res.json(users)).catch(err => console.log(err));
+    User.find({ name: req.query.search }, {_id: 1, username: 1, favorite_team: 1}).then( users => res.json(users)).catch(err => console.log(err));
   }
 
 });

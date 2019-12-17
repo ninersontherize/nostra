@@ -122,3 +122,22 @@ export const favoriteUser = (followerId, history) => dispatch => {
       })
     );
 };
+
+//Search for League
+export const searchUser = searchData => dispatch => {
+  return axios
+    .get("/api/users/users", {
+      params: {
+        search: searchData
+      }
+    })
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};

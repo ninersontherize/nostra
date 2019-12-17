@@ -38,6 +38,9 @@ class UserProfile extends Component {
       followee_id: this.props.match.params.user_id
     };
     this.props.followUser(followData, this.props.history);
+    this.setState({
+      is_followed: true
+    });
   }
 
   onUnfollowClick = e => {
@@ -47,6 +50,9 @@ class UserProfile extends Component {
       followee_id: this.props.match.params.user_id
     };
     this.props.unfollowUser(followData, this.props.history);
+    this.setState({
+      is_followed:false
+    })
   }
 
   renderOdds = (odd_type, odd) => {
@@ -76,12 +82,6 @@ class UserProfile extends Component {
       return home_team_logo;
     }
   };
-
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    if(nextProps.location.key !== this.props.location.key) {
-      window.location.reload();
-    }
-  }
 
   componentDidMount() {
 
@@ -412,9 +412,11 @@ class UserProfile extends Component {
                   {league_table}
                   <div className="divider" />
                   <div className="row">
-                    <h4 className="profile-sub-title">
-                      Followers
-                    </h4>
+                    <Link className="dash-link" to='/searchUser'>
+                      <h4 className="profile-sub-title">
+                        Followers
+                      </h4>
+                    </Link>
                     <div className="follower-table-container">
                       <table className="striped long-table">
                         <thead className="long-table">

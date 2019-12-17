@@ -44,6 +44,11 @@ class NewDashboard extends Component {
 
   onFavoriteClick = id => {
     this.props.favoriteUser(id, this.props.history);
+    this.state.follower_results.filter(obj => {
+      if (obj.follower_id === id) {
+        obj.favorite = !obj.favorite;
+      }
+    });
   }
 
   renderOddType = odd_type => {
@@ -69,11 +74,11 @@ class NewDashboard extends Component {
     }
   };
 
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    if(nextProps.location.key !== this.props.location.key) {
-      window.location.reload();
-    }
-  };
+  //UNSAFE_componentWillReceiveProps = nextProps => {
+  //  if(nextProps.location.key !== this.props.location.key) {
+  //    window.location.reload();
+  //  }
+  //};
 
   componentDidMount() {
 
@@ -296,9 +301,11 @@ class NewDashboard extends Component {
                   {league_table}
                   <div className="divider" />
                   <div className="row">
-                    <h4 className="profile-sub-title">
-                      Following
-                    </h4>
+                    <Link className="dash-link" to='/searchUser'>
+                      <h4 className="profile-sub-title">
+                        Following
+                      </h4>
+                    </Link>
                     <div className="follower-table-container">
                       <table className="striped long-table">
                         <thead className="long-table">
