@@ -74,12 +74,6 @@ class NewDashboard extends Component {
     }
   };
 
-  //UNSAFE_componentWillReceiveProps = nextProps => {
-  //  if(nextProps.location.key !== this.props.location.key) {
-  //    window.location.reload();
-  //  }
-  //};
-
   componentDidMount() {
 
     this.props.showUser(this.props.auth.user.id).then(res => {

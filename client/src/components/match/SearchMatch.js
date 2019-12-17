@@ -15,6 +15,7 @@ class SearchMatch extends Component {
     this.state = {
       search: "",
       search_results: [],
+      display_search_results: [],
       errors: {}
     };
   }
@@ -35,9 +36,8 @@ class SearchMatch extends Component {
     await this.props.searchMatch(searchData).then(res => {
             this.setState({ 
               search: "",
-              search_results: res 
+              display_search_results: res
             });
-            console.log(this.state.search_results);
           });
           
   };
@@ -50,17 +50,25 @@ class SearchMatch extends Component {
     }
   };
 
+  onFilterClick = id => {
+    var new_search_results = [];
+    
+    this.state.search_results.filter(obj => {
+      if (obj.tournament.name === id || obj.home_team.short_name === id || obj.away_team.short_name === id) {
+        new_search_results = new_search_results.concat(obj);
+      }
+    });
+
+    this.setState({
+      display_search_results: new_search_results
+    });
+  };
+
   renderMatchTime = datetime => {
     let match_hour = (datetime.getHours() % 12);
     let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
     let match_trailer = (datetime.getHours() > 11) ? " PM" : " AM";
     return match_hour + ":" + match_minute + match_trailer;
-  };
-
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    if(nextProps.location.key !== this.props.location.key) {
-      window.location.reload();
-    }
   };
 
   componentDidMount() {
@@ -70,7 +78,10 @@ class SearchMatch extends Component {
     search_values.search === undefined ? search = null : search = search_values.search;
     
     this.props.searchMatch(search).then(res => {
-      this.setState({ search_results: res });
+      this.setState({ 
+        search_results: res,
+        display_search_results: res
+      });
     });
   };
 
@@ -135,12 +146,14 @@ class SearchMatch extends Component {
                 </tr>
               </thead>
               <tbody className="long-table">
-                {this.state.search_results.map(row => (
+                {this.state.display_search_results.map(row => (
                   <tr key={row._id}>
                     <td>
-                      <Link to={`/searchMatch?search=${row.tournament.name}`}>   
+                      <button
+                        className="btn-flat"
+                        onClick={() => this.onFilterClick(row.tournament.name)}> 
                         <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
-                      </Link>
+                      </button>
                     </td>
                     <td>
                       <div className="row search-info-row-container">
@@ -150,18 +163,22 @@ class SearchMatch extends Component {
                         <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
                       </div>
                     </td>
-                    <td className="right-align" component="th" scope="row">           
-                      <Link to={`/searchMatch?search=${row.home_team.short_name}`}> 
+                    <td className="right-align" component="th" scope="row">
+                      <button
+                        className="btn-flat"
+                        onClick={() => this.onFilterClick(row.home_team.short_name)}>            
                         <img className="search-match-img" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
-                      </Link>
+                      </button>
                     </td>
                     <td className="center-align" component="th" scope="row">
                       <span className="versus-small"> vs. </span>
                     </td>
                     <td className="left-align" component="th" scope="row">
-                      <Link to={`/searchMatch?search=${row.away_team.short_name}`}>   
+                      <button
+                        className="btn-flat"
+                        onClick={() => this.onFilterClick(row.away_team.short_name)}>   
                         <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
-                      </Link>
+                      </button>
                     </td>
                     <td className="right-align">
                       <div className="row search-info-row-container">
