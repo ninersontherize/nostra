@@ -448,3 +448,65 @@ table.striped > tbody > tr:nth-child(odd) {
   padding: 0;
   float: top;
 }
+
+.tournament-landing-img {
+  display: inline-table;
+  max-width:350px;
+  max-height:175px;
+  width: auto;
+  height: auto;
+}
+
+.landing-row1-img {
+  display: inline-table;
+  max-width:125px;
+  max-height:125px;
+  width: auto;
+  height: auto;
+}
+
+.landing-row2-img {
+  display: inline-table;
+  max-width:100px;
+  max-height:100px;
+  width: auto;
+  height: auto;
+  opacity: 0.7;
+}
+
+.landing-row3-img {
+  display: inline-table;
+  max-width:80px;
+  max-height:80px;
+  width: auto;
+  height: auto;
+  opacity: 0.5;
+}
+
+.landing-row4-img {
+  display: inline-table;
+  max-width:70px;
+  max-height:70px;
+  width: auto;
+  height: auto;
+  opacity: 0.3;
+}
+
+.landing-table-container {
+  border-left: 1px solid lightgray;
+  height: auto;
+}
+
+.landing-header {
+  font-size: 50px;
+  font-weight: 300;
+}
+
+.landing-sub-header {
+  font-size: 25px;
+  font-weight: 300;
+}
+
+.tournament-landing-header {
+  height:175px;
+}
