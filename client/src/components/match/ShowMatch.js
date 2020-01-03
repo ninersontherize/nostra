@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { showMatch, updateMatchTeams } from "../../actions/matchActions";
 import { getMyLeagues, showUserLeague } from "../../actions/leagueActions";
-import { createWager } from "../../actions/wagerActions";
+import { createWager, getWagersByMatch } from "../../actions/wagerActions";
 import classnames from "classnames"
 import M from "materialize-css";
 
@@ -30,6 +30,7 @@ class ShowMatch extends Component {
       wager_league: "",
       wager_amount: "",
       available_funds: "",
+      winner_search: [],
       errors: {}
     };
   }
@@ -99,6 +100,26 @@ class ShowMatch extends Component {
     }
   };
 
+  renderOdds = (odd_type, odd) => {
+    if(odd > 0 && odd_type === "spread") {
+      return `+${odd/1000} K`;
+    } else if (odd < 0 && odd_type === "spread") {
+      return `${odd/1000} K`;
+    } else if (odd > 0) {
+      return `+${odd}`;
+    } else {
+      return odd;
+    }
+  };
+
+  renderOddType = odd_type => {
+    if (odd_type === "spread") {
+      return "Spread";
+    } else {
+      return "Money Line";
+    }
+  };
+
   renderMoney = money => {
     if (money === "") {
       return
@@ -145,6 +166,28 @@ class ShowMatch extends Component {
       })
     });
 
+    await this.props.getWagersByMatch(this.props.match.params.match_id).then(res => {
+      res.forEach(row => {
+        this.props.showUserLeague(row.user_league_id).then(user_league => {
+          row.username = user_league.username;
+          row.user_id = user_league.user_id;
+          row.league_id = user_league.league._id;
+          row.user_bankroll = user_league.user_bankroll;
+          row.league_name = user_league.league.name;
+
+          if (row.team_id === row.match.home_team._id) {
+            row.team_logo = row.match.home_team.logo_small;
+          } else {
+            row.team_logo = row.match.away_team.logo_small;
+          }
+
+          this.setState({
+            winner_search: this.state.winner_search.concat(row)
+          })
+        })
+      });
+    });
+
     if (this.state.winning_id) {
       this.setState({
         match_complete: true
@@ -167,6 +210,68 @@ class ShowMatch extends Component {
 
     if (this.state.match_complete === false) {
       wager_section = 
+      <div className="section">
+      <div className="section">
+        <div className="row">
+          <div className="col s12">
+            <span className="sub-title-show-match"><b>Latest</b> Odds</span>
+          </div>
+          <div className="col s10 offset-s1">
+            <table className="striped">
+              <tbody>
+                <tr key="spread">
+                  <td className="right-align">
+                    <div className={this.state.money_line_home > 0 ? "odds-green" : "odds-red"}>
+                      <div className="money-line">
+                        <span className="money-line-odds" title="money-line-odds">{this.renderPositiveOdds(this.state.money_line_home)}</span>
+                      </div>
+                    </div>   
+                  </td>
+                  <td className="center-align">
+                    <div className="odds-label">
+                      <span className="money-line">Money Line</span>
+                    </div>
+                  </td>
+                  <td className="left-align">
+                    <div className={this.state.money_line_away > 0 ? "odds-green" : "odds-red"}>
+                      <div className="money-line">
+                        <span className="money-line-odds">{this.renderPositiveOdds(this.state.money_line_away)}</span>
+                      </div>
+                    </div> 
+                  </td>
+                </tr>
+                <tr key="money-line">
+                  <td className="right-align">
+                    <div className={this.state.spread_home > 0 ? "odds-green" : "odds-red"}>
+                      <div className="spread">
+                        <span className="spread-odds" title="spread-odds">{this.renderPositiveOdds(this.state.spread_home/1000)} K</span>
+                      </div>
+                    </div> 
+                  </td>
+                  <td className="center-align">
+                    <div className="odds-label">
+                      <div className="row parenthesis">
+                        <span className="spread">Spread</span>
+                      </div> 
+                      <div className="row parenthesis">
+                        <span className="spread">(Total Gold)</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="left-align">
+                    <div className={this.state.spread_away > 0 ? "odds-green" : "odds-red"}>
+                      <div className="spread">
+                        <span className="spread-odds">{this.renderPositiveOdds(this.state.spread_away/1000)} K</span>
+                      </div>
+                    </div> 
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>      
+      <div className="divider"></div>
       <div className="section">
         <div className="row">
           <div className="col s12">
@@ -232,19 +337,66 @@ class ShowMatch extends Component {
           </form>
         </div>
       </div>
+    </div>
     } else {
       wager_section = 
       <div className="section">
-        <div className="row">
-          <div className="col s5 offset-s1 winner-label">
-            <span className="winner-label">Match Winner: </span>
+        <div className="section">
+          <div className="row">
+            <div className="col s5 offset-s1 winner-label">
+              <span className="winner-label">Match Winner: </span>
+            </div>
+            <div className="col s1">
+              <img className="show-match-winner-img" src={process.env.PUBLIC_URL + this.getWinner(this.state.winning_id)} />
+            </div>
+            <div className="col s4 gold-diff">
+              <span className="gold-diff"> ({this.renderPositiveOdds(this.state.gold_difference)})</span>
+            </div>
           </div>
-          <div className="col s1">
-            <img className="show-match-winner-img" src={process.env.PUBLIC_URL + this.getWinner(this.state.winning_id)} />
-          </div>
-          <div className="col s4 gold-diff">
-            <span className="gold-diff"> ({this.renderPositiveOdds(this.state.gold_difference)})</span>
-          </div>
+        </div>
+        <div className="divider"></div>
+        <div className="section">
+          <table className="highlight dash-table-center">
+            <thead>
+              <tr>
+                <th>League</th>
+                <th className="center-align">User</th>
+                <th className="center-align">Pick</th>
+                <th className="center-align">Amount</th>
+                <th className="center-align">Odds</th>
+                <th className="right-align">Payout</th>
+              </tr>
+            </thead>
+            <tbody>  
+              {this.state.winner_search.map(row => (
+                <tr className="dash-row" key={row._id}>
+                  <td className="dash-league-name" component="th" scope="row">
+                    <Link className="dash-link" to={`/joinLeague/${row.league_id}`}>
+                      {row.league_name}
+                    </Link>
+                  </td>
+                  <td className="center-align dash-league-name" component="th" scope="row">
+                    <Link className="dash-link" to={`/userProfile/${row.user_id}`}>
+                      {row.username}
+                    </Link>
+                  </td>
+                  <td className="center-align" component="th" scope="row">           
+                    <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                  </td>
+                  <td className="center-align">{row.amount}g</td>
+                  <td className="center-align">
+                    <div className="row dash-text-container">
+                      <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
+                    </div>
+                    <div className="row dash-text-container"> 
+                      <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                    </div>
+                  </td>
+                  <td className="right-align dash-info-value-green">{row.payout}g</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     }
@@ -298,67 +450,6 @@ class ShowMatch extends Component {
               </div>
             </div>
             <div className="divider"></div>
-            <div className="section">
-              <div className="row">
-                <div className="col s12">
-                  <span className="sub-title-show-match"><b>Latest</b> Odds</span>
-                </div>
-                <div className="col s10 offset-s1">
-                  <table className="striped">
-                    <tbody>
-                      <tr key="spread">
-                        <td className="right-align">
-                          <div className={this.state.money_line_home > 0 ? "odds-green" : "odds-red"}>
-                            <div className="money-line">
-                              <span className="money-line-odds" title="money-line-odds">{this.renderPositiveOdds(this.state.money_line_home)}</span>
-                            </div>
-                          </div>   
-                        </td>
-                        <td className="center-align">
-                          <div className="odds-label">
-                            <span className="money-line">Money Line</span>
-                          </div>
-                        </td>
-                        <td className="left-align">
-                          <div className={this.state.money_line_away > 0 ? "odds-green" : "odds-red"}>
-                            <div className="money-line">
-                              <span className="money-line-odds">{this.renderPositiveOdds(this.state.money_line_away)}</span>
-                            </div>
-                          </div> 
-                        </td>
-                      </tr>
-                      <tr key="money-line">
-                        <td className="right-align">
-                          <div className={this.state.spread_home > 0 ? "odds-green" : "odds-red"}>
-                            <div className="spread">
-                              <span className="spread-odds" title="spread-odds">{this.renderPositiveOdds(this.state.spread_home/1000)} K</span>
-                            </div>
-                          </div> 
-                        </td>
-                        <td className="center-align">
-                          <div className="odds-label">
-                            <div className="row parenthesis">
-                              <span className="spread">Spread</span>
-                            </div> 
-                            <div className="row parenthesis">
-                              <span className="spread">(Total Gold)</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="left-align">
-                          <div className={this.state.spread_away > 0 ? "odds-green" : "odds-red"}>
-                            <div className="spread">
-                              <span className="spread-odds">{this.renderPositiveOdds(this.state.spread_away/1000)} K</span>
-                            </div>
-                          </div> 
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>        
-            <div className="divider"></div>
             {wager_section}
           </div>
         </div>
@@ -373,6 +464,7 @@ ShowMatch.propTypes = {
   updateMatchTeams: PropTypes.func.isRequired,
   createWager: PropTypes.func.isRequired,
   showUserLeague: PropTypes.func.isRequired,
+  getWagersByMatch: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -382,4 +474,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager, updateMatchTeams, showUserLeague })(withRouter(ShowMatch));
+export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager, updateMatchTeams, showUserLeague, getWagersByMatch })(withRouter(ShowMatch));

@@ -275,7 +275,7 @@ class Dashboard extends Component {
                         {this.state.match_search_results.map(row => (
                           <tr className="dash-row" key={row._id}>
                             <td className="center-align">
-                              <Link to={`/searchMatch?search=${row.tournament.name}`}>   
+                              <Link to={`showMatch/${row._id}`}>   
                                 <img className="dash-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
                               </Link>
                             </td>

@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getMyLeagues, showLeague } from "../../actions/leagueActions";
-import { getMyWagers, getLeagueInfo } from "../../actions/wagerActions";
+import { getMyWagers, getLeagueInfo, deleteWager } from "../../actions/wagerActions";
 import { showUser, getFollowing, favoriteUser } from "../../actions/userActions";
 import { showTeam } from "../../actions/teamActions";
 import { searchMatch } from "../../actions/matchActions";
@@ -15,10 +15,12 @@ class NewDashboard extends Component {
 
     this.state = {
       wager_search_results: [],
+      display_wager_search_results: [],
       wager_empty: false,
       league_search_results: [],
       leagues_empty: false,
       match_search_results: [],
+      display_match_search_results: [],
       follower_results: [],
       username: "",
       status: "",
@@ -74,6 +76,51 @@ class NewDashboard extends Component {
     }
   };
 
+  onMatchFilterClick = id => {
+    var new_search_results = [];
+    
+    this.state.match_search_results.filter(obj => {
+      if (obj.tournament.name === id || obj.home_team.short_name === id || obj.away_team.short_name === id) {
+        new_search_results = new_search_results.concat(obj);
+      }
+    });
+
+    this.setState({
+      display_match_search_results: new_search_results
+    });
+  };
+
+  onWagerFilterClick = id => {
+    var new_search_results = [];
+    
+    this.state.wager_search_results.filter(obj => {
+      if (obj.team_id === id || obj.match.home_team.short_name === id || obj.match.away_team.short_name === id) {
+        new_search_results = new_search_results.concat(obj);
+      }
+    });
+
+    this.setState({
+      display_wager_search_results: new_search_results
+    });
+  };
+
+  deleteWagerClick = id => {
+    var new_search_results = [];
+    console.log(id);
+    this.props.deleteWager(id).then(wager_res => {
+      this.state.wager_search_results.filter(obj => {
+        if (obj._id !== id) {
+          new_search_results = new_search_results.concat(obj);
+        }
+      });
+
+      this.setState({
+        wager_search_results: new_search_results,
+        display_wager_search_results: new_search_results
+      })
+    })
+  };
+
   componentDidMount() {
 
     this.props.showUser(this.props.auth.user.id).then(res => {
@@ -95,7 +142,7 @@ class NewDashboard extends Component {
     });
 
     this.props.getFollowing(this.props.auth.user.id).then(res => {
-      console.log(res);
+
       res.forEach(row => {
         this.props.showUser(row.followee_id).then(user_info => {
           user_info.favorite = row.favorite
@@ -142,14 +189,17 @@ class NewDashboard extends Component {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
           row.league_id = user_league.league._id;
+
           if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
           } else {
             row.team_logo = row.match.away_team.logo_small;
           }
-          if (row.closed === null) {
+
+          if (row.closed === null || Date.parse(row.match.match_date) < Date.now()) {
             this.setState({
-              wager_search_results: this.state.wager_search_results.concat(row)
+              wager_search_results: this.state.wager_search_results.concat(row),
+              display_wager_search_results: this.state.display_wager_search_results.concat(row)
             });
           }
         });
@@ -160,7 +210,8 @@ class NewDashboard extends Component {
       res.forEach(row => {
         if (row.winning_id === null) {
           this.setState({
-            match_search_results: this.state.match_search_results.concat(row)
+            match_search_results: this.state.match_search_results.concat(row),
+            display_match_search_results: this.state.display_match_search_results.concat(row)
           });
         }
       });
@@ -195,26 +246,31 @@ class NewDashboard extends Component {
                           <th className="center-align">Match</th>
                           <th></th>
                           <th className="center-align">Odds</th>
+                          <th className="center-align"></th>
                         </tr>
                       </thead>
                       <tbody>
-                        {this.state.wager_search_results.map(row => (
+                        {this.state.display_wager_search_results.map(row => (
                           <tr className="dash-row" key={row._id}>
                             <td className="dash-league-name" component="th" scope="row">
                               <Link className="dash-link" to={`/joinLeague/${row.league_id}`}>
                                 {row.league_name}
                               </Link>
                             </td>
-                            <td className="center-align">
-                              <Link to={`/showMatch/${row.match_id}`}>
+                            <td className="center-align" component="th" scope="row">
+                              <button
+                                className="btn-flat"
+                                onClick={() => this.onWagerFilterClick(row.team_id)}>            
                                 <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
-                              </Link>
+                              </button>
                             </td>
                             <td className="center-align">{row.amount}g</td>
                             <td className="right-align" component="th" scope="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
+                              <button
+                                className="btn-flat"
+                                onClick={() => this.onWagerFilterClick(row.match.home_team.short_name)}>            
                                 <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
-                              </Link>
+                              </button>
                             </td>
                             <td className="center-align" conponent="th" scopt="row">
                               <Link to={`/showMatch/${row.match_id}`} className="dash-link">
@@ -222,9 +278,11 @@ class NewDashboard extends Component {
                               </Link>
                             </td>
                             <td className="left-align" component="th" scope="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
+                              <button
+                                className="btn-flat"
+                                onClick={() => this.onWagerFilterClick(row.match.away_team.short_name)}>            
                                 <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
-                              </Link>
+                              </button>
                             </td>
                             <td className="center-align">
                               <div className="row dash-text-container">
@@ -233,6 +291,20 @@ class NewDashboard extends Component {
                               <div className="row dash-text-container"> 
                                 <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
                               </div>
+                            </td>
+                            <td>
+                              <button
+                                style={{
+                                  width: "90px",
+                                  borderRadius: "1px",
+                                  letterSpacing: "1px",
+                                  marginTop: "1rem",
+                                  fontSize: "12px"
+                                }}
+                                onClick={() => this.deleteWagerClick(row._id)}
+                                className="btn-flat waves-effect waves-light hoverable nostra-button-unfollow">
+                                  Cancel
+                              </button>
                             </td>
                           </tr>
                         ))}
@@ -349,15 +421,18 @@ class NewDashboard extends Component {
                         <th></th>
                         <th className="left-align">Money Line</th>
                         <th className="left-align">Spread</th>
+                        <th className="right-align"></th>
                       </tr>
                     </thead>
                     <tbody className="long-table">
-                      {this.state.match_search_results.map(row => (
+                      {this.state.display_match_search_results.map(row => (
                         <tr className="dash-row" key={row._id}>
                           <td>
-                            <Link to={`/searchMatch?search=${row.tournament.name}`}>   
+                            <button
+                              className="btn-flat"
+                              onClick={() => this.onMatchFilterClick(row.tournament.name)}> 
                               <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
-                            </Link>
+                            </button>
                           </td>
                           <td>
                             <div className="row search-info-row-container">
@@ -367,18 +442,24 @@ class NewDashboard extends Component {
                               <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
                             </div>
                           </td>
-                          <td className="right-align" component="th" scope="row">           
-                            <Link to={`/searchMatch?search=${row.home_team.short_name}`}> 
+                          <td className="right-align" component="th" scope="row">
+                            <button
+                              className="btn-flat"
+                              onClick={() => this.onMatchFilterClick(row.home_team.short_name)}>            
                               <img className="search-match-img" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
-                            </Link>
+                            </button>
                           </td>
-                          <td className="center-align" component="th" scope="row">
-                            <span className="versus-small"> vs. </span>
+                          <td className="center-align" conponent="th" scopt="row">
+                            <Link to={`/showMatch/${row._id}`} className="dash-link">
+                              <span className="versus-small">vs.</span>
+                            </Link>
                           </td>
                           <td className="left-align" component="th" scope="row">
-                            <Link to={`/searchMatch?search=${row.away_team.short_name}`}>   
+                            <button
+                              className="btn-flat"
+                              onClick={() => this.onMatchFilterClick(row.away_team.short_name)}>   
                               <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
-                            </Link>
+                            </button>
                           </td>
                           <td className="left-align">
                             <div className="row search-info-row-container">
@@ -400,6 +481,7 @@ class NewDashboard extends Component {
                               <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
                             </div>
                           </td>
+                          <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>
                         </tr>
                       ))}
                     </tbody>
@@ -423,6 +505,7 @@ NewDashboard.propTypes = {
   showUser: PropTypes.func.isRequired,
   showTeam: PropTypes.func.isRequired,
   getMyWagers: PropTypes.func.isRequired,
+  deleteWager: PropTypes.func.isRequired,
   getFollowing: PropTypes.func.isRequired,
   searchMatch: PropTypes.func.isRequired,
   favoriteUser: PropTypes.func.isRequired,
@@ -433,4 +516,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getMyLeagues, showLeague, getLeagueInfo, showTeam, showUser, getMyWagers, getFollowing, searchMatch, favoriteUser})(withRouter(NewDashboard));
+export default connect(mapStateToProps, { getMyLeagues, showLeague, getLeagueInfo, showTeam, showUser, getMyWagers, deleteWager, getFollowing, searchMatch, favoriteUser})(withRouter(NewDashboard));

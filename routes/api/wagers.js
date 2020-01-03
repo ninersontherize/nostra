@@ -90,7 +90,7 @@ router.get("/:id/wagersByMatch", (req, res) => {
 
   var id = req.params.id;
 
-  Wager.find({ match_id: id }).then( wagers => {
+  Wager.find({ match_id: id, win: true }).sort({ payout: -1 }).limit(5).then( wagers => {
     res.json(wagers);
   }).catch(err => console.log(err));
 

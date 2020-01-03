@@ -69,3 +69,29 @@ export const getTopLosses = userInfo => dispatch => {
       })
     );
 }
+
+//Get wagers by match
+export const getWagersByMatch = matchId => dispatch => {
+  return axios
+    .get(`/api/wagers/${matchId}/wagersByMatch`)
+    .then(res => {return res.data;})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+}
+
+//Delete Wager by wager id
+export const deleteWager = wagerId => dispatch => {
+  return axios
+    .delete(`/api/wagers/${wagerId}/deleteWager`)
+    .then(res => {return res.data;})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+}

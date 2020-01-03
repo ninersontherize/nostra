@@ -286,7 +286,7 @@ class UserProfile extends Component {
                                 <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
                               </div>
                             </td>
-                            <td className="right-align">{(row.payout-row.amount)}g</td>
+                            <td className="right-align dash-info-value-green">{(row.payout-row.amount)}g</td>
                           </tr>
                         ))}
                       </tbody>

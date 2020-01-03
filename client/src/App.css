@@ -98,13 +98,13 @@ table.striped > tbody > tr:nth-child(odd) {
 }
 
 .league-info-label {
-  font-weight: bold;
+  font-weight: 400;
   font-size: 15px;
   float: right;
 }
 
 .search-info-label {
-  font-weight: bold;
+  font-weight: 400;
   font-size: 15px;
 }
 

@@ -171,7 +171,9 @@ class SearchMatch extends Component {
                       </button>
                     </td>
                     <td className="center-align" component="th" scope="row">
-                      <span className="versus-small"> vs. </span>
+                      <Link to={`/showMatch/${row._id}`} className="dash-link">
+                        <span className="versus-small">vs.</span>
+                      </Link>
                     </td>
                     <td className="left-align" component="th" scope="row">
                       <button
