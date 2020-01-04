@@ -253,7 +253,7 @@ class NewDashboard extends Component {
                     <div className="section">
                       <div className="row">
                         <span className="flow-text dash-info-text">
-                          This user hasn't won any wagers yet, check back soon.
+                          You haven't placed any wagers yet, click on an upcoming match below to place one!
                         </span>
                       </div>
                     </div>
@@ -362,9 +362,11 @@ class NewDashboard extends Component {
       <div className="container">
         <div className="row">
           <div className="col s12 center-align">
-            <h4 className="header-text">
-              <b>Hey there,</b> {user.name.split(" ")[0]}
-            </h4>
+            <div className="row dash-welcome-text">
+              <h4 className="header-text">
+                <b>Hey there,</b> {user.name.split(" ")[0]}
+              </h4>
+            </div>
             <div className="divider"></div>
             <div className="section">
               <div className="row">
@@ -427,12 +429,12 @@ class NewDashboard extends Component {
                     </Link>
                   </h4>
                   {wager_table}
-                  <div className="divider"></div>
+                  <br/>
                   <h4 className="dash-sub-title">
                     <Link className="dash-link" to="/searchMatch">
                       <span><b>Upcoming</b> Matches</span>
                     </Link>
-                  </h4>                 
+                  </h4>  
                   <table className="highlight dash-table-center long-table" pageSize={(this.state.match_search_results.length > 3) ? 3 : this.state.match_search_results.length}>
                     <thead className="long-table">
                       <tr>
