@@ -102,8 +102,6 @@ class NewDashboard extends Component {
   };
 
   onWagerFilterClick = id => {
-    console.log(this.state.current_wager_filter);
-    console.log(id);
     if (this.state.current_wager_filter === id) {
       this.setState({
         display_wager_search_results: this.state.wager_search_results,

@@ -16,6 +16,7 @@ class SearchMatch extends Component {
       search: "",
       search_results: [],
       display_search_results: [],
+      current_filter: "",
       errors: {}
     };
   }
@@ -51,6 +52,14 @@ class SearchMatch extends Component {
   };
 
   onFilterClick = id => {
+    if (this.state.current_filter === id) {
+      this.setState({
+        display_search_results: this.state.search_results,
+        current_filter: ""
+      });
+      return;
+    }
+
     var new_search_results = [];
     
     this.state.search_results.filter(obj => {
@@ -60,7 +69,8 @@ class SearchMatch extends Component {
     });
 
     this.setState({
-      display_search_results: new_search_results
+      display_search_results: new_search_results,
+      current_filter: id
     });
   };
 
