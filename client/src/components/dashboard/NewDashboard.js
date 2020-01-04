@@ -28,6 +28,8 @@ class NewDashboard extends Component {
       favorite_team_logo: "",
       lifetime_earnings_cash: "",
       lifetime_earnings_pct: "",
+      current_match_filter: "",
+      current_wager_filter: "",
       errors: {}
     };
   }
@@ -77,6 +79,14 @@ class NewDashboard extends Component {
   };
 
   onMatchFilterClick = id => {
+    if (this.state.current_match_filter === id) {
+      this.setState({
+        display_match_search_results: this.state.match_search_results,
+        current_match_filter: ""
+      });
+      return;
+    }
+
     var new_search_results = [];
     
     this.state.match_search_results.filter(obj => {
@@ -86,11 +96,22 @@ class NewDashboard extends Component {
     });
 
     this.setState({
-      display_match_search_results: new_search_results
+      display_match_search_results: new_search_results,
+      current_match_filter: id
     });
   };
 
   onWagerFilterClick = id => {
+    console.log(this.state.current_wager_filter);
+    console.log(id);
+    if (this.state.current_wager_filter === id) {
+      this.setState({
+        display_wager_search_results: this.state.wager_search_results,
+        current_wager_filter: ""
+      });
+      return;
+    }
+
     var new_search_results = [];
     
     this.state.wager_search_results.filter(obj => {
@@ -100,7 +121,8 @@ class NewDashboard extends Component {
     });
 
     this.setState({
-      display_wager_search_results: new_search_results
+      display_wager_search_results: new_search_results,
+      current_wager_filter: id
     });
   };
 
@@ -192,14 +214,16 @@ class NewDashboard extends Component {
 
           if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
+            row.short_name = row.match.home_team.short_name;
           } else {
             row.team_logo = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.logo_small;
           }
 
           if (row.closed === null || Date.parse(row.match.match_date) < Date.now()) {
             this.setState({
-              wager_search_results: this.state.wager_search_results.concat(row),
-              display_wager_search_results: this.state.display_wager_search_results.concat(row)
+              wager_search_results: this.state.wager_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1),
+              display_wager_search_results: this.state.display_wager_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1)
             });
           }
         });
@@ -260,7 +284,7 @@ class NewDashboard extends Component {
                             <td className="center-align" component="th" scope="row">
                               <button
                                 className="btn-flat"
-                                onClick={() => this.onWagerFilterClick(row.team_id)}>            
+                                onClick={() => this.onWagerFilterClick(row.short_name)}>            
                                 <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
                               </button>
                             </td>
