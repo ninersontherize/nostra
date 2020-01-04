@@ -13,7 +13,7 @@ class Landing extends Component {
             <p className="flow-text grey-text text-darken-1 landing-sub-header">
               Use strategy and game knowledge to predict wins, bank gold, and beat your friends.
               <br></ br>
-              Login or create and account below to play.
+              Login or create an account below to play.
             </p>
           </div> 
           <div className="col s12 center-align">          

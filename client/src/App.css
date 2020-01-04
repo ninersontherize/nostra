@@ -427,6 +427,7 @@ table.striped > tbody > tr:nth-child(odd) {
 .profile-info-container {
   border-right: 1px solid lightgrey;
   width: 200px;
+  height: auto;
 }
 
 .profile-sub-title {

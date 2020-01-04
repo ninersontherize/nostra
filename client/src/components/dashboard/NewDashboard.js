@@ -373,7 +373,7 @@ class NewDashboard extends Component {
                       </h4>
                     </Link>
                     <div className="follower-table-container">
-                      <table className="striped long-table">
+                      <table className={(this.state.follower_results.length < 7) ? "striped" : "striped long-table"}>
                         <thead className="long-table">
                         </thead>
                         <tbody className="long-table">
