@@ -10,6 +10,9 @@ class MyWagers extends Component {
 
     this.state = {
       search_results: [],
+      display_search_results: [],
+      current_filter: "",
+      current_tournament_filter: "",
       errors: {}
     };
   }
@@ -46,6 +49,70 @@ class MyWagers extends Component {
     }
   };
 
+  onFilterClick = id => {
+    if (this.state.current_filter === id) {
+      this.setState({
+        display_search_results: this.state.search_results,
+        current_tournament_filter: "",
+        current_filter: ""
+      });
+      return;
+    }
+
+    var new_search_results = [];
+
+    if (this.state.current_tournament_filter ===  "") {
+      this.state.search_results.filter(obj => {
+        if (obj.match.home_team.short_name === id || obj.match.away_team.short_name === id) {
+          new_search_results = new_search_results.concat(obj);
+        }
+      });
+    } else {
+      this.state.search_results.filter(obj => {
+        if ((obj.match.home_team.short_name === id || obj.match.away_team.short_name === id) && obj.league_name === this.state.current_tournament_filter) {
+          new_search_results = new_search_results.concat(obj);
+        }
+      });
+    }
+
+    this.setState({
+      display_search_results: new_search_results,
+      current_filter: id
+    });
+  };
+
+  onTournamentFilterClick = id => {
+    if (this.state.current_tournament_filter === id) {
+      this.setState({
+        display_search_results: this.state.search_results,
+        current_tournament_filter: "",
+        current_filter: ""
+      });
+      return;
+    }
+
+    var new_search_results = [];
+
+    if (this.state.current_filter ===  "") {
+      this.state.search_results.filter(obj => {
+        if (obj.league_name === id) {
+          new_search_results = new_search_results.concat(obj);
+        }
+      });
+    } else {
+      this.state.search_results.filter(obj => {
+        if ((obj.match.home_team.short_name === this.state.current_filter || obj.match.away_team.short_name === this.state.current_filter) && obj.league_name === id) {
+          new_search_results = new_search_results.concat(obj);
+        }
+      });
+    }
+
+    this.setState({
+      display_search_results: new_search_results,
+      current_tournament_filter: id
+    });
+  };
+
   async componentDidMount() {
     await this.props.getMyWagers(this.props.auth.user.id).then(res => {
       res.forEach(row => {
@@ -54,13 +121,15 @@ class MyWagers extends Component {
           row.league_id = user_league.league._id;
           if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
+            row.short_name = row.match.home_team.short_name;
           } else {
             row.team_logo = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.logo_small;
           }
           this.setState({
-            search_results: this.state.search_results.concat(row)
+            search_results: this.state.search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1).sort((a, b) => (a.closed === null || a.closed < b.closed) ? -1 : 1),
+            display_search_results: this.state.display_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1).sort((a, b) => (a.closed === null || a.closed < b.closed) ? -1 : 1)
           });
-          console.log(this.state.search_results);
         });
       });
     });
@@ -80,28 +149,37 @@ class MyWagers extends Component {
             <table className="highlight long-table-wager">
               <thead className="long-table-wager">
                 <tr>
-                  <th>League Name</th>
+                  <th>League</th>
                   <th></th>
                   <th className="center-align">Match</th>
                   <th></th>
-                  <th className="right-align">Amount</th>
-                  <th className="right-align">Team</th>
-                  <th className="right-align">Odds</th>
-                  <th className="right-align">Win</th>
+                  <th className="center-align">Amount</th>
+                  <th className="center-align">Pick</th>
+                  <th className="center-align">Odds</th>
+                  <th className="center-align">Win</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody className="long-table-wager">
-                {this.state.search_results.map(row => (
-                  <tr key={row.league_id}>
-                    <td component="th" scope="row">
-                      <Link to={`/joinLeague/${row.league_id}`} className="dash-link">
+                {this.state.display_search_results.map(row => (
+                  <tr key={row._id}>
+                    <td component="th" scope="row" className="truncate">
+                      <button
+                        style={{
+                          width: "100px",
+                          fontSize: "10px"
+                        }}
+                        className="btn-flat truncate"
+                        onClick={() => this.onTournamentFilterClick(row.league_name)}>            
                         {row.league_name}
-                      </Link>
+                      </button>
                     </td>
                     <td className="right-align" component="th" scope="row">
-                      <Link to={`showMatch/${row.match_id}`} className="dash-link">
+                      <button
+                        className="btn-flat"
+                        onClick={() => this.onFilterClick(row.match.home_team.short_name)}>            
                         <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.home_team.logo_small} />
-                      </Link>
+                      </button>
                     </td>
                     <td className="center-align" conponent="th" scopt="row">
                       <Link to={`showMatch/${row.match_id}`} className="dash-link">
@@ -109,13 +187,21 @@ class MyWagers extends Component {
                       </Link>
                     </td>
                     <td className="left-align" component="th" scope="row">
-                      <Link to={`showMatch/${row.match_id}`} className="dash-link">
+                      <button
+                        className="btn-flat"
+                        onClick={() => this.onFilterClick(row.match.away_team.short_name)}>            
                         <img className="search-match-img" src={process.env.PUBLIC_URL + row.match.away_team.logo_small} />
-                      </Link>
+                      </button>
                     </td>
-                    <td className="right-align">{row.amount}g</td>
-                    <td className="right-align"><img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} /></td>
-                    <td className="right-align">
+                    <td className="center-align">{row.amount}g</td>
+                    <td className="center-align">
+                      <button
+                        className="btn-flat"
+                        onClick={() => this.onFilterClick(row.short_name)}>            
+                        <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                      </button>
+                    </td>
+                    <td className="center-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{this.renderOddType(row.wager_type)}</span>
                       </div>
@@ -123,7 +209,8 @@ class MyWagers extends Component {
                         <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
                       </div>
                     </td>
-                    <td className="right-align">{this.renderWin(row.win, row.closed)}</td>
+                    <td className="center-align">{this.renderWin(row.win, row.closed)}</td>
+                    <td className="right-align"><Link to={`/showMatch/${row.match._id}`}>Match Page</Link></td>
                   </tr>
                 ))}
               </tbody>

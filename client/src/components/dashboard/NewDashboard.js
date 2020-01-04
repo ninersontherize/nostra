@@ -113,7 +113,7 @@ class NewDashboard extends Component {
     var new_search_results = [];
     
     this.state.wager_search_results.filter(obj => {
-      if (obj.team_id === id || obj.match.home_team.short_name === id || obj.match.away_team.short_name === id) {
+      if (obj.match.home_team.short_name === id || obj.match.away_team.short_name === id) {
         new_search_results = new_search_results.concat(obj);
       }
     });

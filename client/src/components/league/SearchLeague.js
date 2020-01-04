@@ -66,37 +66,33 @@ class SearchLeague extends Component {
               </h4>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
-              <div className="section">
-                <div className="row">
-                  <div className="input-field col s6 offset-s2">
-                    <input
-                      onChange={this.onChange}
-                      value={this.state.search}
-                      error={errors.search}
-                      id="search"
-                      type="text"
-                      className={classnames('', { invalid: errors.search })}
-                    />
-                    <label htmlFor="name">Search</label>
-                    <span className="red-text">{errors.search}</span>
-                  </div>
-                  <div className="col s1" style={{ paddingLeft: "11.250px" }}>
-                    <button
-                      style={{
-                        width: "150px",
-                        borderRadius: "3px",
-                        letterSpacing: "1.5px",
-                        marginTop: "1rem"
-                      }}
-                      type="submit"
-                      className="btn btn-flat waves-effect waves-light hoverable nostra-button">
-                        Search
-                      </button>
-                  </div>
-                </div>
+              <div className="input-field col s6 offset-s2">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.search}
+                  error={errors.search}
+                  id="search"
+                  type="text"
+                  className={classnames('', { invalid: errors.search })}
+                />
+                <label htmlFor="name">Search</label>
+                <span className="red-text">{errors.search}</span>
+              </div>
+              <div className="col s1" style={{ paddingLeft: "11.250px" }}>
+                <button
+                  style={{
+                    width: "150px",
+                    borderRadius: "3px",
+                    letterSpacing: "1.5px",
+                    marginTop: "1rem"
+                  }}
+                  type="submit"
+                  className="btn btn-flat waves-effect waves-light hoverable nostra-button">
+                    Search
+                  </button>
               </div>
             </form>
-            <table className="highlight minwidth: 650" aria-label="simple table">
+            <table className={(this.state.search_results.length < 7) ? "highlight" : "highlight long-table"}>
               <thead>
                 <tr>
                   <th>League Name</th>
@@ -126,6 +122,20 @@ class SearchLeague extends Component {
                 ))}
               </tbody>
             </table>
+            <div className="section">
+              <div className="row">
+                <Link
+                  to="/createLeague"
+                  style={{
+                    width: "250px",
+                    borderRadius: "3px",
+                    letterSpacing: "1.5px"
+                  }}
+                  className="btn btn-flat waves effect waves-light hoverable nostra-button">
+                    Create New League
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
