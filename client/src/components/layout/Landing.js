@@ -124,7 +124,7 @@ class Landing extends Component {
                       <img className="landing-row3-img" src={process.env.PUBLIC_URL + "/lcs/fq_large.png"} />
                     </td>
                     <td className="left-align">
-                      <img className="landing-row3-img" src={process.env.PUBLIC_URL + "/lcs/ggs_large.png"} />
+                      <img className="landing-row3-img" src={process.env.PUBLIC_URL + "/lcs/ggs_small.png"} />
                     </td>
                     <td></td>
                     <td></td>
