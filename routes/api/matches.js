@@ -5,7 +5,7 @@ const isEmpty = require("is-empty");
 const Match = require("../../models/Match");
 const Team = require("../../models/Team");
 
-// @route POST api/matchess/createMatch
+// @route POST api/matches/createMatch
 // @desc Create Match
 // @access Public
 router.post("/createMatch", (req, res) => {
@@ -51,6 +51,56 @@ router.post("/createMatch", (req, res) => {
         }
       });
     }
+  });
+  
+});
+
+// @route POST api/matches/batchCreateMatch
+// @desc Create Match
+// @access Private - script use only
+router.post("/batchCreateMatch", (req, res) => {
+
+  req.body.forEach(match => {
+    console.log(match.match_date);
+    Tournament.findOne({ name: match.tournament, split: match.split }).then(tournament => {
+      if (!tournament) {
+        return res.status(404).json({ league: "Matches must take place in a valid tournament, please check tournament id and try again." });
+      } else {
+        Team.findOne({ short_name: match.home_team, "tournament.name": tournament.name }).then(home_team => {
+          if (!home_team) {
+            return res.status(404).json({ home_team: "Home team must be a valid team, please check home team id and try again" });
+          } else {
+            Team.findOne({ short_name: match.away_team, "tournament.name": tournament.name }).then(away_team => {
+              if (!away_team) {
+                return res.status(404).json({ away_team: "Away team must be a valid team, please check away team id and try again"})
+              } else {
+                Match.findOne({ tournament_id: tournament._id, home_team_id: home_team._id, away_team_id: away_team._id, match_date: match.match_date }).then( existing_match => {
+                  if (existing_match) {
+                    return res.status(400).json({ league: "Match participants and date must be unique, please try again." });
+                  } else {
+                    const new_match = new Match({
+                      tournament: tournament,
+                      home_team: home_team,
+                      away_team: away_team,
+                      money_line_home: null,
+                      money_line_away: null,
+                      spread_home: null,
+                      spread_away: null,
+                      winning_id: null,
+                      losing_id: null,
+                      gold_difference: null,
+                      match_date: match.match_date
+                    });
+              
+                    new_match.save().then(match => res.json(match)).catch(err => console.log(err));
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
   });
   
 });
