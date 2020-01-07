@@ -27,9 +27,9 @@
           if( !localStorage.getItem('firstLoad') && window.location.pathname === "/") {
             localStorage['firstLoad'] = true;
             if (localStorage["jwtToken"]) {
-              window.location.assign('http://www.nostra.gg/dashboard');
+              window.location.assign('https://www.nostra.gg/dashboard');
             } else {
-              window.location.assign('http://www.nostra.gg/home');
+              window.location.assign('https://www.nostra.gg/home');
             }
           } else {
             localStorage.removeItem('firstLoad');
