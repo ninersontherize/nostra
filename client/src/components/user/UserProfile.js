@@ -83,6 +83,12 @@ class UserProfile extends Component {
     }
   };
 
+  UNSAFE_componentWillReceiveProps = nextProps => {
+    if(nextProps.location.key !== this.props.location.key) {
+      window.location.reload();
+    }
+  };
+
   componentDidMount() {
 
     this.props.checkFollowed(this.props.auth.user.id, this.props.match.params.user_id).then(res => {
@@ -203,6 +209,7 @@ class UserProfile extends Component {
     var wager_win_table;
     var wager_loss_table;
     var follow_button;
+    const { location, match } = this.props;
 
     if (this.state.is_followed === false) {
       follow_button =
@@ -425,7 +432,7 @@ class UserProfile extends Component {
                           {this.state.follower_results.map(row => (
                             <tr className="dash-row" key={row._id}>
                               <td className="left-align">
-                                <Link className="dash-link" to={`/userProfile/${row._id}`}>
+                                <Link className="dash-link" to={location.pathname.replace(match.params.user_id, row._id)}>
                                   {row.username}
                                 </Link>
                               </td>
@@ -444,7 +451,7 @@ class UserProfile extends Component {
                     Biggest Wins
                   </h4>
                   {wager_win_table}
-                  <div className="divider"></div>
+                  <br/>
                   <h4 className="profile-sub-title">
                     Biggest Losses
                   </h4>                 

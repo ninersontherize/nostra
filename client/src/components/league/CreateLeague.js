@@ -24,7 +24,7 @@ class CreateLeague extends Component {
       ),
       private: false,
       max_players: "",
-      starting_cash: 5000,
+      starting_cash: 20000,
       in_progress: false,
       errors: {}
     };
@@ -164,21 +164,6 @@ class CreateLeague extends Component {
                       <span className="lever"></span>
                       Private
                     </label>
-                  </div>
-                </div>
-                <div className="row row-input-field">
-                  <div className="input-field col s8 offset-s2">
-                    <input
-                      placeholder={this.starting_cash}
-                      onChange={this.onChange}
-                      value={this.state.starting_cash}
-                      error={errors.starting_cash}
-                      id="starting_cash"
-                      type="number"
-                      className={classnames('', { invalid: errors.starting_cash })}
-                    />
-                    <label htmlFor="name">Starting Gold</label>
-                    <span className="red-text">{errors.starting_cash}</span>
                   </div>
                 </div>
                 <div className="row">
