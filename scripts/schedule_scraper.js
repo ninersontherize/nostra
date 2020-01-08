@@ -28,7 +28,7 @@ if (!LEAGUE || !YEAR || !SPLIT) {
   let match_set = [];
 
   //grab schedule info
-  for(let j = 0; j < 9; j++) {
+  for(let j = 0; j < 4; j++) {
     $($(`tr.ml-allw.ml-w${j+1}.matchlist-date.matchlist-you-date.ofl-toggle-2-1.ofl-toggle-2-2.ofl-toggler-2-all`).children()).each((i, elm) => {
       split_date = $(elm).text().split(",");
       if (split_date[1] < 10) {
@@ -36,12 +36,8 @@ if (!LEAGUE || !YEAR || !SPLIT) {
       } else {
         match_month = split_date[1];
       }
-
-      if (split_date[2] < 10) {
-        match_day = `0${split_date[2]}`
-      } else {
-        match_day = split_date[2];
-      }
+  
+      match_day = split_date[2];
       concat_date = `${split_date[0]}-${match_month}-${match_day}T${split_date[3]}:${split_date[4]}:00.000Z`
       match_date[i] = concat_date;
     });
@@ -61,7 +57,7 @@ if (!LEAGUE || !YEAR || !SPLIT) {
           if ($(elm).find('span.teamname').text() === "100") {
             away_team = "100T"
           } else if ($(elm).find('span.teamname').text() === "GG") {
-            home_team = "GGS"
+            away_team = "GGS"
           } else {
             away_team = $(elm).find('span.teamname').text();
           }
@@ -74,9 +70,11 @@ if (!LEAGUE || !YEAR || !SPLIT) {
           away_team: away_team,
           match_date: match_date[match_count - 1]
         };
+
         match_count++;
         home_team = "";
         away_team = "";
+ 
         if ($(elm).find('span.teamname').text() != "") {
           if ($(elm).find('span.teamname').text() === "100") {
             home_team = "100T"
@@ -98,12 +96,15 @@ if (!LEAGUE || !YEAR || !SPLIT) {
         };
       }
 
-
     });
     match_count = 1;
     match_date = [];
+    home_team = "";
+    away_team = "";
   }
-  console.log(JSON.stringify(match_set));
-
+  
+  console.log(match_set);
+  payload = JSON.stringify(match_set);
+  console.log(payload);
 
 })();

@@ -76,6 +76,9 @@ class SearchMatch extends Component {
 
   renderMatchTime = datetime => {
     let match_hour = (datetime.getHours() % 12);
+    if (match_hour === 0) {
+      match_hour = 12;
+    }
     let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
     let match_trailer = (datetime.getHours() > 11) ? " PM" : " AM";
     return match_hour + ":" + match_minute + match_trailer;
@@ -96,12 +99,6 @@ class SearchMatch extends Component {
   };
 
   render() {
-
-    let match_date = new Date(this.state.match_date);
-    let match_hour = (match_date.getHours() % 12);
-    let match_minute = (match_date.getMinutes() < 10) ? "0" + match_date.getMinutes() : match_date.getMinutes();
-    let match_trailer = (match_date.getHours() > 11) ? " PM" : " AM";
-    let match_time = match_hour + ":" + match_minute + match_trailer;
 
     const{ errors } = this.state;
     return (

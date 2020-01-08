@@ -511,3 +511,45 @@ table.striped > tbody > tr:nth-child(odd) {
 .tournament-landing-header {
   height:175px;
 }
+
+.info-row {
+  height: 20px;
+}
+
+.info-link {
+  font-size: 10px;
+}
+
+.info-title-row {
+  height: 120px;
+}
+
+.info-header {
+  font-size: 40px;
+  font-weight: 300;
+  text-decoration: underline;
+}
+
+.info-sub-header {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.info-section-title {
+  font-size: 28px;
+  font-weight: 300;
+  text-decoration: underline;
+}
+
+.info-section-text {
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.info-example-img {
+  display: inline-table;
+  max-width:600px;
+  max-height:600px;
+  width: auto;
+  height: auto;
+}

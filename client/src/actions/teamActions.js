@@ -4,7 +4,7 @@ import {
   GET_ERRORS
 } from "./types";
 
-//show info for a user
+//show info for a team
 export const showTeam = teamData => dispatch => {
   return axios
     .get(`/api/teams/${teamData}/showTeam`)

@@ -298,5 +298,22 @@ router.put("/:id/editUser", (req, res) => {
 
 });
 
+// @route PUT api/users/:id/checkAdmin
+// @desc check if user is a site admin
+// @access public
+router.get("/:id/checkAdmin", (req, res) => {
+
+  var id = req.params.id;
+
+  User.findOne({ _id: id }).then( user => {
+    if (!user) {
+      return res.status(404).json({ user: "User not found"});
+    } else {
+      res.status(200).send({ admin: user.site_admin });
+    }
+  });
+  
+});
+
 
 module.exports = router;

@@ -95,3 +95,16 @@ export const deleteWager = wagerId => dispatch => {
       })
     );
 }
+
+//Update match odds
+export const updateMatchOdds = (matchId, oddsInfo, history) => dispatch => {
+  axios
+    .put(`/api/matches/${matchId}/updateMatchOdds`, oddsInfo)
+    .then(res => history.push(`/showMatch/${matchId}`)) //re-direct to searchMatch on successful creation
+    .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+}

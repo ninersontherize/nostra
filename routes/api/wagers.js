@@ -379,4 +379,13 @@ router.put("/:id/resolveWagers", (req, res) => {
   });
 });
 
+// @route DELETE api/wagers/deleteWager
+// @desc Delete a wager by id
+// @access public
+router.delete("/deleteAll", (req, res) => {
+
+  Match.deleteMany({}).then(res => console.log(res));
+
+});
+
 module.exports = router;

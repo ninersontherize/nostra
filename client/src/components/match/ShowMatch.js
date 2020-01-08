@@ -202,6 +202,9 @@ class ShowMatch extends Component {
     let wager_section;
     let match_date = new Date(this.state.match_date);
     let match_hour = (match_date.getHours() % 12);
+    if (match_hour === 0) {
+      match_hour = 12;
+    }
     let match_minute = (match_date.getMinutes() < 10) ? "0" + match_date.getMinutes() : match_date.getMinutes();
     let match_trailer = (match_date.getHours() > 11) ? " PM" : " AM";
     let match_time = match_hour + ":" + match_minute + match_trailer;
@@ -215,6 +218,11 @@ class ShowMatch extends Component {
         <div className="row">
           <div className="col s12">
             <span className="sub-title-show-match"><b>Latest</b> Odds</span>
+          </div>
+          <div className="row info-row">
+            <div className="col s12">
+              <Link className="info-link" to="/oddsInfo">How do odds affect my wager?</Link>
+            </div>
           </div>
           <div className="col s10 offset-s1">
             <table className="striped">
