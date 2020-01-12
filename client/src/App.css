@@ -553,3 +553,12 @@ table.striped > tbody > tr:nth-child(odd) {
   width: auto;
   height: auto;
 }
+
+.dash-league-link { 
+  color: darkgray;
+  font-size: 15px;
+}
+
+.dash-league-link:hover {
+  color: rgb(54, 173, 247);
+}

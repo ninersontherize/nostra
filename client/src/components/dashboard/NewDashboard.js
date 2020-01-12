@@ -6,7 +6,7 @@ import { getMyLeagues, showLeague } from "../../actions/leagueActions";
 import { getMyWagers, getLeagueInfo, deleteWager } from "../../actions/wagerActions";
 import { showUser, getFollowing, favoriteUser } from "../../actions/userActions";
 import { showTeam } from "../../actions/teamActions";
-import { searchMatch } from "../../actions/matchActions";
+import { searchMatchByDateRange } from "../../actions/matchActions";
 
 
 class NewDashboard extends Component {
@@ -69,7 +69,7 @@ class NewDashboard extends Component {
       match_hour = 12;
     }
     let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
-    let match_trailer = (datetime.getHours() > 11) ? " PM" : " AM";
+    let match_trailer = (datetime.getHours() > 11) ? " PM PST" : " AM PST";
     return match_hour + ":" + match_minute + match_trailer;
   };
 
@@ -164,41 +164,24 @@ class NewDashboard extends Component {
       }
     });
 
-    this.props.getFollowing(this.props.auth.user.id).then(res => {
+    var next_week = new Date();
+    next_week.setDate(next_week.getDate() + 14);
 
+    const DateRange = {
+      start_date: Date.now(),
+      end_date: Date.parse(next_week)
+    };
+
+    console.log(DateRange);
+
+    this.props.searchMatchByDateRange(DateRange).then(res => {
       res.forEach(row => {
-        this.props.showUser(row.followee_id).then(user_info => {
-          user_info.favorite = row.favorite
-          user_info.follower_id = row._id
+        if (row.winning_id === null) {
           this.setState({
-            follower_results: this.state.follower_results.concat(user_info).sort((a, b) => (a.favorite < b.favorite) ? 1 : -1)
+            match_search_results: this.state.match_search_results.concat(row),
+            display_match_search_results: this.state.display_match_search_results.concat(row)
           });
-        });
-      });
-    });
-
-    this.props.getMyLeagues(this.props.auth.user.id).then(res => {
-      if (res.length === 0) {
-        this.setState({
-          leagues_empty: true
-        });
-      }
-      var lifetime_starting_cash = 0;
-      var lifetime_bankroll = 0;
-      res.forEach(row => {
-        this.props.showLeague(row.league._id).then(res => {
-          res.bankroll = row.user_bankroll;
-          res.bankroll_percent_change = row.bankroll_percent_change;
-
-          lifetime_bankroll = lifetime_bankroll + row.user_bankroll;
-          lifetime_starting_cash = lifetime_starting_cash + res.starting_cash;
-        
-          this.setState({ 
-            league_search_results: this.state.league_search_results.concat(res).sort((a, b) => (a.bankroll_percent_change < b.bankroll_percent_change) ? 1 : -1),
-            lifetime_earnings_cash: lifetime_bankroll - lifetime_starting_cash,
-            lifetime_earnings_pct: ((lifetime_bankroll - lifetime_starting_cash)/lifetime_starting_cash*100).toFixed(2),
-          });
-        });
+        }
       });
     });
 
@@ -231,14 +214,41 @@ class NewDashboard extends Component {
       });
     });
 
-    this.props.searchMatch().then(res => {
+    this.props.getMyLeagues(this.props.auth.user.id).then(res => {
+      if (res.length === 0) {
+        this.setState({
+          leagues_empty: true
+        });
+      }
+      var lifetime_starting_cash = 0;
+      var lifetime_bankroll = 0;
       res.forEach(row => {
-        if (row.winning_id === null) {
-          this.setState({
-            match_search_results: this.state.match_search_results.concat(row),
-            display_match_search_results: this.state.display_match_search_results.concat(row)
+        this.props.showLeague(row.league._id).then(res => {
+          res.bankroll = row.user_bankroll;
+          res.bankroll_percent_change = row.bankroll_percent_change;
+
+          lifetime_bankroll = lifetime_bankroll + row.user_bankroll;
+          lifetime_starting_cash = lifetime_starting_cash + res.starting_cash;
+        
+          this.setState({ 
+            league_search_results: this.state.league_search_results.concat(res).sort((a, b) => (a.bankroll_percent_change < b.bankroll_percent_change) ? 1 : -1),
+            lifetime_earnings_cash: lifetime_bankroll - lifetime_starting_cash,
+            lifetime_earnings_pct: ((lifetime_bankroll - lifetime_starting_cash)/lifetime_starting_cash*100).toFixed(2),
           });
-        }
+        });
+      });
+    });
+
+    this.props.getFollowing(this.props.auth.user.id).then(res => {
+
+      res.forEach(row => {
+        this.props.showUser(row.followee_id).then(user_info => {
+          user_info.favorite = row.favorite
+          user_info.follower_id = row._id
+          this.setState({
+            follower_results: this.state.follower_results.concat(user_info).sort((a, b) => (a.favorite < b.favorite) ? 1 : -1)
+          });
+        });
       });
     });
 
@@ -348,8 +358,8 @@ class NewDashboard extends Component {
                           <tbody>
                             {this.state.league_search_results.map(row => (
                               <tr className="dash-row" key={row._id}>
-                                <td className="dash-league-name" component="th" scope="row">
-                                  <Link className="dash-link" to={`/joinLeague/${row._id}`}>
+                                <td className="dash-league-name right-align" component="th" scope="row">
+                                  <Link className="dash-link truncate" to={`/joinLeague/${row._id}`}>
                                     {row.name}
                                   </Link>
                                 </td>
@@ -358,6 +368,22 @@ class NewDashboard extends Component {
                             ))}
                           </tbody>
                         </table>
+                      </div>
+    } else {
+      league_table =  <div className="row">
+                          <h4 className="profile-sub-title">
+                            Leagues
+                          </h4>
+                        <div className="row">
+                          <Link className="dash-league-link" to="/createLeague">
+                            Create New League
+                          </Link>
+                        </div>
+                        <div className="row">
+                          <Link className="dash-league-link" to='/searchLeague'>
+                            Search Available Leagues
+                          </Link>
+                        </div>
                       </div>
     }
 
@@ -534,7 +560,7 @@ NewDashboard.propTypes = {
   getMyWagers: PropTypes.func.isRequired,
   deleteWager: PropTypes.func.isRequired,
   getFollowing: PropTypes.func.isRequired,
-  searchMatch: PropTypes.func.isRequired,
+  searchMatchByDateRange: PropTypes.func.isRequired,
   favoriteUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -543,4 +569,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getMyLeagues, showLeague, getLeagueInfo, showTeam, showUser, getMyWagers, deleteWager, getFollowing, searchMatch, favoriteUser})(withRouter(NewDashboard));
+export default connect(mapStateToProps, { getMyLeagues, showLeague, getLeagueInfo, showTeam, showUser, getMyWagers, deleteWager, getFollowing, searchMatchByDateRange, favoriteUser})(withRouter(NewDashboard));

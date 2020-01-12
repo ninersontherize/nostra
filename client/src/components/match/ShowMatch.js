@@ -206,7 +206,7 @@ class ShowMatch extends Component {
       match_hour = 12;
     }
     let match_minute = (match_date.getMinutes() < 10) ? "0" + match_date.getMinutes() : match_date.getMinutes();
-    let match_trailer = (match_date.getHours() > 11) ? " PM" : " AM";
+    let match_trailer = (match_date.getHours() > 11) ? " PM PST" : " AM PST";
     let match_time = match_hour + ":" + match_minute + match_trailer;
     let home_logo = process.env.PUBLIC_URL + this.state.home_team.logo_large;
     let away_logo = process.env.PUBLIC_URL + this.state.away_team.logo_large;

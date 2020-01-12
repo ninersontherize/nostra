@@ -134,19 +134,8 @@ router.get("/matches", (req, res) => {
 // @access public
 router.get("/matchesByDate", (req, res) => {
 
-  if ( isEmpty(req.query) ) {
-    Match.find().then(matches => res.json(matches)).catch(err => console.log(err));
-  } else if (isEmpty(req.query.end_date)) {
-    console.log(req.query.start_date);
-    Match.find({ match_date: { $gte: new Date(req.query.start_date) } }).sort({match_date: 1})
+    Match.find({$and: [{ match_date: { $gte: req.query.start_date } }, { match_date: { $lte: req.query.end_date } }] }).sort({match_date: 1})
       .then( matches => res.json(matches)).catch(err => console.log(err));
-  } else if (isEmpty(req.query.start_date)) {
-    Match.find({ match_date: { $lte: new Date(req.query.end_date) } }).sort({match_date: 1})
-      .then( matches => res.json(matches)).catch(err => console.log(err));
-  } else {
-    Match.find({$and: [{ match_date: { $gte: new Date(req.query.start_date) } }, { match_date: { $lte: new Date(req.query.end_date) } }] }).sort({match_date: 1})
-      .then( matches => res.json(matches)).catch(err => console.log(err));
-  }
 
 });
 

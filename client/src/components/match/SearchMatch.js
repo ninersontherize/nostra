@@ -80,7 +80,7 @@ class SearchMatch extends Component {
       match_hour = 12;
     }
     let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
-    let match_trailer = (datetime.getHours() > 11) ? " PM" : " AM";
+    let match_trailer = (datetime.getHours() > 11) ? " PM PST" : " AM PST";
     return match_hour + ":" + match_minute + match_trailer;
   };
 
