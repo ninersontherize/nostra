@@ -81,11 +81,11 @@ class MyLeagues extends Component {
                     <td className="center-align">{row.game}</td>
                     <td className="center-align">
                       {row.leagues_supported.map(sub_row => (
-                        <span><img className="search-match-tournament-img" src={process.env.PUBLIC_URL + sub_row.tournament_logo} /> </span>
+                        <span><img className="dash-tournament-img" src={process.env.PUBLIC_URL + sub_row.tournament_logo} /> </span>
                       ))}
                     </td>
                     <td className="center-align">{row.bankroll}</td>
-                    <td className={row.bankroll_percent_change > 0 ? "search-info-value-green right-align" : "search-info-value-red right-align"}>{row.bankroll_percent_change}%</td>
+                    <td className={row.bankroll_percent_change < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.bankroll_percent_change}%</td>
                   </tr>
                 ))}
               </tbody>

@@ -14,7 +14,7 @@ class CreateLeague extends Component {
     this.state = {
       name: "",
       game: "League of Legends",
-      leagues_supported: [],
+      leagues_supported: ["LCS", "LEC"],
       checkboxes: OPTIONS.reduce(
         (options, option) => ({
           ...options,

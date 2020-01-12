@@ -349,7 +349,7 @@ class NewDashboard extends Component {
 
     if ((this.state.leagues_empty === false)) {
       league_table =  <div className="row">
-                        <Link className="dash-link" to='/searchLeague'>
+                        <Link className="dash-link" to='/myLeagues'>
                           <h4 className="profile-sub-title">
                             Leagues
                           </h4>
@@ -363,7 +363,7 @@ class NewDashboard extends Component {
                                     {row.name}
                                   </Link>
                                 </td>
-                                <td className={row.bankroll_percent_change > 0 ? "dash-info-value-green center-align" : "dash-info-value-red center-align"}>{row.bankroll_percent_change}%</td>
+                                <td className={row.bankroll_percent_change < 0 ? "dash-info-value-red center-align" : "dash-info-value-green center-align"}>{row.bankroll_percent_change}%</td>
                               </tr>
                             ))}
                           </tbody>
@@ -413,7 +413,7 @@ class NewDashboard extends Component {
                   </div>
                   <div className="row">
                     <span className="user-status">
-                      <b>Total Earnings:</b> <span className={this.state.lifetime_earnings_cash > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds("none", this.state.lifetime_earnings_cash)}g <br/>({this.renderOdds("none", this.state.lifetime_earnings_pct)}%)</span>
+                      <b>Total Earnings:</b> <span className={this.state.lifetime_earnings_cash < 0 ? "dash-info-value-red" : "dash-info-value-green"}>{this.renderOdds("none", this.state.lifetime_earnings_cash)}g <br/>({this.renderOdds("none", this.state.lifetime_earnings_pct)}%)</span>
                     </span>
                   </div>
                   <div className="divider" />
