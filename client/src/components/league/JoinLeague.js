@@ -18,8 +18,6 @@ class JoinLeague extends Component {
       current_players: [],
       max_players: "",
       starting_cash: "",
-      in_progress: "",
-      season_in_progress: "",
       private_league: "",
       user_exists: false,
       errors: {}
@@ -54,20 +52,9 @@ class JoinLeague extends Component {
         leagues_supported: res.leagues_supported,
         private: res.private,
         max_players: res.max_players,
-        starting_cash: res.starting_cash,
-        in_progress: res.in_progress
+        starting_cash: res.starting_cash
       });
     });
-
-    if (this.state.in_progress === true) {
-      this.setState({
-        season_in_progress: "Yes"
-      });
-    } else {
-      this.setState({
-        season_in_progress: "No"
-      });
-    }
 
     if (this.state.private === true) {
       this.setState({
@@ -99,7 +86,7 @@ class JoinLeague extends Component {
     let button;
     let table;
 
-    if ((this.state.private === false) && (this.state.max_players >= this.state.current_players) && (this.state.in_progress === false) && (this.state.user_exists === false)) {
+    if ((this.state.private === false) && (this.state.max_players >= this.state.current_players.length) && (this.state.user_exists === false)) {
       button = <button
                   style={{
                     width: "250px",
@@ -222,11 +209,6 @@ class JoinLeague extends Component {
                       Private:
                     </span>
                   </div>
-                  <div className="row">
-                    <span className="league-info-label">
-                      In-Progress:
-                    </span>
-                  </div>
                 </div>
                 <div className="col s3 league-info-value-container">
                   <div className="row">
@@ -242,11 +224,6 @@ class JoinLeague extends Component {
                   <div className="row">
                     <span className="league-info-value">
                       {this.state.private_league}
-                    </span>
-                  </div>
-                  <div className="row">
-                    <span className="league-info-value">
-                      {this.state.season_in_progress}
                     </span>
                   </div>
                 </div>
