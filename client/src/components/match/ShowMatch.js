@@ -58,7 +58,11 @@ class ShowMatch extends Component {
       [e.target.id]: e.target.value
     });
 
-    if (this.state.wager_info === "") {
+    if (this.state.wager_info === "" || e.target.value === "") {
+      this.setState({
+        potential_winnings: "",
+        potential_difference: ""
+      });
       return;
     } else {
       var wager_type = this.state.wager_info.split("/")[1];
