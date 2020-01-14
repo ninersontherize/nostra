@@ -344,12 +344,14 @@ router.get("/checkCurrentUserMembership", (req, res) => {
   var league_id = req.query.league_id;
   var user_id = req.query.user_id;
 
-  UserLeague.find({ league_id: league_id, user_id: user_id }).count().then(count => {
-    if (count > 0) {
-      return res.status(200).json(true);
-    } else {
-      return res.status(200).json(false);
-    }
+  League.findOne({ _id: league_id }).then(league => {
+    UserLeague.find({ "league.name": league.name, user_id: user_id }).count().then(count => {
+      if (count > 0) {
+        return res.status(200).json(true);
+      } else {
+        return res.status(200).json(false);
+      }
+    });
   });
 
 });

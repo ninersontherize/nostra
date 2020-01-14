@@ -36,8 +36,6 @@ class JoinLeague extends Component {
       user_id: this.props.auth.user.id
     };
 
-    console.log(joinData);
-
     this.props.joinLeague(joinData, this.props.history);
   };
 
@@ -76,6 +74,8 @@ class JoinLeague extends Component {
     });
 
     await this.props.checkCurrentUserMembership(userData).then(res => {
+      console.log(userData);
+      console.log(res);
       this.setState({
         user_exists: res
       });
