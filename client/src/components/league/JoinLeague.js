@@ -28,13 +28,15 @@ class JoinLeague extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  onSubmit = e => {
+  onJoinClick = e => {
     e.preventDefault();
 
     const joinData = {
       league_id: this.props.match.params.league_id,
       user_id: this.props.auth.user.id
     };
+
+    console.log(joinData);
 
     this.props.joinLeague(joinData, this.props.history);
   };
@@ -94,7 +96,7 @@ class JoinLeague extends Component {
                     letterSpacing: "1.5px",
                     marginTop: "1rem"
                   }}
-                  type="submit"
+                  onClick={this.onJoinClick}
                   className="btn btn-flat waves-effect waves-light hoverable nostra-button">
                     Join League
                 </button>;
