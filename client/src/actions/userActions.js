@@ -156,3 +156,16 @@ export const checkAdmin = userId => dispatch => {
       })
     );
 };
+
+//Edit User Settings
+export const editUserPreferences = (userId, userData, history) => dispatch => {
+  axios
+    .put(`/api/users/${userId}/editUser`, userData)
+    .then(res => history.push("/dashboard"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};

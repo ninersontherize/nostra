@@ -31,6 +31,8 @@ class ShowMatch extends Component {
       wager_amount: "",
       available_funds: "",
       winner_search: [],
+      potential_winnings: "",
+      potential_difference: "",
       errors: {}
     };
   }
@@ -49,7 +51,107 @@ class ShowMatch extends Component {
         available_funds: res.user_bankroll
       });
     });
-  }
+  };
+
+  onAmountChange = e => {
+    this.setState({ 
+      [e.target.id]: e.target.value
+    });
+
+    if (this.state.wager_info === "") {
+      return;
+    } else {
+      var wager_type = this.state.wager_info.split("/")[1];
+      var wager_team = this.state.wager_info.split("/")[0];
+      var wager_odds;
+
+      if (wager_type === "money_line") {
+        if (wager_team === this.state.home_team._id) {
+          wager_odds = this.state.money_line_home;
+          if (wager_odds < 0) {
+            this.setState({
+              potential_winnings: parseInt(((100/Math.abs(wager_odds))*parseInt(e.target.value))+parseInt(e.target.value)),
+              potential_difference: parseInt(((100/Math.abs(wager_odds))*parseInt(e.target.value)))
+            });
+          } else {
+            this.setState({
+              potential_winnings: parseInt(((wager_odds/100)*parseInt(e.target.value))+parseInt(e.target.value)),
+              potential_difference: parseInt(((wager_odds/100)*parseInt(e.target.value)))
+            });
+          }
+        } else {
+          wager_odds = this.state.money_line_away;
+          if (wager_odds < 0) {
+            this.setState({
+              potential_winnings: parseInt(((100/Math.abs(wager_odds))*parseInt(e.target.value))+parseInt(e.target.value)),
+              potential_difference: parseInt(((100/Math.abs(wager_odds))*parseInt(e.target.value)))
+            });
+          } else {
+            this.setState({
+              potential_winnings: parseInt(((wager_odds/100)*parseInt(e.target.value))+parseInt(e.target.value)),
+              potential_difference: parseInt(((wager_odds/100)*parseInt(e.target.value)))
+            });
+          }
+        }
+      } else {
+        this.setState({
+          potential_winnings: parseInt(e.target.value)*2,
+          potential_difference: parseInt(e.target.value)
+        });
+      }
+    }
+
+  };
+
+  onTeamChange = e => {
+    this.setState({ 
+      [e.target.id]: e.target.value
+    });
+
+    if (this.state.wager_amount === "") {
+      return;
+    } else {
+      var wager_type = e.target.value.split("/")[1];
+      var wager_team = e.target.value.split("/")[0];
+      var wager_odds;
+
+      if (wager_type === "money_line") {
+        if (wager_team === this.state.home_team._id) {
+          wager_odds = this.state.money_line_home;
+          if (wager_odds < 0) {
+            this.setState({
+              potential_winnings: parseInt(((100/Math.abs(wager_odds))*parseInt(this.state.wager_amount))+parseInt(this.state.wager_amount)),
+              potential_difference: parseInt(((100/Math.abs(wager_odds))*parseInt(this.state.wager_amount)))
+            });
+          } else {
+            this.setState({
+              potential_winnings: parseInt(((wager_odds/100)*parseInt(this.state.wager_amount))+parseInt(this.state.wager_amount)),
+              potential_difference: parseInt(((wager_odds/100)*parseInt(this.state.wager_amount)))
+            });
+          }
+        } else {
+          wager_odds = this.state.money_line_away;
+          if (wager_odds < 0) {
+            this.setState({
+              potential_winnings: parseInt(((100/Math.abs(wager_odds))*parseInt(this.state.wager_amount))+parseInt(this.state.wager_amount)),
+              potential_difference: parseInt(((100/Math.abs(wager_odds))*parseInt(this.state.wager_amount)))
+            });
+          } else {
+            this.setState({
+              potential_winnings: parseInt(((wager_odds/100)*parseInt(this.state.wager_amount))+parseInt(this.state.wager_amount)),
+              potential_difference: parseInt(((wager_odds/100)*parseInt(this.state.wager_amount)))
+            });
+          }
+        }
+      } else {
+        this.setState({
+          potential_winnings: parseInt(this.state.wager_amount)*2,
+          potential_difference: parseInt(this.state.wager_amount)
+        });
+      }
+    }
+
+  };
 
   onSubmit = e => {
     e.preventDefault();
@@ -125,6 +227,14 @@ class ShowMatch extends Component {
       return
     } else {
       return `${money}g`
+    }
+  }
+
+  renderDifference = money => {
+    if (money === "") {
+      return
+    } else {
+      return `(+${money}g)`
     }
   }
 
@@ -290,7 +400,7 @@ class ShowMatch extends Component {
           <form noValidate onSubmit={this.onSubmit}>
             <div className="row wager-info-container">
               <div className="input-field col s3">
-                <select id="wager_info" value={this.state.wager_info} onChange={this.onChange}>
+                <select id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange}>
                   <option value="" disabled selected>Team</option>
                   <optgroup label="Money-Line">
                     <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
@@ -314,7 +424,7 @@ class ShowMatch extends Component {
               </div>
               <div className="input-field inline col s3">
                 <input
-                  onChange={this.onChange}
+                  onChange={this.onAmountChange}
                   value={this.state.wager_amount}
                   error={errors.wager_amount}
                   id="wager_amount"
@@ -325,7 +435,13 @@ class ShowMatch extends Component {
                 <span className="red-text">{errors.amount}</span>
               </div>
               <div className="input-field inline col s3 available-funds">
-                  <span className="available-funds">Available Funds: {this.renderMoney(this.state.available_funds)}</span>
+                <div className="row">
+                  <span className="available-funds">
+                    Available Funds: {this.renderMoney(this.state.available_funds)}
+                    <br />
+                    Potential Payout: {this.renderMoney(this.state.potential_winnings)} {(this.renderDifference(this.state.potential_difference))}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="row">

@@ -24,6 +24,7 @@ import ShowMatch from "./components/match/ShowMatch";
 import SearchUser from "./components/user/SearchUser";
 import AdminSetOdds from "./components/match/AdminSetOdds";
 import OddsInfo from "./components/wager/OddsInfo";
+import UserSettings from "./components/user/UserSettings";
 
 import "./App.css";
 import ForgotPassword from './components/auth/ForgotPassword';
@@ -79,6 +80,7 @@ class App extends Component {
               <PrivateRoute exact path="/searchUser" component={SearchUser} />
               <PrivateRoute exact path="/adminSetOdds/:match_id" component={AdminSetOdds} />
               <PrivateRoute exact path="/oddsInfo" component={OddsInfo} />
+              <PrivateRoute exact path="/userSettings/:user_id" component={UserSettings} />
             </Switch>
           </div>
         </Router> 

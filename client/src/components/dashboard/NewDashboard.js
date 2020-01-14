@@ -172,8 +172,6 @@ class NewDashboard extends Component {
       end_date: Date.parse(next_week)
     };
 
-    console.log(DateRange);
-
     this.props.searchMatchByDateRange(DateRange).then(res => {
       res.forEach(row => {
         if (row.winning_id === null) {
@@ -401,7 +399,10 @@ class NewDashboard extends Component {
               <div className="row">
                 <div className="profile-info-container col s3">
                   <div className="row"> 
-                    <img className="profile-team-img" src={process.env.PUBLIC_URL + this.state.favorite_team_logo} />                 
+                    <img className="profile-team-img" src={process.env.PUBLIC_URL + this.state.favorite_team_logo} />
+                    <Link className="btn-flat settings-dash" to={`/userSettings/${this.props.auth.user.id}`}>
+                      <i class="material-icons">settings_applications</i> 
+                    </Link>               
                     <h5 className="username-header">
                       {this.state.username}
                     </h5>                    
@@ -432,17 +433,17 @@ class NewDashboard extends Component {
                         <tbody className="long-table">
                           {this.state.follower_results.map(row => (
                             <tr className="dash-row" key={row._id}>
-                              <td className="left-align">
+                              <td className="right-align">
                                 <Link className="dash-link" to={`/userProfile/${row._id}`}>
                                   {row.username}
                                 </Link>
                               </td>
                               <td className="center-align">
-                              <button
-                                className="btn-flat"
-                                onClick={() => this.onFavoriteClick(row.follower_id)}>
-                                  {(row.favorite === true) ? <i class="material-icons">star</i> : <i class="material-icons">star_border</i>}
-                              </button>
+                                <button
+                                  className="btn-flat"
+                                  onClick={() => this.onFavoriteClick(row.follower_id)}>
+                                    {(row.favorite === true) ? <i class="material-icons">star</i> : <i class="material-icons">star_border</i>}
+                                </button>
                               </td>
                             </tr>
                           ))}

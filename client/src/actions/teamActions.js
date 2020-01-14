@@ -19,3 +19,18 @@ export const showTeam = teamData => dispatch => {
     );
 };
 
+//get teams
+export const getTeams = teamData => dispatch => {
+  return axios
+    .get(`/api/teams/teams`)
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+

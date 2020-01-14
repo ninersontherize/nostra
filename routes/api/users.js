@@ -274,7 +274,7 @@ router.get("/userInformation", (req, res) => {
 // @route PUT api/users/editUser
 // @desc edit user information - used for user settings
 // @access public
-router.put("/:id/editUser", (req, res) => {
+router.put("/:id/adminEditUser", (req, res) => {
 
   var id = req.params.id;
 
@@ -286,6 +286,32 @@ router.put("/:id/editUser", (req, res) => {
         status: req.body.status,
         favorite_team: req.body.favorite_team,
         site_admin: req.body.site_admin
+      }, function(err, affected, res) {
+        console.log(res);
+      })
+      .then(() => {
+        console.log("user updated");
+        res.status(200).send({ message: "user updated successfully" });
+      });
+    }
+  });
+
+});
+
+// @route PUT api/users/editUser
+// @desc edit user information - used for user settings
+// @access public
+router.put("/:id/editUser", (req, res) => {
+
+  var id = req.params.id;
+
+  User.findOne({ _id: id }).then( user => {
+    if (!user) {
+      return res.status(404).json({ user: "That id does not exist."});
+    } else {
+      User.updateOne({ _id: id }, {
+        status: req.body.status,
+        favorite_team: req.body.favorite_team
       }, function(err, affected, res) {
         console.log(res);
       })

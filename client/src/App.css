@@ -336,7 +336,6 @@ table.striped > tbody > tr:nth-child(odd) {
   font-weight: 250;
   float: left;
   height: 0%;
-  margin-top: 4%;
 }
 
 .wager-info-container {
@@ -561,4 +560,9 @@ table.striped > tbody > tr:nth-child(odd) {
 
 .dash-league-link:hover {
   color: rgb(54, 173, 247);
+}
+
+.settings-dash {
+  float: right;
+  position: absolute;
 }
