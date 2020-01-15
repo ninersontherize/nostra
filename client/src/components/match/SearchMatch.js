@@ -43,11 +43,15 @@ class SearchMatch extends Component {
           
   };
 
-  renderPositiveOdds = odd => {
-    if(odd > 0) {
-      return `+${odd}`
+  renderOdds = (odd_type, odd) => {
+    if(odd > 0 && odd_type === "spread") {
+      return `+${odd/1000} K`;
+    } else if (odd < 0 && odd_type === "spread") {
+      return `${odd/1000} K`;
+    } else if (odd > 0) {
+      return `+${odd}`;
     } else {
-      return odd
+      return odd;
     }
   };
 
@@ -147,8 +151,8 @@ class SearchMatch extends Component {
                   <th></th>
                   <th className="center-align">Match</th>
                   <th></th>
-                  <th className="right-align">Money Line</th>
-                  <th className="right-align">Spread</th>
+                  <th className="left-align">Money Line</th>
+                  <th className="left-align">Spread</th>
                   <th className="right-align"></th>
                 </tr>
               </thead>
@@ -189,24 +193,24 @@ class SearchMatch extends Component {
                         <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                       </button>
                     </td>
-                    <td className="right-align">
+                    <td className="left-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.home_team.short_name}: </span> 
-                        <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.money_line_home)}</span> 
+                        <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_home)}</span> 
                       </div>
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.away_team.short_name}: </span>
-                        <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.money_line_away)}</span>
+                        <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_away)}</span>
                       </div>
                     </td>
-                    <td className="right-align">
+                    <td className="left-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.home_team.short_name}: </span> 
-                        <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.spread_home/1000)} K</span> 
+                        <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_home)}</span> 
                       </div>
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.away_team.short_name}: </span>
-                        <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderPositiveOdds(row.spread_away/1000)} K</span>
+                        <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
                       </div>
                     </td>
                     <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>
