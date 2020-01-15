@@ -28,7 +28,7 @@ if (!LEAGUE || !YEAR || !SPLIT) {
   let match_set = [];
 
   //grab schedule info
-  for(let j = 0; j < 4; j++) {
+  for(let j = 4; j < 9; j++) {
     $($(`tr.ml-allw.ml-w${j+1}.matchlist-date.matchlist-you-date.ofl-toggle-2-1.ofl-toggle-2-2.ofl-toggler-2-all`).children()).each((i, elm) => {
       split_date = $(elm).text().split(",");
       if (split_date[1] < 10) {

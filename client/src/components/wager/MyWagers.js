@@ -124,7 +124,7 @@ class MyWagers extends Component {
             row.short_name = row.match.home_team.short_name;
           } else {
             row.team_logo = row.match.away_team.logo_small;
-            row.short_name = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.short_name;
           }
           this.setState({
             search_results: this.state.search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1).sort((a, b) => (a.closed === null || a.closed < b.closed) ? -1 : 1),

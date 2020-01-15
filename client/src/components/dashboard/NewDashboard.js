@@ -199,7 +199,7 @@ class NewDashboard extends Component {
             row.short_name = row.match.home_team.short_name;
           } else {
             row.team_logo = row.match.away_team.logo_small;
-            row.short_name = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.short_name;
           }
 
           if (row.closed === null || Date.parse(row.match.match_date) < Date.now()) {
