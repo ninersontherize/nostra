@@ -186,9 +186,10 @@ class NewDashboard extends Component {
     this.props.getMyWagers(this.props.auth.user.id).then(res => {
       if (res.length === 0) {
         this.setState({
-          wagers_empty: true
+          wager_empty: true
         });
       }
+
       res.forEach(row => {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
@@ -257,7 +258,6 @@ class NewDashboard extends Component {
 
     var league_table;
     var wager_table;
-    var follow_button;
 
     if (this.state.wager_empty === true) {
       wager_table = 
