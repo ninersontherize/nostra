@@ -566,3 +566,7 @@ table.striped > tbody > tr:nth-child(odd) {
   float: right;
   position: absolute;
 }
+
+.update-section {
+  padding-top: 250px;
+}

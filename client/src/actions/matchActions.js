@@ -81,3 +81,15 @@ export const updateMatchTeams = matchId => dispatch => {
       })
     );
 };
+
+export const setResult = (matchId, matchData) => dispatch => {
+  axios
+    .put(`/api/matches/${matchId}/setResult`, matchData)
+    .then(res => res.data)
+    .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+}

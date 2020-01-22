@@ -335,7 +335,11 @@ router.get("/:id/checkAdmin", (req, res) => {
     if (!user) {
       return res.status(404).json({ user: "User not found"});
     } else {
-      res.status(200).send({ admin: user.site_admin });
+      if (user.site_admin === undefined) {
+        res.status(200).send({ admin: false });
+      } else {
+        res.status(200).send({ admin: user.site_admin });
+      }
     }
   });
   

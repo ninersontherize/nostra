@@ -33,6 +33,7 @@ class ShowMatch extends Component {
       winner_search: [],
       potential_winnings: "",
       potential_difference: "",
+      wager_empty: "",
       errors: {}
     };
   }
@@ -281,6 +282,12 @@ class ShowMatch extends Component {
     });
 
     await this.props.getWagersByMatch(this.props.match.params.match_id).then(res => {
+      if (res.length === 0) {
+        this.setState({
+          wager_empty: true
+        });
+      }
+      
       res.forEach(row => {
         this.props.showUserLeague(row.user_league_id).then(user_league => {
           row.username = user_league.username;
@@ -466,7 +473,7 @@ class ShowMatch extends Component {
         </div>
       </div>
     </div>
-    } else if (this.state.match_complete === true) {
+    } else if (this.state.match_complete === true && this.state.wager_empty !== true) {
       wager_section = 
       <div className="section">
         <div className="section">
@@ -525,6 +532,23 @@ class ShowMatch extends Component {
               ))}
             </tbody>
           </table>
+        </div>
+      </div>
+    } else if (this.state.match_complete === true) {
+      wager_section = 
+      <div className="section">
+        <div className="section">
+          <div className="row">
+            <div className="col s5 offset-s1 winner-label">
+              <span className="winner-label">Match Winner: </span>
+            </div>
+            <div className="col s1">
+              <img className="show-match-winner-img" src={process.env.PUBLIC_URL + this.getWinner(this.state.winning_id)} />
+            </div>
+            <div className="col s4 gold-diff">
+              <span className="gold-diff"> ({this.renderPositiveOdds(this.state.gold_difference)})</span>
+            </div>
+          </div>
         </div>
       </div>
     } else {

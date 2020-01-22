@@ -42,7 +42,7 @@ export const getLeagueInfo = user_league_id => dispatch => {
         payload: err.response.data
       })
     );
-}
+};
 
 //Get top 5 biggest wins for a given user
 export const getTopWins = userInfo => dispatch => {
@@ -55,7 +55,7 @@ export const getTopWins = userInfo => dispatch => {
         payload: err.response.data
       })
     );
-}
+};
 
 //Get top 5 biggest losses for a given user
 export const getTopLosses = userInfo => dispatch => {
@@ -68,7 +68,7 @@ export const getTopLosses = userInfo => dispatch => {
         payload: err.response.data
       })
     );
-}
+};
 
 //Get wagers by match
 export const getWagersByMatch = matchId => dispatch => {
@@ -81,7 +81,7 @@ export const getWagersByMatch = matchId => dispatch => {
         payload: err.response.data
       })
     );
-}
+};
 
 //Delete Wager by wager id
 export const deleteWager = wagerId => dispatch => {
@@ -94,17 +94,30 @@ export const deleteWager = wagerId => dispatch => {
         payload: err.response.data
       })
     );
-}
+};
 
 //Update match odds
 export const updateMatchOdds = (matchId, oddsInfo, history) => dispatch => {
   axios
     .put(`/api/matches/${matchId}/updateMatchOdds`, oddsInfo)
-    .then(res => history.push(`/searchMatch`)) //re-direct to searchMatch on successful creation
+    .then(res => history.push(`/adminMatchSearch`)) //re-direct to searchMatch on successful creation
     .catch(err => 
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
       })
     );
-}
+};
+
+//Update match odds
+export const resolveWagers = (matchId, history) => dispatch => {
+  axios
+    .put(`/api/wagers/${matchId}/resolveWagers`)
+    .then(res => history.push(`/adminMatchSearch`)) //re-direct to searchMatch on successful creation
+    .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};

@@ -33,6 +33,8 @@ import JoinLeague from './components/league/JoinLeague';
 import MyLeagues from './components/league/MyLeagues';
 import MyWagers from './components/wager/MyWagers';
 import UserProfile from './components/user/UserProfile';
+import AdminMatchSearch from './components/match/AdminMatchSearch';
+import AdminResolveMatch from './components/match/AdminResolveMatch';
 
 //Check fro token to keep user logged in
 if (localStorage.jwtToken) {
@@ -79,6 +81,8 @@ class App extends Component {
               <PrivateRoute exact path="/userProfile/:user_id" component={UserProfile} />
               <PrivateRoute exact path="/searchUser" component={SearchUser} />
               <PrivateRoute exact path="/adminSetOdds/:match_id" component={AdminSetOdds} />
+              <PrivateRoute exact path="/adminMatchSearch" component={AdminMatchSearch} />
+              <PrivateRoute exact path="/adminResolveMatch/:match_id" component={AdminResolveMatch} />
               <PrivateRoute exact path="/oddsInfo" component={OddsInfo} />
               <PrivateRoute exact path="/userSettings/:user_id" component={UserSettings} />
             </Switch>

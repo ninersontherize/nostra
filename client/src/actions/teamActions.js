@@ -34,3 +34,16 @@ export const getTeams = teamData => dispatch => {
     );
 };
 
+//update Team Records
+export const updateRecord = teamId => dispatch => {
+  axios
+    .put(`/api/teams/${teamId}/updateRecord`)
+    .then(res => res.data)
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
