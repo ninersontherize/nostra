@@ -12,9 +12,17 @@ const UserLeague = require("../../models/UserLeague");
 // @access Public
 router.post("/createWager", (req, res) => {
 
+  if (req.body.wager_user_league === "") {
+    return res.status(400).json({ wager_league: "Please select a league to attribute this wager to."});
+  } else if (req.body.wager_team === "") {
+    return res.status(400).json({ wager_info: "Please select team to wager on."});
+  } else if (req.body.wager_amount === "") {
+    return res.status(400).json({ amount: "Please enter an amount for your wager." });
+  }
+
   UserLeague.findOne({ _id: req.body.wager_user_league }).then(user_league => {
     if (!user_league) {
-      return res.status(404).json({ home_team: "Submitted user is not part of that league, please double check and try again" });
+      return res.status(404).json({ wager_league: "Submitted user is not part of that league, please double check and try again" });
     } else {
       if (req.body.wager_amount > user_league.user_bankroll || req.body.wager_amount <= 0) {
         return res.status(400).json({ amount: "Amount submitted is more that the user has available." });
@@ -91,6 +99,19 @@ router.get("/:id/wagersByMatch", (req, res) => {
   var id = req.params.id;
 
   Wager.find({ match_id: id, win: true }).sort({ payout: -1 }).limit(5).then( wagers => {
+    res.json(wagers);
+  }).catch(err => console.log(err));
+
+});
+
+// @route GET api/wagers/:id/wagers
+// @desc show wagers associated to match through url id
+// @access public
+router.get("/:id/adminWagersByMatch", (req, res) => {
+
+  var id = req.params.id;
+
+  Wager.find({ match_id: id }).then( wagers => {
     res.json(wagers);
   }).catch(err => console.log(err));
 

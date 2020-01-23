@@ -158,6 +158,14 @@ class ShowMatch extends Component {
 
   };
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   onSubmit = e => {
     e.preventDefault();
 
@@ -411,7 +419,7 @@ class ShowMatch extends Component {
           <form noValidate onSubmit={this.onSubmit}>
             <div className="row wager-info-container">
               <div className="input-field col s3">
-                <select id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange}>
+                <select id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange} error={errors.wager_info}>
                   <option value="" disabled selected>Team</option>
                   <optgroup label="Money-Line">
                     <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
@@ -423,15 +431,17 @@ class ShowMatch extends Component {
                   </optgroup>
                 </select>
                 <label>Team and Type of Wager</label>
+                <span className="red-text">{errors.wager_info}</span>
               </div>
               <div className="input-field col s3">
-                <select id="wager_league" value={this.state.wager_league} onChange={this.onLeagueChange}>
+                <select id="wager_league" value={this.state.wager_league} onChange={this.onLeagueChange} error={errors.wager_league}>
                   <option value="" disabled selected>League</option>
                   {this.state.my_leagues.map(row => (
                     <option value={row._id}>{row.league.name}</option>
                   ))}
                 </select> 
                 <label>League</label>
+                <span className="red-text">{errors.wager_league}</span>
               </div>
               <div className="input-field inline col s3">
                 <input
