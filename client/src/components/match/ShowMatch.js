@@ -322,6 +322,14 @@ class ShowMatch extends Component {
         match_complete: true
       });
     }
+
+    if (this.state.my_leagues.length === 1) {
+      this.setState({
+        wager_league: this.state.my_leagues[0],
+        available_funds: this.state.my_leagues[0].user_bankroll
+      });
+    }
+
     M.AutoInit();
   };
 
