@@ -186,7 +186,7 @@ class AdminSetOdds extends Component {
                     marginTop: "1rem"
                   }}
                   type="submit"
-                  className="btn btn-flat waves-effect waves-light hoverable nostra-button">
+                  className="btn btn-flat hoverable nostra-button">
                     Set Score
                   </button>
               </div>
@@ -194,17 +194,17 @@ class AdminSetOdds extends Component {
             <div className="update-section">
               <div className="row">
                 <div className="update-record-button-home col s5 offset-s1">
-                  <Link onClick={this.onHomeTeamUpdateClick} className="btn btn-flat waves-effect waves-light hoverable nostra-button">Update Home Record</Link>
+                  <Link onClick={this.onHomeTeamUpdateClick} className="btn btn-flat hoverable nostra-button">Update Home Record</Link>
                 </div>
                 <div className="update-record-button-away col s5">
-                  <Link onClick={this.onAwayTeamUpdateClick} className="btn btn-flat waves-effect waves-light hoverable nostra-button">Update Away Record</Link>
+                  <Link onClick={this.onAwayTeamUpdateClick} className="btn btn-flat hoverable nostra-button">Update Away Record</Link>
                 </div>
               </div>
             </div>  
             <div className="section">
               <div className="row">
                 <div className="update-record-button-home col s12">
-                  <Link onClick={this.onResolveWagerClick} className="btn btn-flat waves-effect waves-light hoverable nostra-button">Resolve Wagers</Link>
+                  <Link onClick={this.onResolveWagerClick} className="btn btn-flat hoverable nostra-button">Resolve Wagers</Link>
                 </div>
               </div>
             </div>  

@@ -87,7 +87,7 @@ class SearchLeague extends Component {
                     marginTop: "1rem"
                   }}
                   type="submit"
-                  className="btn btn-flat waves-effect waves-light hoverable nostra-button">
+                  className="btn btn-flat hoverable nostra-button">
                     Search
                   </button>
               </div>

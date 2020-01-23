@@ -18,6 +18,8 @@ router.post("/createWager", (req, res) => {
     return res.status(400).json({ wager_info: "Please select team to wager on."});
   } else if (req.body.wager_amount === "") {
     return res.status(400).json({ amount: "Please enter an amount for your wager." });
+  } else if (req.body.wager_amount <= 0) {
+    return res.status(400).json({ amount: "Wager amount must be above 0." });
   }
 
   UserLeague.findOne({ _id: req.body.wager_user_league }).then(user_league => {

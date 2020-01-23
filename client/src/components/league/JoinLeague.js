@@ -97,7 +97,7 @@ class JoinLeague extends Component {
                     marginTop: "1rem"
                   }}
                   onClick={this.onJoinClick}
-                  className="btn btn-flat waves-effect waves-light hoverable nostra-button">
+                  className="btn btn-flat hoverable nostra-button">
                     Join League
                 </button>;
     }
