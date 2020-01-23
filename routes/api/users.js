@@ -12,6 +12,7 @@ const validateRegisterInput = require("../../validation/user/register");
 const validateLoginInput = require("../../validation/user/login");
 const validateForgotPasswordInput = require("../../validation/user/forgotPassword");
 const validateUpdatePasswordInput = require("../../validation/user/updatePassword");
+const gmailTransport = require("../../config/nodemailer_config");
 
 const User = require("../../models/User");
 
@@ -165,13 +166,9 @@ router.post("/forgotPassword", (req, res) => {
       console.log(res);
     });
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: `${process.env.REACT_APP_EMAIL_ACCOUNT}`,
-        pass: `${process.env.REACT_APP_EMAIL_PASSWORD}`
-      }
-    });
+    console.log(gmailTransport);
+
+    const transporter = gmailTransport;
 
     const mailOptions = {
       from: "nostra.help@gmail.com",
