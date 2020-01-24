@@ -205,8 +205,8 @@ class NewDashboard extends Component {
 
           if (row.closed === null || Date.parse(row.match.match_date) > Date.now()) {
             this.setState({
-              wager_search_results: this.state.wager_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1),
-              display_wager_search_results: this.state.display_wager_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1)
+              wager_search_results: this.state.wager_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
+              display_wager_search_results: this.state.display_wager_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
             });
           }
         });
