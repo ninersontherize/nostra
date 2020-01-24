@@ -203,7 +203,7 @@ class NewDashboard extends Component {
             row.short_name = row.match.away_team.short_name;
           }
 
-          if (row.closed === null || Date.parse(row.match.match_date) < Date.now()) {
+          if (row.closed === null || Date.parse(row.match.match_date) > Date.now()) {
             this.setState({
               wager_search_results: this.state.wager_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1),
               display_wager_search_results: this.state.display_wager_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1)
@@ -404,7 +404,7 @@ class NewDashboard extends Component {
                       <i class="material-icons">settings_applications</i> 
                     </Link>               
                     <h5 className="username-header">
-                      {this.state.username}
+                      <Link to={`/userProfile/${this.props.auth.user.id}`} className="dash-link">{this.state.username}</Link>
                     </h5>                    
                   </div>
                   <div className="row">
