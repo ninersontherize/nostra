@@ -307,7 +307,7 @@ class NewDashboard extends Component {
                   <div className="row">
                     <h4 className="dash-sub-title">
                       <Link className="dash-link" to="/searchMatch">
-                        <span><b>Live</b> Match</span>
+                        <span><b>Live</b> Match Alert</span>
                       </Link>
                     </h4> 
                     <table className="striped">
