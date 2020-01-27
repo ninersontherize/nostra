@@ -100,7 +100,20 @@ router.get("/:id/wagersByMatch", (req, res) => {
 
   var id = req.params.id;
 
-  Wager.find({ match_id: id, win: true }).sort({ payout: -1 }).limit(5).then( wagers => {
+  Wager.find({ match_id: id, win: true }).sort({ payout: -1 }).limit(10).then( wagers => {
+    res.json(wagers);
+  }).catch(err => console.log(err));
+
+});
+
+// @route GET api/wagers/:id/wagers
+// @desc show wagers associated to match through url id
+// @access public
+router.get("/:id/losingWagersByMatch", (req, res) => {
+
+  var id = req.params.id;
+
+  Wager.find({ match_id: id, win: false }).sort({ amount: -1 }).limit(10).then( wagers => {
     res.json(wagers);
   }).catch(err => console.log(err));
 

@@ -24,6 +24,7 @@ class NewDashboard extends Component {
       past_match_search_results: [],
       display_past_match_search_results: [],
       live_match_search_results: [],
+      live_match: false,
       follower_results: [],
       username: "",
       status: "",
@@ -213,7 +214,12 @@ class NewDashboard extends Component {
       end_date: Date.now()
     }
 
-    this.props.searchMatchByDateRange(PastDateRange).then(res => {
+    this.props.searchMatchByDateRange(LiveDateRange).then(res => {
+      if (res.length > 0) {
+        this.setState({
+          live_match: true
+        });
+      }
       this.setState({
         live_match_search_results: res
       });
@@ -294,6 +300,49 @@ class NewDashboard extends Component {
 
     var league_table;
     var wager_table;
+    var live_match;
+
+    if (this.state.live_match === true) {
+      live_match =  
+                  <div className="row">
+                    <h4 className="dash-sub-title">
+                      <Link className="dash-link" to="/searchMatch">
+                        <span><b>Live</b> Match</span>
+                      </Link>
+                    </h4> 
+                    <table className="striped">
+                      <tbody className="long-table">
+                        {this.state.live_match_search_results.map(row => (
+                          <tr className="dash-row" key={row._id}>
+                            <td className="center-align">
+                              <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
+                            </td>
+                            <td className="right-align">           
+                              <img className="search-match-img" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                            </td>
+                            <td className="left-align">
+                              <span>({row.home_team.wins}-{row.home_team.losses})</span>
+                            </td>
+                            <td className="center-align">
+                              <Link to={`/showMatch/${row._id}`} className="dash-link">
+                                <span className="versus-small">vs.</span>
+                              </Link>
+                            </td>
+                            <td className="right-align">
+                              <span>({row.away_team.wins}-{row.away_team.losses})</span>
+                            </td>
+                            <td className="left-align">  
+                              <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
+                            </td>
+                            <td className="left-align">
+                              <a href={row.tournament.name === "LCS" ? "https://www.twitch.tv/lcs" : "https://www.twitch.tv/lec"}>Watch Live</a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table> 
+                  </div>
+    }
 
     if (this.state.wager_empty === true) {
       wager_table = 
@@ -496,6 +545,7 @@ class NewDashboard extends Component {
                   </h4>
                   {wager_table}
                   <br/>
+                  {live_match}
                   <h4 className="dash-sub-title">
                     <Link className="dash-link" to="/searchMatch">
                       <span><b>Upcoming</b> Matches</span>

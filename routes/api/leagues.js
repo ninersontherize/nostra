@@ -412,4 +412,27 @@ router.get("/:id/userLeague", (req, res) => {
 
 });
 
+// @route PUT api/leagues/userLeagueAllowance
+// @desc add a set amount to all userLeagues
+// @access public
+router.put("/userLeagueAllowance", (req, res) => {
+
+  let change = 2000
+
+  UserLeague.find().then( user_leagues => {
+    user_leagues.forEach(row => {
+      UserLeague.updateOne({ _id: row.id }, {
+        user_bankroll: row.user_bankroll + change,
+        bankroll_percent_change: ((((row.user_bankroll + change)/row.league.starting_cash)*100)-100)
+      }, function(err, affected, res) {
+        console.log(res);
+      }).then( user_league => {
+        console.log(user_league);
+      });
+    });
+    return res.status(200).json(user_league);
+  }).catch(err => console.log(err));
+
+});
+
 module.exports = router;

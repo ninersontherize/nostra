@@ -83,6 +83,19 @@ export const getWagersByMatch = matchId => dispatch => {
     );
 };
 
+//Get wagers by match
+export const getLosingWagersByMatch = matchId => dispatch => {
+  return axios
+    .get(`/api/wagers/${matchId}/losingWagersByMatch`)
+    .then(res => {return res.data;})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Delete Wager by wager id
 export const deleteWager = wagerId => dispatch => {
   return axios

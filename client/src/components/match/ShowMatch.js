@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { showMatch, updateMatchTeams } from "../../actions/matchActions";
 import { getMyLeagues, showUserLeague } from "../../actions/leagueActions";
-import { createWager, getWagersByMatch } from "../../actions/wagerActions";
+import { createWager, getWagersByMatch, getLosingWagersByMatch } from "../../actions/wagerActions";
 import classnames from "classnames"
 import M from "materialize-css";
 
@@ -31,6 +31,8 @@ class ShowMatch extends Component {
       wager_amount: "",
       available_funds: "",
       winner_search: [],
+      losing_wager_empty: "",
+      loser_search: [],
       potential_winnings: "",
       potential_difference: "",
       wager_empty: "",
@@ -317,6 +319,34 @@ class ShowMatch extends Component {
       });
     });
 
+    await this.props.getLosingWagersByMatch(this.props.match.params.match_id).then(res => {
+      if (res.length === 0) {
+        this.setState({
+          losing_wager_empty: true
+        });
+      }
+      
+      res.forEach(row => {
+        this.props.showUserLeague(row.user_league_id).then(user_league => {
+          row.username = user_league.username;
+          row.user_id = user_league.user_id;
+          row.league_id = user_league.league._id;
+          row.user_bankroll = user_league.user_bankroll;
+          row.league_name = user_league.league.name;
+
+          if (row.team_id === row.match.home_team._id) {
+            row.team_logo = row.match.home_team.logo_small;
+          } else {
+            row.team_logo = row.match.away_team.logo_small;
+          }
+
+          this.setState({
+            loser_search: this.state.winner_search.concat(row)
+          })
+        })
+      });
+    });
+
     if (this.state.winning_id) {
       this.setState({
         match_complete: true
@@ -509,6 +539,9 @@ class ShowMatch extends Component {
         </div>
         <div className="divider"></div>
         <div className="section">
+          <h4 className="profile-sub-title">
+            Biggest Wins
+          </h4>
           <table className="highlight dash-table-center">
             <thead>
               <tr>
@@ -546,6 +579,48 @@ class ShowMatch extends Component {
                     </div>
                   </td>
                   <td className="right-align dash-info-value-green">{row.payout}g</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h4 className="profile-sub-title">
+            Biggest Losses
+          </h4>
+          <table className="highlight dash-table-center">
+            <thead>
+              <tr>
+                <th>League</th>
+                <th className="center-align">User</th>
+                <th className="center-align">Pick</th>
+                <th className="center-align">Amount</th>
+                <th className="right-align">Odds</th>
+              </tr>
+            </thead>
+            <tbody>  
+              {this.state.loser_search.map(row => (
+                <tr className="dash-row" key={row._id}>
+                  <td className="dash-league-name" component="th" scope="row">
+                    <Link className="dash-link" to={`/joinLeague/${row.league_id}`}>
+                      {row.league_name}
+                    </Link>
+                  </td>
+                  <td className="center-align dash-league-name" component="th" scope="row">
+                    <Link className="dash-link" to={`/userProfile/${row.user_id}`}>
+                      {row.username}
+                    </Link>
+                  </td>
+                  <td className="center-align" component="th" scope="row">           
+                    <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                  </td>
+                  <td className="center-align">{row.amount}g</td>
+                  <td className="right-align">
+                    <div className="row dash-text-container">
+                      <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
+                    </div>
+                    <div className="row dash-text-container"> 
+                      <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -649,6 +724,7 @@ ShowMatch.propTypes = {
   createWager: PropTypes.func.isRequired,
   showUserLeague: PropTypes.func.isRequired,
   getWagersByMatch: PropTypes.func.isRequired,
+  getLosingWagersByMatch: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -658,4 +734,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager, updateMatchTeams, showUserLeague, getWagersByMatch })(withRouter(ShowMatch));
+export default connect(mapStateToProps, { showMatch, getMyLeagues, createWager, updateMatchTeams, showUserLeague, getWagersByMatch, getLosingWagersByMatch })(withRouter(ShowMatch));
