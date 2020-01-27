@@ -21,6 +21,9 @@ class NewDashboard extends Component {
       leagues_empty: false,
       match_search_results: [],
       display_match_search_results: [],
+      past_match_search_results: [],
+      display_past_match_search_results: [],
+      live_match_search_results: [],
       follower_results: [],
       username: "",
       status: "",
@@ -180,6 +183,39 @@ class NewDashboard extends Component {
             display_match_search_results: this.state.display_match_search_results.concat(row)
           });
         }
+      });
+    });
+
+    var one_hour = 60 * 60 * 1000;
+
+    const PastDateRange = {
+      start_date: 0,
+      end_date: Date.now() - one_hour
+    }
+
+    this.props.searchMatchByDateRange(PastDateRange).then(res => {
+      res.forEach(row => {
+        if (row.winning_id === row.home_team._id) {
+          row.team_logo = row.home_team.logo_small;
+        } else {
+          row.team_logo = row.away_team.logo_small;
+        }
+        this.setState({
+          past_match_search_results: this.state.past_match_search_results.concat(row),
+          display_past_match_search_results: this.state.display_past_match_search_results.concat(row)
+        });
+        
+      });
+    });
+
+    const LiveDateRange = {
+      start_date: Date.now() - one_hour,
+      end_date: Date.now()
+    }
+
+    this.props.searchMatchByDateRange(PastDateRange).then(res => {
+      this.setState({
+        live_match_search_results: res
       });
     });
 
@@ -534,6 +570,73 @@ class NewDashboard extends Component {
                               <span className="search-info-label">{row.away_team.short_name}: </span>
                               <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
                             </div>
+                          </td>
+                          <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <br/>
+                  <h4 className="dash-sub-title">
+                    <Link className="dash-link" to="/searchMatch">
+                      <span><b>Past</b> Matches</span>
+                    </Link>
+                  </h4>  
+                  <table className="highlight dash-table-center long-table" pageSize={(this.state.past_match_search_results.length > 3) ? 3 : this.state.past_match_search_results.length}>
+                    <thead className="long-table">
+                      <tr>
+                        <th>League</th>
+                        <th className="left-align">Match Date</th>
+                        <th></th>
+                        <th className="center-align">Match</th>
+                        <th></th>
+                        <th className="left-align">Gold Diff</th>
+                        <th className="left-align">Winner</th>
+                        <th className="right-align"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="long-table">
+                      {this.state.display_past_match_search_results.map(row => (
+                        <tr className="dash-row" key={row._id}>
+                          <td>
+                            <button
+                              className="btn-flat"
+                              onClick={() => this.onMatchFilterClick(row.tournament.name)}> 
+                              <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
+                            </button>
+                          </td>
+                          <td>
+                            <div className="row search-info-row-container">
+                              <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
+                            </div>
+                            <div className="row search-info-row-container">
+                              <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
+                            </div>
+                          </td>
+                          <td className="right-align" component="th" scope="row">
+                            <button
+                              className="btn-flat"
+                              onClick={() => this.onMatchFilterClick(row.home_team.short_name)}>            
+                              <img className="search-match-img" src={process.env.PUBLIC_URL + row.home_team.logo_small} />
+                            </button>
+                          </td>
+                          <td className="center-align" conponent="th" scopt="row">
+                            <Link to={`/showMatch/${row._id}`} className="dash-link">
+                              <span className="versus-small">vs.</span>
+                            </Link>
+                          </td>
+                          <td className="left-align" component="th" scope="row">
+                            <button
+                              className="btn-flat"
+                              onClick={() => this.onMatchFilterClick(row.away_team.short_name)}>   
+                              <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
+                            </button>
+                          </td>
+                          <td className="left-align">
+                            <span>{row.gold_difference/1000} K</span>
+                          </td>
+                          <td className="left-align">
+                            <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
                           </td>
                           <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>
                         </tr>

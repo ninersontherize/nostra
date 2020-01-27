@@ -249,7 +249,7 @@ class UserProfile extends Component {
                       </div>
                     </div>
     } else {      
-      wager_win_table = <table className="highlight dash-table-center">
+      wager_win_table = <table className={(this.state.wager_wins_search_results.length < 7) ? "highlight dash-table-center" : "highlight dash-table-center long-table"}>
                       <thead>
                         <tr>
                           <th>Pick</th>
@@ -310,7 +310,7 @@ class UserProfile extends Component {
                       </div>
                     </div>
     } else {      
-      wager_loss_table = <table className="highlight dash-table-center">
+      wager_loss_table = <table className={(this.state.wager_losses_search_results.length < 5) ? "highlight dash-table-center" : "highlight dash-table-center long-table"}>
                       <thead>
                         <tr>
                           <th>Pick</th>

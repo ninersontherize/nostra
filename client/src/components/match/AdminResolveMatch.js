@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { resolveWagers } from "../../actions/wagerActions";
+import { resolveWagers, rollbackWagers } from "../../actions/wagerActions";
 import { showMatch, updateMatchTeams, setResult } from "../../actions/matchActions";
 import { checkAdmin } from "../../actions/userActions";
 import { updateRecord } from "../../actions/teamActions";
@@ -95,6 +95,17 @@ class AdminSetOdds extends Component {
     this.props.resolveWagers(this.props.match.params.match_id, this.props.history);
   }
 
+  onRollbackClick = e => {
+    e.preventDefault();
+
+    if (this.state.admin === false) {
+      return;
+    }
+
+    //rollback all the wagers linked to this match
+    this.props.rollbackWagers(this.props.match.params.match_id);
+  }
+
   async componentDidMount() {
 
     await this.props.updateMatchTeams(this.props.match.params.match_id);
@@ -177,6 +188,13 @@ class AdminSetOdds extends Component {
                 <label htmlFor="name">Gold Difference</label>
                 <span className="red-text">{errors.gold_difference}</span>
               </div>
+              <div className="section">
+                <div className="row">
+                  <div className="update-record-button-home col s12">
+                    <Link onClick={this.onRollbackClick} className="btn btn-flat hoverable nostra-button-unfollow">Rollback</Link>
+                  </div>
+                </div>
+              </div> 
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <button
                   style={{
@@ -275,6 +293,7 @@ AdminSetOdds.propTypes = {
   setResult: PropTypes.func.isRequired,
   updateRecord: PropTypes.func.isRequired,
   resolveWagers: PropTypes.func.isRequired,
+  rollbackWagers: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -284,4 +303,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { setResult, updateRecord, resolveWagers, showMatch, updateMatchTeams, checkAdmin })(withRouter(AdminSetOdds));
+export default connect(mapStateToProps, { setResult, updateRecord, resolveWagers, showMatch, updateMatchTeams, checkAdmin, rollbackWagers })(withRouter(AdminSetOdds));

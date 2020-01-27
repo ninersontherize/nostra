@@ -568,5 +568,18 @@ table.striped > tbody > tr:nth-child(odd) {
 }
 
 .update-section {
-  padding-top: 250px;
+  padding-top: 90px;
+}
+
+.my-wagers-sub-header {
+  font-weight: 300;
+  font-size: 20px;
+}
+
+.wager-win-row {
+  background-color: rgb(241, 255, 241);
+}
+
+.wager-lose-row {
+  background-color: rgb(253, 242, 244);
 }

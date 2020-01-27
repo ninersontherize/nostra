@@ -121,3 +121,16 @@ export const resolveWagers = (matchId, history) => dispatch => {
       })
     );
 };
+
+//Update match odds
+export const rollbackWagers = matchId => dispatch => {
+  axios
+    .put(`/api/wagers/${matchId}/rollbackWagers`)
+    .then(res => {return res.data;}) 
+    .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};

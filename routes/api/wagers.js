@@ -142,7 +142,7 @@ router.get("/:id/topLosses", (req, res) => {
 
   UserLeague.find({ user_id: id }).distinct("_id", {}).then( user_leagues => {
     console.log(user_leagues);
-    Wager.find({ user_league_id: { $in: user_leagues }, win: false}).sort({amount: -1}).limit(5).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    Wager.find({ user_league_id: { $in: user_leagues }, win: false}).sort({amount: -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
   });
 
 });
@@ -156,7 +156,7 @@ router.get("/topWins/:id", (req, res) => {
 
   UserLeague.find({ user_id: id }).distinct("_id", {}).then( user_leagues => {
     console.log(user_leagues);
-    Wager.find({ user_league_id: { $in: user_leagues }, win: true}).sort({payout: -1}).limit(5).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    Wager.find({ user_league_id: { $in: user_leagues }, win: true}).sort({payout: -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
   });
 
 });
@@ -212,6 +212,56 @@ router.delete("/:id/deleteWager", (req, res) => {
     }
   });
 
+});
+
+router.put("/:id/rollbackWagers", (req, res) => {
+
+  var id = req.params.id;
+
+  Match.findOne({ _id: id }).then( match => {
+    if (!match) {
+      return res.status(404).json({ match: "Sorry that match cannot be found, double check and try again" });
+    } else if (match.winning_id === null ) {
+      return res.status(400).json({ match: "Match has not been completed yet."})
+    } else {
+      Wager.find({ match_id: id }).then( wagers => {
+        wagers.forEach( wager => {
+          if (wager.closed === false) {
+            return;
+          } else {
+            if (wager.win === true) {
+              UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+                var new_bankroll = user_league.user_bankroll - wager.payout;
+                
+                UserLeague.updateOne({ _id: user_league.id}, {
+                  user_bankroll: new_bankroll,
+                  bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
+                }, function(err, affected, res) {
+                  console.log(res);
+                }).then(() => {
+                  Wager.updateOne({ _id: wager._id }, {
+                    win: null,
+                    payout: null,
+                    closed: null
+                  }, function(err, affected, res) {
+                    console.log(res);
+                  });
+                });
+              });           
+            } else {
+              Wager.updateOne({ _id: wager._id }, {
+                win: null,
+                payout: null,
+                closed: null
+              }, function(err, affected, res) {
+                console.log(res);
+              });
+            }     
+          }
+        });
+      });
+    }
+  });
 });
 
 // @route PUT api/wagers/:id/resolveWagers
