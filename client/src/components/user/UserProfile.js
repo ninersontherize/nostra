@@ -174,7 +174,7 @@ class UserProfile extends Component {
             row.team_logo = row.match.away_team.logo_small;
           }
           this.setState({
-            wager_wins_search_results: this.state.wager_wins_search_results.concat(row)
+            wager_wins_search_results: this.state.wager_wins_search_results.concat(row).sort((a, b) => (a.payout < b.payout) ? 1 : -1)
           });
         });
       });
@@ -196,7 +196,7 @@ class UserProfile extends Component {
             row.team_logo = row.match.away_team.logo_small;
           }
           this.setState({
-            wager_losses_search_results: this.state.wager_losses_search_results.concat(row)
+            wager_losses_search_results: this.state.wager_losses_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1)
           });
         });
       });
