@@ -341,7 +341,7 @@ class ShowMatch extends Component {
           }
 
           this.setState({
-            loser_search: this.state.winner_search.concat(row)
+            loser_search: this.state.loser_search.concat(row)
           })
         })
       });
