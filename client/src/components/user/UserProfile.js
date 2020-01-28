@@ -377,7 +377,7 @@ class UserProfile extends Component {
                                     {row.name}
                                   </Link>
                                 </td>
-                                <td className={row.bankroll_percent_change > 0 ? "dash-info-value-green center-align" : "dash-info-value-red center-align"}>{row.bankroll_percent_change}%</td>
+                                <td className={row.bankroll_percent_change > 0 ? "dash-info-value-green center-align" : "dash-info-value-red center-align"}>{row.bankroll_percent_change.toFixed(2)}%</td>
                               </tr>
                             ))}
                           </tbody>
