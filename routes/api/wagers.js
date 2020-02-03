@@ -33,7 +33,7 @@ router.post("/createWager", (req, res) => {
           if (!match) {
             return res.status(404).json({ match: "Match not found, please double check and try again." });
           } else {
-            if (match.winning_id !== null) {
+            if (new Date(match.match_date) < Date.now()) {
               return res.status(400).json({ match: "Cannot place wager on match that is already complete." });
             } else {
               const new_wager = new Wager({
