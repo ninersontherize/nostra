@@ -169,7 +169,7 @@ class NewDashboard extends Component {
     });
 
     var next_week = new Date();
-    next_week.setDate(next_week.getDate() + 14);
+    next_week.setDate(next_week.getDate() + 7);
 
     const DateRange = {
       start_date: Date.now(),
