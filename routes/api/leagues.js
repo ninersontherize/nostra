@@ -417,11 +417,12 @@ router.get("/:id/userLeague", (req, res) => {
 // @access public
 router.put("/userLeagueAllowance", (req, res) => {
 
-  let change = 2000
+  let change = 2000;
 
   UserLeague.find().then( user_leagues => {
     user_leagues.forEach(row => {
       UserLeague.updateOne({ _id: row.id }, {
+        prev_week_bankroll: row.user_bankroll + change,
         user_bankroll: row.user_bankroll + change,
         bankroll_percent_change: ((((row.user_bankroll + change)/row.league.starting_cash)*100)-100)
       }, function(err, affected, res) {

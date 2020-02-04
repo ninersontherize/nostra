@@ -19,6 +19,10 @@ const UserLeagueSchema = new Schema({
     type: Number,
     required: true
   },
+  prev_week_bankroll: {
+    type: Number,
+    required: false
+  },
   bankroll_percent_change: {
     type: Number,
     required: true

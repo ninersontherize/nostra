@@ -109,12 +109,13 @@ class JoinLeague extends Component {
                     <span className="sub-title">Leaderboard</span>
                   </h5>
                 </div>
-                <div className="col s6 offset-s3">
+                <div className="col s10 offset-s1">
                   <table className="highlight minwidth: 650" aria-label="simple table">
                     <thead>
                       <tr>
                         <th>Username</th>
-                        <th className="right-align">% Change</th>
+                        <th className="right-align">Season Change</th>
+                        <th className="right-align">WoW Change</th>
                         <th className="right-align">Current Gold</th>
                       </tr>
                     </thead>
@@ -124,7 +125,8 @@ class JoinLeague extends Component {
                           <td component="th" scope="row" align="right">
                               <Link className="dash-link" to={`/userProfile/${row.user_id}`}>{row.username}</Link>
                           </td>
-                          <td className={row.bankroll_percent_change < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.bankroll_percent_change.toFixed(2)}%</td>
+                          <td className={row.bankroll_percent_change < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash}g ({row.bankroll_percent_change.toFixed(2)}%)</td>
+                          <td className={((row.user_bankroll - row.prev_week_bankroll)/row.prev_week_bankroll)*100 < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{(row.user_bankroll - row.prev_week_bankroll)}g ({((row.user_bankroll - row.prev_week_bankroll)/row.prev_week_bankroll*100).toFixed(2)}%)</td>
                           <td className="right-align">{row.user_bankroll}g</td>
                         </tr>
                       ))}
@@ -138,9 +140,6 @@ class JoinLeague extends Component {
       <div className="container">
         <div className="row">
           <div className="col s8 offset-s2">
-            <Link to="/dashboard" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to home
-            </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4 className="header-text">
                 <b>League</b> Information

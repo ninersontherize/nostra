@@ -9,6 +9,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 import { Provider } from "react-redux"
 import store from "./store";
 
+import Sidebar from "./components/layout/Sidebar";
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import Home from "./components/layout/Landing"
@@ -61,7 +62,7 @@ class App extends Component {
       <Provider store={store}>
         <Router basename={process.env.PUBLIC_URL}>
           <div className="App">
-            <Navbar />
+            <Sidebar />
             <Route exact path="/" component={Landing} />
             <Route exact path="/home" component={Home} />
             <Route exact path="/register" component={Register} />

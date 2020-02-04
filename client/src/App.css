@@ -583,3 +583,13 @@ table.striped > tbody > tr:nth-child(odd) {
 .wager-lose-row {
   background-color: rgb(253, 242, 244);
 }
+
+.sidenav-header {
+  font-weight: 300;
+  font-size: 28px;
+}
+
+.sidenav-item {
+  font-weight: 250;
+  font-size: 18px;
+}
