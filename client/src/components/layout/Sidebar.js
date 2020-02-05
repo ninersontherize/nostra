@@ -27,8 +27,11 @@ class Sidebar extends Component {
       if (this.props.auth.user.id !== undefined) {
         user_nav =  <ul id="slide-out" className="sidenav">
                       <li className="sidenav-header">
-                        <Link to="/dashboard">
-                          <span className="sidenav-header">Nostra Nav</span>
+                        <Link to="/dashboard"
+                          style={{
+                            fontFamily: "monospace"
+                          }}>
+                          <span className="sidenav-header">nostra.nav</span>
                         </Link>
                       </li>
                       <li>
@@ -45,7 +48,7 @@ class Sidebar extends Component {
                         </Link>
                       </li>
                       <li className="sidenav-item">
-                        <Link to="/myWagers">
+                        <Link to="/myLeagues">
                           <span className="sidenav-item"><b>My</b> Leagues</span>
                         </Link>
                       </li>
@@ -76,8 +79,11 @@ class Sidebar extends Component {
       } else {
         user_nav =  <ul id="slide-out" className="sidenav">
                       <li className="sidenav-header">
-                        <Link to="/dashboard">
-                          <span className="sidenav-header">Nostra Nav</span>
+                        <Link to="/dashboard"
+                          style={{
+                            fontFamily: "monospace"
+                          }}>
+                          <span className="sidenav-header">nostra.nav</span>
                         </Link>
                       </li>
                       <li>
