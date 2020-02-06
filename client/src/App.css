@@ -593,3 +593,73 @@ table.striped > tbody > tr:nth-child(odd) {
   font-weight: 250;
   font-size: 18px;
 }
+
+.rankings-header {
+  font-size: 40px;
+  font-weight: 300;
+  text-decoration: underline;
+}
+
+.rankings-sub-header {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.rankings-sub-header-1 {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.rankings-week-title {
+  font-size: 30px;
+  font-weight: 450;
+  font-style: italic;
+  text-align: left;
+}
+
+.rankings-week-selector {
+  font-size: 20px;
+  font-weight: 300;
+  text-align: right;
+}
+
+.rankings-section-title {
+  font-size: 28px;
+  font-weight: 300;
+  padding-left: 15px;
+}
+
+.rankings-section-sub-title {
+  font-size: 22px;
+  font-weight: 300;
+  padding-left: 30px;
+}
+
+.rankings-section-text {
+  font-size: 18px;
+  font-weight: 300;
+  padding-left: 40px;
+  text-align: justify;
+}
+
+.rankings-logo-img {
+  vertical-align: middle;
+  display: inline-block;
+  max-width:100px;
+  max-height:100px;
+  width: auto;
+  height: auto;
+}
+
+.rankings-week-header-row {
+  padding-top: 20px;
+  height: 35px;
+}
+
+.rankings-title-row {
+  height: 190px;
+}
+
+.rankings-title-row-2 {
+  height: 170px;
+}
