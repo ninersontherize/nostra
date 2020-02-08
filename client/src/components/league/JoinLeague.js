@@ -125,7 +125,7 @@ class JoinLeague extends Component {
                           <td component="th" scope="row" align="right">
                               <Link className="dash-link" to={`/userProfile/${row.user_id}`}>{row.username}</Link>
                           </td>
-                          <td className={row.bankroll_percent_change < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash}g ({row.bankroll_percent_change.toFixed(2)}%)</td>
+                          <td className={row.bankroll_percent_change < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash}g ({parseInt(row.bankroll_percent_change)}%)</td>
                           <td className={((row.user_bankroll - row.prev_week_bankroll)/row.prev_week_bankroll)*100 < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{(row.user_bankroll - row.prev_week_bankroll)}g ({parseInt(((row.user_bankroll - row.prev_week_bankroll)/row.prev_week_bankroll*100))}%)</td>
                           <td className="right-align">{row.user_bankroll}g</td>
                         </tr>
