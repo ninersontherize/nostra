@@ -188,8 +188,8 @@ class MyWagers extends Component {
     }
   };
 
-  componentDidMount() {
-    this.props.getMyOpenWagers(this.props.auth.user.id).then(res => {
+  async componentDidMount() {
+    await this.props.getMyOpenWagers(this.props.auth.user.id).then(res => {
       res.forEach(row => {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
@@ -208,8 +208,8 @@ class MyWagers extends Component {
         });
       });
     });
-    
-    this.props.getMyClosedWagers(this.props.auth.user.id).then(res => {
+
+    await this.props.getMyClosedWagers(this.props.auth.user.id).then(res => {
       res.forEach(row => {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
