@@ -168,65 +168,73 @@ class AdminSetOdds extends Component {
       wager_section = 
         <div className="section">
           <form noValidate onSubmit={this.onSubmit}>
+            <div className="show-on-large input-field col s8 offset-s2">
+              <select id="winning_team" value={this.state.winning_team} onChange={this.onTeamChange}>
+                <option value="" disabled selected>Winning Team</option>
+                <option value={this.state.home_team._id}>{this.state.home_team.short_name}</option>
+                <option value={this.state.away_team._id}>{this.state.away_team.short_name}</option>
+              </select>
+              <label>Winning Team</label>
+            </div>
+            <div className="hide-on-large-only input-field col s8 offset-s2">
+              <select className="browser-default" id="winning_team" value={this.state.winning_team} onChange={this.onTeamChange}>
+                <option value="" disabled selected>Winning Team</option>
+                <option value={this.state.home_team._id}>{this.state.home_team.short_name}</option>
+                <option value={this.state.away_team._id}>{this.state.away_team.short_name}</option>
+              </select>
+              <label>Winning Team</label>
+            </div>
             <div className="input-field col s8 offset-s2">
-                <select id="winning_team" value={this.state.winning_team} onChange={this.onTeamChange}>
-                  <option value="" disabled selected>Winning Team</option>
-                  <option value={this.state.home_team._id}>{this.state.home_team.short_name}</option>
-                  <option value={this.state.away_team._id}>{this.state.away_team.short_name}</option>
-                </select>
-                <label>Winning Team</label>
-              </div>
-              <div className="input-field col s8 offset-s2">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.gold_difference}
-                  error={errors.gold_difference}
-                  id="gold_difference"
-                  type="number"
-                  className={classnames('', { invalid: errors.gold_difference})}
-                />
-                <label htmlFor="name">Gold Difference</label>
-                <span className="red-text">{errors.gold_difference}</span>
-              </div>
-              <div className="section">
-                <div className="row">
-                  <div className="update-record-button-home col s12">
-                    <Link onClick={this.onRollbackClick} className="btn btn-flat hoverable nostra-button-unfollow">Rollback</Link>
-                  </div>
-                </div>
-              </div> 
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <button
-                  style={{
-                    width: "250px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem"
-                  }}
-                  type="submit"
-                  className="btn btn-flat hoverable nostra-button">
-                    Set Score
-                  </button>
-              </div>
-            </form>
-            <div className="update-section">
-              <div className="row">
-                <div className="update-record-button-home col s5 offset-s1">
-                  <Link onClick={this.onHomeTeamUpdateClick} className="btn btn-flat hoverable nostra-button">Update Home Record</Link>
-                </div>
-                <div className="update-record-button-away col s5">
-                  <Link onClick={this.onAwayTeamUpdateClick} className="btn btn-flat hoverable nostra-button">Update Away Record</Link>
-                </div>
-              </div>
-            </div>  
+              <input
+                onChange={this.onChange}
+                value={this.state.gold_difference}
+                error={errors.gold_difference}
+                id="gold_difference"
+                type="number"
+                className={classnames('', { invalid: errors.gold_difference})}
+              />
+              <label htmlFor="name">Gold Difference</label>
+              <span className="red-text">{errors.gold_difference}</span>
+            </div>
             <div className="section">
               <div className="row">
                 <div className="update-record-button-home col s12">
-                  <Link onClick={this.onResolveWagerClick} className="btn btn-flat hoverable nostra-button">Resolve Wagers</Link>
+                  <Link onClick={this.onRollbackClick} className="btn btn-flat hoverable nostra-button-unfollow">Rollback</Link>
                 </div>
               </div>
-            </div>  
-          </div>
+            </div> 
+            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+              <button
+                style={{
+                  width: "250px",
+                  borderRadius: "3px",
+                  letterSpacing: "1.5px",
+                  marginTop: "1rem"
+                }}
+                type="submit"
+                className="btn btn-flat hoverable nostra-button">
+                  Set Score
+                </button>
+            </div>
+          </form>
+          <div className="update-section">
+            <div className="row">
+              <div className="update-record-button-home col s5 offset-s1">
+                <Link onClick={this.onHomeTeamUpdateClick} className="btn btn-flat hoverable nostra-button">Update Home Record</Link>
+              </div>
+              <div className="update-record-button-away col s5">
+                <Link onClick={this.onAwayTeamUpdateClick} className="btn btn-flat hoverable nostra-button">Update Away Record</Link>
+              </div>
+            </div>
+          </div>  
+          <div className="section">
+            <div className="row">
+              <div className="update-record-button-home col s12">
+                <Link onClick={this.onResolveWagerClick} className="btn btn-flat hoverable nostra-button">Resolve Wagers</Link>
+              </div>
+            </div>
+          </div>  
+        </div>
     } 
 
     return (

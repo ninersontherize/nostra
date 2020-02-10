@@ -75,8 +75,19 @@ class UserSettings extends Component {
             </div>
             <form noValidate onSubmit={this.onSubmit}>
               <div className="section">
-                <div className="input-field col s8 offset-s2">
+                <div className="show-on-large input-field col s8 offset-s2">
                   <select id="favorite_team" value={this.state.favorite_team} onChange={this.onChange}>
+                  <option value="" disabled selected>Choose a team to rep</option>
+                  {this.state.team_list.map(row => (
+                    <option value={row._id}>
+                      {row.name}
+                    </option>
+                  ))}
+                  </select>
+                  <label>Favorite Team</label>
+                </div>
+                <div className="hide-on-large-only input-field col s8 offset-s2">
+                  <select className="browser-default" id="favorite_team" value={this.state.favorite_team} onChange={this.onChange}>
                   <option value="" disabled selected>Choose a team to rep</option>
                   {this.state.team_list.map(row => (
                     <option value={row._id}>
