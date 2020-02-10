@@ -473,7 +473,7 @@ class ShowMatch extends Component {
               </div>
               <div className="hide-on-large-only input-field col s3">
                 <select className="browser-default" id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange} error={errors.wager_info}>
-                  <option value="" disabled selected>Team</option>
+                  <option value="" disabled selected>Wager Type & Team</option>
                   <optgroup label="Money-Line">
                     <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
                     <option value={this.state.away_team._id + "/money_line"}>{this.state.away_team.short_name}</option>
@@ -483,7 +483,6 @@ class ShowMatch extends Component {
                     <option value={this.state.away_team._id + "/spread"}>{this.state.away_team.short_name}</option>
                   </optgroup>
                 </select>
-                <label>Team and Type of Wager</label>
                 <span className="red-text">{errors.wager_info}</span>
               </div>
               <div className="hide-on-med-and-down input-field col s3">
@@ -503,7 +502,6 @@ class ShowMatch extends Component {
                     <option value={row._id}>{row.league.name}</option>
                   ))}
                 </select> 
-                <label>League</label>
                 <span className="red-text">{errors.wager_league}</span>
               </div>
               <div className="input-field inline col s3">

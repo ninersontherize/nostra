@@ -182,7 +182,6 @@ class AdminSetOdds extends Component {
                 <option value={this.state.home_team._id}>{this.state.home_team.short_name}</option>
                 <option value={this.state.away_team._id}>{this.state.away_team.short_name}</option>
               </select>
-              <label>Winning Team</label>
             </div>
             <div className="input-field col s8 offset-s2">
               <input

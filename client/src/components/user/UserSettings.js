@@ -88,14 +88,13 @@ class UserSettings extends Component {
                 </div>
                 <div className="hide-on-large-only input-field col s8 offset-s2">
                   <select className="browser-default" id="favorite_team" value={this.state.favorite_team} onChange={this.onChange}>
-                  <option value="" disabled selected>Choose a team to rep</option>
+                  <option value="" disabled selected>Favorite Team</option>
                   {this.state.team_list.map(row => (
                     <option value={row._id}>
                       {row.name}
                     </option>
                   ))}
                   </select>
-                  <label>Favorite Team</label>
                 </div>
                 <div className="row row-input-field-bottom">
                   <div className="input-field col s8 offset-s2">
