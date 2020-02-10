@@ -123,7 +123,7 @@ class Sidebar extends Component {
                     <i className="material-icons">gamepad</i>
                     nostra.gg
                   </Link>
-                  <ul id="nav-mobile" class="left hide-on-med-and-down">
+                  <ul id="nav-mobile" class="left">
                     <li>
                         <button href="#" data-target="slide-out" className="sidenav-trigger btn-flat">
                           <i className="material-icons">menu</i>
