@@ -189,26 +189,6 @@ class MyWagers extends Component {
   };
 
   componentDidMount() {
-    this.props.getMyClosedWagers(this.props.auth.user.id).then(res => {
-      res.forEach(row => {
-        this.props.getLeagueInfo(row.user_league_id).then(user_league => {
-          row.league_name = user_league.league.name;
-          row.league_id = user_league.league._id;
-          if (row.team_id === row.match.home_team._id) {
-            row.team_logo = row.match.home_team.logo_small;
-            row.short_name = row.match.home_team.short_name;
-          } else {
-            row.team_logo = row.match.away_team.logo_small;
-            row.short_name = row.match.away_team.short_name;
-          }
-          this.setState({
-            closed_search_results: this.state.closed_search_results.concat(row),
-            closed_display_search_results: this.state.closed_display_search_results.concat(row)
-          });
-        });
-      });
-    });
-
     this.props.getMyOpenWagers(this.props.auth.user.id).then(res => {
       res.forEach(row => {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
@@ -224,6 +204,26 @@ class MyWagers extends Component {
           this.setState({
             open_search_results: this.state.open_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
             open_display_search_results: this.state.open_display_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
+          });
+        });
+      });
+    });
+    
+    this.props.getMyClosedWagers(this.props.auth.user.id).then(res => {
+      res.forEach(row => {
+        this.props.getLeagueInfo(row.user_league_id).then(user_league => {
+          row.league_name = user_league.league.name;
+          row.league_id = user_league.league._id;
+          if (row.team_id === row.match.home_team._id) {
+            row.team_logo = row.match.home_team.logo_small;
+            row.short_name = row.match.home_team.short_name;
+          } else {
+            row.team_logo = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.short_name;
+          }
+          this.setState({
+            closed_search_results: this.state.closed_search_results.concat(row),
+            closed_display_search_results: this.state.closed_display_search_results.concat(row)
           });
         });
       });
