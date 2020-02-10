@@ -168,7 +168,7 @@ class AdminSetOdds extends Component {
       wager_section = 
         <div className="section">
           <form noValidate onSubmit={this.onSubmit}>
-            <div className="show-on-large input-field col s8 offset-s2">
+            <div className="hide-on-med-and-down input-field col s8 offset-s2">
               <select id="winning_team" value={this.state.winning_team} onChange={this.onTeamChange}>
                 <option value="" disabled selected>Winning Team</option>
                 <option value={this.state.home_team._id}>{this.state.home_team.short_name}</option>
