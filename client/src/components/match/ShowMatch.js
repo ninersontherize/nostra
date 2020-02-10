@@ -457,7 +457,18 @@ class ShowMatch extends Component {
           <form noValidate onSubmit={this.onSubmit}>
             <div className="row wager-info-container">
               <div className="input-field col s3">
-                <select id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange} error={errors.wager_info}>
+                <select className="show-on-large" id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange} error={errors.wager_info}>
+                  <option value="" disabled selected>Team</option>
+                  <optgroup label="Money-Line">
+                    <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
+                    <option value={this.state.away_team._id + "/money_line"}>{this.state.away_team.short_name}</option>
+                  </optgroup>
+                  <optgroup label="Spread">
+                    <option value={this.state.home_team._id + "/spread"}>{this.state.home_team.short_name}</option>
+                    <option value={this.state.away_team._id + "/spread"}>{this.state.away_team.short_name}</option>
+                  </optgroup>
+                </select>
+                <select className="hide-on-large-only browser-default" id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange} error={errors.wager_info}>
                   <option value="" disabled selected>Team</option>
                   <optgroup label="Money-Line">
                     <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
