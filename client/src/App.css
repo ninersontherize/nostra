@@ -596,8 +596,7 @@ table.striped > tbody > tr:nth-child(odd) {
 
 .rankings-header {
   font-size: 40px;
-  font-weight: 300;
-  text-decoration: underline;
+  font-weight: 500;
 }
 
 .rankings-sub-header {
