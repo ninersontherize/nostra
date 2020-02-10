@@ -134,9 +134,9 @@ router.get("/matches", (req, res) => {
 // @access public
 router.get("/matchesByDate", (req, res) => {
 
-    Match.find({$and: [{ match_date: { $gte: req.query.start_date } }, { match_date: { $lte: req.query.end_date } }] }).sort({match_date: 1})
-      .then( matches => res.json(matches)).catch(err => console.log(err));
-
+  Match.find({$and: [{ match_date: { $gte: req.query.start_date } }, { match_date: { $lte: req.query.end_date } }] }).sort({match_date: req.query.order})
+  .then( matches => res.json(matches)).catch(err => console.log(err));
+  
 });
 
 // @route GET api/matches/:id/matches

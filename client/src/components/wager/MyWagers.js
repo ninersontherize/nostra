@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getMyWagers, getLeagueInfo } from "../../actions/wagerActions";
+import { getMyOpenWagers, getMyClosedWagers, getLeagueInfo } from "../../actions/wagerActions";
 
 class MyWagers extends Component {
   constructor() {
@@ -188,8 +188,8 @@ class MyWagers extends Component {
     }
   };
 
-  async componentDidMount() {
-    await this.props.getMyWagers(this.props.auth.user.id).then(res => {
+  componentDidMount() {
+    this.props.getMyClosedWagers(this.props.auth.user.id).then(res => {
       res.forEach(row => {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
@@ -201,17 +201,30 @@ class MyWagers extends Component {
             row.team_logo = row.match.away_team.logo_small;
             row.short_name = row.match.away_team.short_name;
           }
-          if (row.closed === true) {
-            this.setState({
-              closed_search_results: this.state.closed_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
-              closed_display_search_results: this.state.closed_display_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
-            });
+          this.setState({
+            closed_search_results: this.state.closed_search_results.concat(row),
+            closed_display_search_results: this.state.closed_display_search_results.concat(row)
+          });
+        });
+      });
+    });
+
+    this.props.getMyOpenWagers(this.props.auth.user.id).then(res => {
+      res.forEach(row => {
+        this.props.getLeagueInfo(row.user_league_id).then(user_league => {
+          row.league_name = user_league.league.name;
+          row.league_id = user_league.league._id;
+          if (row.team_id === row.match.home_team._id) {
+            row.team_logo = row.match.home_team.logo_small;
+            row.short_name = row.match.home_team.short_name;
           } else {
-            this.setState({
-              open_search_results: this.state.open_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
-              open_display_search_results: this.state.open_display_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
-            });
+            row.team_logo = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.short_name;
           }
+          this.setState({
+            open_search_results: this.state.open_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
+            open_display_search_results: this.state.open_display_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
+          });
         });
       });
     });
@@ -384,7 +397,8 @@ class MyWagers extends Component {
 }
 
 MyWagers.propTypes = {
-  getMyWagers: PropTypes.func.isRequired,
+  getMyOpenWagers: PropTypes.func.isRequired,
+  getMyClosedWagers: PropTypes.func.isRequired,
   getLeagueInfo: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -393,4 +407,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getMyWagers, getLeagueInfo })(MyWagers);
+export default connect(mapStateToProps, { getMyOpenWagers, getMyClosedWagers, getLeagueInfo })(MyWagers);

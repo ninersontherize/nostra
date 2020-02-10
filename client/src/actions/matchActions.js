@@ -29,7 +29,8 @@ export const searchMatchByDateRange = searchData => dispatch => {
     .get("/api/matches/matchesByDate", {
       params: {
         start_date: searchData.start_date,
-        end_date: searchData.end_date
+        end_date: searchData.end_date,
+        order: searchData.order
       }
     })
     .then(res => {

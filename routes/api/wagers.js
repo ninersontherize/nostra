@@ -146,6 +146,32 @@ router.get("/:id/myWagers", (req, res) => {
 
 });
 
+// @route GET api/wagers/:id/myOpenWagers
+// @desc given a user_id, return all wagers related to that id
+// @access public
+router.get("/:id/myOpenWagers", (req, res) => {
+
+  var id = req.params.id;
+
+  UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
+    Wager.find({ user_league_id: { $in: user_leagues }, closed: null}).sort({"match.match_date": 1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+  });
+
+});
+
+// @route GET api/wagers/:id/myOpenWagers
+// @desc given a user_id, return all wagers related to that id
+// @access public
+router.get("/:id/myClosedWagers", (req, res) => {
+
+  var id = req.params.id;
+
+  UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
+    Wager.find({ user_league_id: { $in: user_leagues }, closed: true}).sort({"match.match_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+  });
+
+});
+
 // @route GET api/wagers/:id/topLosses
 // @desc given a user_id, return top 5 losses related to that id
 // @access public

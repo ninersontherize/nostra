@@ -31,6 +31,32 @@ export const getMyWagers = user_id => dispatch => {
     );
 };
 
+//Get myOpenWagers
+export const getMyOpenWagers = user_id => dispatch => {
+  return axios
+    .get(`/api/wagers/${user_id}/myOpenWagers`)
+    .then(res => {return res.data;})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Get myClosedWagers
+export const getMyClosedWagers = user_id => dispatch => {
+  return axios
+    .get(`/api/wagers/${user_id}/myClosedWagers`)
+    .then(res => {return res.data;})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Get user_league
 export const getLeagueInfo = user_league_id => dispatch => {
   return axios

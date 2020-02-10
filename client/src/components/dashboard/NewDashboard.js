@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getMyLeagues, showLeague } from "../../actions/leagueActions";
-import { getMyWagers, getLeagueInfo, deleteWager } from "../../actions/wagerActions";
+import { getMyOpenWagers, getLeagueInfo, deleteWager } from "../../actions/wagerActions";
 import { showUser, getFollowing, favoriteUser } from "../../actions/userActions";
 import { showTeam } from "../../actions/teamActions";
 import { searchMatchByDateRange } from "../../actions/matchActions";
@@ -173,7 +173,8 @@ class NewDashboard extends Component {
 
     const DateRange = {
       start_date: Date.now(),
-      end_date: Date.parse(next_week)
+      end_date: Date.parse(next_week),
+      order: 1
     };
 
     this.props.searchMatchByDateRange(DateRange).then(res => {
@@ -191,7 +192,8 @@ class NewDashboard extends Component {
 
     const PastDateRange = {
       start_date: 0,
-      end_date: Date.now() - one_hour
+      end_date: Date.now() - one_hour,
+      order: -1
     }
 
     this.props.searchMatchByDateRange(PastDateRange).then(res => {
@@ -211,7 +213,8 @@ class NewDashboard extends Component {
 
     const LiveDateRange = {
       start_date: Date.now() - one_hour,
-      end_date: Date.now()
+      end_date: Date.now(),
+      order: -1
     }
 
     this.props.searchMatchByDateRange(LiveDateRange).then(res => {
@@ -225,7 +228,7 @@ class NewDashboard extends Component {
       });
     });
 
-    this.props.getMyWagers(this.props.auth.user.id).then(res => {
+    this.props.getMyOpenWagers(this.props.auth.user.id).then(res => {
       if (res.length === 0) {
         this.setState({
           wager_empty: true
@@ -711,7 +714,7 @@ NewDashboard.propTypes = {
   getLeagueInfo: PropTypes.func.isRequired,
   showUser: PropTypes.func.isRequired,
   showTeam: PropTypes.func.isRequired,
-  getMyWagers: PropTypes.func.isRequired,
+  getMyOpenWagers: PropTypes.func.isRequired,
   deleteWager: PropTypes.func.isRequired,
   getFollowing: PropTypes.func.isRequired,
   searchMatchByDateRange: PropTypes.func.isRequired,
@@ -723,4 +726,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getMyLeagues, showLeague, getLeagueInfo, showTeam, showUser, getMyWagers, deleteWager, getFollowing, searchMatchByDateRange, favoriteUser})(withRouter(NewDashboard));
+export default connect(mapStateToProps, { getMyLeagues, showLeague, getLeagueInfo, showTeam, showUser, getMyOpenWagers, deleteWager, getFollowing, searchMatchByDateRange, favoriteUser})(withRouter(NewDashboard));
