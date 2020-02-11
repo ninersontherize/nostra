@@ -28,6 +28,7 @@ import OddsInfo from "./components/wager/OddsInfo";
 import UserSettings from "./components/user/UserSettings";
 import LcsPowerRankingsWeek1 from "./components/blog/LcsPowerRankingsWeek1";
 import LcsPowerRankingsWeek2 from "./components/blog/LcsPowerRankingsWeek2";
+import LcsPowerRankingsWeek3 from "./components/blog/LcsPowerRankingsWeek3";
 
 import "./App.css";
 import ForgotPassword from './components/auth/ForgotPassword';
@@ -89,6 +90,7 @@ class App extends Component {
               <PrivateRoute exact path="/oddsInfo" component={OddsInfo} />
               <PrivateRoute exact path="/lcsPowerRankings/week1" component={LcsPowerRankingsWeek1} />
               <PrivateRoute exact path="/lcsPowerRankings/week2" component={LcsPowerRankingsWeek2} />
+              <PrivateRoute exact path="/lcsPowerRankings/week3" component={LcsPowerRankingsWeek3} />
               <PrivateRoute exact path="/userSettings/:user_id" component={UserSettings} />
             </Switch>
           </div>
