@@ -43,10 +43,12 @@ class NewDashboard extends Component {
       return `+${odd/1000} K`;
     } else if (odd < 0 && odd_type === "spread") {
       return `${odd/1000} K`;
-    } else if (odd > 0) {
+    } else if (odd > 0 && odd_type === "money_line") {
       return `+${odd}`;
-    } else {
+    } else if (odd < 0 && odd_type === "money_line") {
       return odd;
+    } else {
+      return `${parseInt(odd)}`
     }
   };
 
@@ -62,8 +64,10 @@ class NewDashboard extends Component {
   renderOddType = odd_type => {
     if (odd_type === "spread") {
       return "Spread";
-    } else {
+    } else if (odd_type === "money_line"){
       return "Money Line";
+    } else {
+      return "Parlay";
     }
   };
 
@@ -240,18 +244,22 @@ class NewDashboard extends Component {
           row.league_name = user_league.league.name;
           row.league_id = user_league.league._id;
 
-          if (row.team_id === row.match.home_team._id) {
+          if (row.match_id === "parlay") {
+            row.team_logo = "/lcs/lcs_logo.png";
+            row.match.home_team.logo_small = "/lcs/lcs_logo.png";
+            row.match.away_team.logo_small = "/lcs/lcs_logo.png";
+          } else if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
             row.short_name = row.match.home_team.short_name;
-          } else {
+          } else if (row.team_id === row.match.away_team._id) {
             row.team_logo = row.match.away_team.logo_small;
             row.short_name = row.match.away_team.short_name;
           }
 
           if (row.closed === null || Date.parse(row.match.match_date) > Date.now()) {
             this.setState({
-              wager_search_results: this.state.wager_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
-              display_wager_search_results: this.state.display_wager_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
+              wager_search_results: this.state.wager_search_results.concat(row),
+              display_wager_search_results: this.state.display_wager_search_results.concat(row)
             });
           }
         });
@@ -352,7 +360,7 @@ class NewDashboard extends Component {
                     <div className="section">
                       <div className="row">
                         <span className="flow-text dash-info-text">
-                          You haven't placed any wagers yet, click on an upcoming match below to place one!
+                          You currently have no open wagers, click on an upcoming match below to place one!
                         </span>
                       </div>
                     </div>

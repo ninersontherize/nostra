@@ -4,7 +4,7 @@ import {
   GET_ERRORS
 } from "./types";
 
-//Create League
+//Create Wager
 export const createWager = (wagerData, history) => dispatch => {
   console.log(wagerData);
   axios
@@ -166,6 +166,20 @@ export const rollbackWagers = matchId => dispatch => {
   axios
     .put(`/api/wagers/${matchId}/rollbackWagers`)
     .then(res => {return res.data;}) 
+    .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Create Parlay
+export const createParlay = (wagerData, history) => dispatch => {
+  console.log(wagerData);
+  axios
+    .post("/api/wagers/createParlay", wagerData)
+    .then(res => history.push("/dashboard")) //re-direct to searchMatch on successful creation
     .catch(err => 
       dispatch({
         type: GET_ERRORS,

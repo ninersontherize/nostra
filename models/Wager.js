@@ -31,6 +31,10 @@ const WagerSchema = new Schema({
     type: Number,
     required: true
   },
+  parlay_wagers: {
+    type: Array,
+    required: false
+  },
   win: {
     type: Boolean,
     required: false

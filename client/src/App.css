@@ -662,3 +662,39 @@ table.striped > tbody > tr:nth-child(odd) {
 .rankings-title-row-2 {
   height: 170px;
 }
+
+.nostra-button-add-parlay {
+  color: darkgray;
+  background-color: rgb(246, 249, 250);
+}
+
+.nostra-button-add-parlay:hover {
+  color: white;
+  background-color: rgb(64, 191, 241);
+}
+
+.parlay-table tbody {
+  display: block;
+  table-layout: fixed;
+  height: 30vh;
+  overflow: auto;
+  overflow-x: hidden;
+  font-weight: 250;
+}
+
+.parlay-table thead, tbody, tr {
+  display: table;
+  width: 100%;
+  font-weight: 250;
+  table-layout: fixed;
+}
+
+.parlay-table thead {
+  width: calc (100%-1em);
+  font-weight: 250;
+}
+
+.parlay-table table {
+  width: 1000px;
+}
+

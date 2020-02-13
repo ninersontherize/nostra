@@ -39,6 +39,7 @@ import MyWagers from './components/wager/MyWagers';
 import UserProfile from './components/user/UserProfile';
 import AdminMatchSearch from './components/match/AdminMatchSearch';
 import AdminResolveMatch from './components/match/AdminResolveMatch';
+import CreateParlay from './components/wager/CreateParlay';
 
 //Check fro token to keep user logged in
 if (localStorage.jwtToken) {
@@ -92,6 +93,7 @@ class App extends Component {
               <PrivateRoute exact path="/lcsPowerRankings/week2" component={LcsPowerRankingsWeek2} />
               <PrivateRoute exact path="/lcsPowerRankings/week3" component={LcsPowerRankingsWeek3} />
               <PrivateRoute exact path="/userSettings/:user_id" component={UserSettings} />
+              <PrivateRoute exact path="/createParlay" component={CreateParlay} />
             </Switch>
           </div>
         </Router> 

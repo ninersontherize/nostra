@@ -154,7 +154,7 @@ router.get("/:id/myOpenWagers", (req, res) => {
   var id = req.params.id;
 
   UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
-    Wager.find({ user_league_id: { $in: user_leagues }, closed: null}).sort({"match.match_date": 1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    Wager.find({ user_league_id: { $in: user_leagues }, closed: null }).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
   });
 
 });
@@ -230,24 +230,54 @@ router.delete("/:id/deleteWager", (req, res) => {
     if (!wager) {
       return res.status(404).json({ wager: "That id does not exist, delete failed" });
     } else {
-      Match.findOne({ _id: wager.match_id }).then( match => {
-        if (match.match_date < Date.now() || wager.closed === true) {
-          return res.status(400).json({ wager: "Sorry, cannot delete a wager for a match that has begun." });
-        } else {
-          UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
-            var new_bankroll = user_league.user_bankroll + wager.amount;
-            UserLeague.updateOne({ _id: user_league._id }, {
-              user_bankroll: new_bankroll,
-              bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
-            }, function(err, affected, res) {
-                    console.log(res);
+      if (wager.match_id === "parlay") {
+        wager.parlay_wagers.forEach(sub_wager => {
+          console.log(sub_wager);
+          Wager.findOne({ _id: sub_wager }).then(sub_bet => {
+            Match.findOne({ _id: sub_bet.match_id }).then( match => {
+              if (match.match_date < Date.now() || wager.closed === true) {
+                return res.status(400).json({ wager: "Sorry, cannot delete a wager for a match that has begun." });
+              } else {
+                Wager.deleteOne({ _id: sub_wager }).then( wager => console.log(wager));
+              }
             });
           });
-  
-          Wager.deleteOne({ _id: id }).then( wager => console.log(wager));
-          return res.status(200).json({ wager: "Wager successfully deleted" });
-        }
-      }); 
+        });
+        UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+          var new_bankroll = user_league.user_bankroll + wager.amount;
+          UserLeague.updateOne({ _id: user_league._id }, {
+            user_bankroll: new_bankroll,
+            bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
+          }, function(err, affected, res) {
+                  console.log(res);
+          });
+        });
+
+        Wager.deleteOne({ _id: id }).then( wager => console.log(wager));
+        return res.status(200).json({ wager: "Wager successfully deleted" });
+
+      } else if (wager.amount === 0) {
+        return res.status(403).json({ wager: "Cannot delete sub-wager for parlay, must delete parent bet." });
+      } else {
+        Match.findOne({ _id: wager.match_id }).then( match => {
+          if (match.match_date < Date.now() || wager.closed === true) {
+            return res.status(400).json({ wager: "Sorry, cannot delete a wager for a match that has begun." });
+          } else {
+            UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+              var new_bankroll = user_league.user_bankroll + wager.amount;
+              UserLeague.updateOne({ _id: user_league._id }, {
+                user_bankroll: new_bankroll,
+                bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
+              }, function(err, affected, res) {
+                      console.log(res);
+              });
+            });
+    
+            Wager.deleteOne({ _id: id }).then( wager => console.log(wager));
+            return res.status(200).json({ wager: "Wager successfully deleted" });
+          }
+        }); 
+      }
     }
   });
 
@@ -494,10 +524,91 @@ router.put("/:id/resolveWagers", (req, res) => {
 // @route DELETE api/wagers/deleteWager
 // @desc Delete a wager by id
 // @access public
-router.delete("/deleteAll", (req, res) => {
+//router.delete("/deleteAll", (req, res) => {
+//
+//  Match.deleteMany({}).then(res => console.log(res));
+//
+//});
 
-  Match.deleteMany({}).then(res => console.log(res));
+// @route POST api/wagers/createParlay
+// @desc Create New Parlay Wager with X number of bets
+// @access Public
+router.post("/createParlay", (req, res) => {
 
+  var bet_list = [];
+  var team_list = [];
+  var items_processed = 0;
+
+  if (req.body.parlay_user_league === "") {
+    return res.status(400).json({ wager_league: "Please select a league to attribute this wager to."});
+  } else if (req.body.wagers.isEmpty) {
+    return res.status(400).json({ wager_info: "Please select team to wager on."});
+  } else if (req.body.parlay_amount === "") {
+    return res.status(400).json({ amount: "Please enter an amount for your wager." });
+  } else if (req.body.parlay_amount <= 0) {
+    return res.status(400).json({ amount: "Wager amount must be above 0." });
+  }
+
+  UserLeague.findOne({ _id: req.body.parlay_user_league }).then(user_league => {
+    if (!user_league) {
+      return res.status(404).json({ wager_league: "Submitted user is not part of that league, please double check and try again" });
+    } else {
+      if (req.body.parlay_amount > user_league.user_bankroll || req.body.parlay_amount <= 0) {
+        return res.status(400).json({ amount: "Amount submitted is more that the user has available." });
+      } else {
+        req.body.wagers.forEach(wager => {
+          Match.findOne({ _id: wager.wager_match }).then(match => {
+            if (!match) {
+              return res.status(404).json({ match: "Match not found, please double check and try again." });
+            } else {
+              if (new Date(match.match_date) < Date.now()) {
+                return res.status(400).json({ match: "Cannot place wager on match that is already complete." });
+              } else {
+                const new_wager = new Wager({
+                  user_league_id: req.body.parlay_user_league,
+                  match_id: wager.wager_match,
+                  match: match,
+                  team_id: wager.wager_team,
+                  amount: 0,
+                  wager_type: wager.wager_type,
+                  odds: wager.wager_odds,
+                  win: null,
+                  payout: null,
+                  closed: null
+                });
+    
+                new_wager.save().then(sub_wager => {
+                  bet_list.push(sub_wager._id);
+                  team_list.push(sub_wager.team_id);
+
+                  items_processed++;
+                  if(items_processed === req.body.wagers.length) {
+                    const new_parlay = new Wager({
+                      user_league_id: req.body.parlay_user_league,
+                      match_id: "parlay",
+                      match: match,
+                      team_id: team_list.join(","),
+                      amount: req.body.parlay_amount,
+                      wager_type: "parlay",
+                      odds: req.body.parlay_odds,
+                      parlay_wagers: bet_list,
+                      win: null,
+                      payout: null,
+                      closed: null
+                    });
+
+                    new_parlay.save().then(parlay => {
+                      res.json(parlay);
+                    }).catch(err => console.log(err));
+                  }
+                }).catch(err => console.log(err));
+              }
+            }
+          });
+        });
+      }
+    }
+  }); 
 });
 
 module.exports = router;
