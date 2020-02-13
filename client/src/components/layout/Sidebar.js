@@ -48,6 +48,11 @@ class Sidebar extends Component {
                         </Link>
                       </li>
                       <li className="sidenav-item">
+                        <Link to="/createParlay">
+                          <span className="sidenav-item"><b>Create</b> Parlay</span>
+                        </Link>
+                      </li>
+                      <li className="sidenav-item">
                         <Link to="/myLeagues">
                           <span className="sidenav-item"><b>My</b> Leagues</span>
                         </Link>

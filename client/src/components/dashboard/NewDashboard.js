@@ -47,8 +47,10 @@ class NewDashboard extends Component {
       return `+${odd}`;
     } else if (odd < 0 && odd_type === "money_line") {
       return odd;
+    } else if (odd_type ==="parlay") {
+      return `${parseFloat(odd).toFixed(2)}-1`
     } else {
-      return `${parseInt(odd)}`
+      return odd;
     }
   };
 
