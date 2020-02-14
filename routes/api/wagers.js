@@ -656,42 +656,80 @@ router.put("/resolveParlays", (req, res) => {
           } else {
             return;
           }
-        });
 
-        items_processed++;
-        console.log(items_processed);
-        console.log(wager.parlay_wagers.length === items_processed);
-        if (items_processed === wager.parlay_wagers.length) {
-          console.log(win);
-          if (win === true) {
-            payout = (wager.amount*wager.odds);
+          items_processed++;
+          console.log(items_processed);
+          console.log(wager.parlay_wagers.length === items_processed);
+          if (items_processed === wager.parlay_wagers.length) {
+            console.log(win);
+            if (win === true) {
+              payout = (wager.amount*wager.odds);
 
-            UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+              UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+                var new_bankroll = user_league.user_bankroll + payout;
 
-              var new_bankroll = user_league.user_bankroll + payout;
-
-              UserLeague.updateOne({ _id: user_league.id}, {
-                user_bankroll: new_bankroll,
-                bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
-              }, function(err, affected, res) {
-                console.log(res);
-              }).then(() => {
-                Wager.updateOne({ _id: wager._id }, {
-                  win: true,
-                  payout: payout,
-                  closed: true
+                UserLeague.updateOne({ _id: user_league.id}, {
+                  user_bankroll: new_bankroll,
+                  bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
                 }, function(err, affected, res) {
                   console.log(res);
-                });
-              });    
-            });
-          } else {
-            return;
+                }).then(() => {
+                  Wager.updateOne({ _id: wager._id }, {
+                    win: true,
+                    payout: payout,
+                    closed: true
+                  }, function(err, affected, res) {
+                    console.log(res);
+                  });
+                });    
+              });
+            } else {
+              return;
+            }
           }
-        }
+        });
       });
     });
     return res.status(200).json({ wager: "Parlays successfully resolved" });
+  });
+});
+
+router.put("/rollbackParlays", (req, res) => {
+
+  var id = req.params.id;
+
+  Wager.find({ match_id: "parlay", closed: true }).then( wagers => {
+    wagers.forEach( wager => {
+      if (wager.win === true) {
+        UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+          var new_bankroll = user_league.user_bankroll - wager.payout;
+          
+          UserLeague.updateOne({ _id: user_league.id}, {
+            user_bankroll: new_bankroll,
+            bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
+          }, function(err, affected, res) {
+            console.log(res);
+          }).then(() => {
+            Wager.updateOne({ _id: wager._id }, {
+              win: null,
+              payout: null,
+              closed: null
+            }, function(err, affected, res) {
+              console.log(res);
+            });
+          });
+        });           
+      } else {
+        Wager.updateOne({ _id: wager._id }, {
+          win: null,
+          payout: null,
+          closed: null
+        }, function(err, affected, res) {
+          console.log(res);
+        });
+      }     
+    });
+    return res.status(200).json({ wager: "Parlays successfully reverted" });
   });
 });
 
