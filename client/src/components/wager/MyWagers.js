@@ -26,30 +26,24 @@ class MyWagers extends Component {
       return `+${odd/1000} K`;
     } else if (odd < 0 && odd_type === "spread") {
       return `${odd/1000} K`;
-    } else if (odd > 0) {
+    } else if (odd > 0 && odd_type === "money_line") {
       return `+${odd}`;
+    } else if (odd < 0 && odd_type === "money_line") {
+      return odd;
+    } else if (odd_type ==="parlay") {
+      return `${parseFloat(odd).toFixed(2)}-1`
     } else {
       return odd;
     }
   };
 
-  renderOddType = (odd_type) => {
+  renderOddType = odd_type => {
     if (odd_type === "spread") {
       return "Spread";
-    } else {
+    } else if (odd_type === "money_line"){
       return "Money Line";
-    }
-  };
-
-  renderWin = (win, complete) => {
-    if (complete === null) {
-      return "Open"
     } else {
-      if(win === true) {
-        return "Yes"
-      } else {
-        return "No"
-      }
+      return "Parlay";
     }
   };
 
@@ -194,13 +188,19 @@ class MyWagers extends Component {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
           row.league_id = user_league.league._id;
-          if (row.team_id === row.match.home_team._id) {
+          
+          if (row.match_id === "parlay") {
+            row.team_logo = "/lcs/lcs_logo.png";
+            row.match.home_team.logo_small = "/lcs/lcs_logo.png";
+            row.match.away_team.logo_small = "/lcs/lcs_logo.png";
+          } else if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
             row.short_name = row.match.home_team.short_name;
-          } else {
+          } else if (row.team_id === row.match.away_team._id) {
             row.team_logo = row.match.away_team.logo_small;
             row.short_name = row.match.away_team.short_name;
           }
+
           this.setState({
             open_search_results: this.state.open_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
             open_display_search_results: this.state.open_display_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
@@ -214,10 +214,15 @@ class MyWagers extends Component {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
           row.league_id = user_league.league._id;
-          if (row.team_id === row.match.home_team._id) {
+
+          if (row.match_id === "parlay") {
+            row.team_logo = "/lcs/lcs_logo.png";
+            row.match.home_team.logo_small = "/lcs/lcs_logo.png";
+            row.match.away_team.logo_small = "/lcs/lcs_logo.png";
+          } else if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
             row.short_name = row.match.home_team.short_name;
-          } else {
+          } else if (row.team_id === row.match.away_team._id) {
             row.team_logo = row.match.away_team.logo_small;
             row.short_name = row.match.away_team.short_name;
           }
@@ -255,7 +260,6 @@ class MyWagers extends Component {
                     <th className="center-align">Amount</th>
                     <th className="center-align">Pick</th>
                     <th className="center-align">Odds</th>
-                    <th className="center-align">Win</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -308,7 +312,6 @@ class MyWagers extends Component {
                           <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
                         </div>
                       </td>
-                      <td className="center-align">{this.renderWin(row.win, row.closed)}</td>
                       <td className="right-align"><Link to={`/showMatch/${row.match._id}`}>Match Page</Link></td>
                     </tr>
                   ))}
@@ -382,7 +385,7 @@ class MyWagers extends Component {
                           <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
                         </div>
                       </td>
-                      <td className="center-align">{row.payout}</td>
+                      <td className="center-align">{parseInt(row.payout)}</td>
                       <td className="right-align"><Link to={`/showMatch/${row.match._id}`}>Match Page</Link></td>
                     </tr>
                   ))}

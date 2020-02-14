@@ -153,9 +153,21 @@ export const updateMatchOdds = (matchId, oddsInfo, history) => dispatch => {
 };
 
 //Update match odds
-export const resolveWagers = (matchId, history) => dispatch => {
+export const resolveWagers = matchId => dispatch => {
   axios
     .put(`/api/wagers/${matchId}/resolveWagers`)
+    .catch(err => 
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Update match odds
+export const resolveParlays = history => dispatch => {
+  axios
+    .put(`/api/wagers/resolveParlays`)
     .then(res => history.push(`/adminMatchSearch`)) //re-direct to searchMatch on successful creation
     .catch(err => 
       dispatch({

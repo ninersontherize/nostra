@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { resolveWagers, rollbackWagers } from "../../actions/wagerActions";
+import { resolveWagers, rollbackWagers, resolveParlays } from "../../actions/wagerActions";
 import { showMatch, updateMatchTeams, setResult } from "../../actions/matchActions";
 import { checkAdmin } from "../../actions/userActions";
 import { updateRecord } from "../../actions/teamActions";
@@ -92,7 +92,18 @@ class AdminSetOdds extends Component {
     }
 
     //resolve all the wagers linked to this match
-    this.props.resolveWagers(this.props.match.params.match_id, this.props.history);
+    this.props.resolveWagers(this.props.match.params.match_id);
+  }
+
+  onResolveParlayClick = e => {
+    e.preventDefault();
+
+    if (this.state.admin === false) {
+      return;
+    }
+
+    //check all open parlays to resolve potential wins
+    this.props.resolveParlays(this.props.history);
   }
 
   onRollbackClick = e => {
@@ -233,6 +244,13 @@ class AdminSetOdds extends Component {
               </div>
             </div>
           </div>  
+          <div className="section">
+            <div className="row">
+              <div className="update-record-button-home col s12">
+                <Link onClick={this.onResolveParlayClick} className="btn btn-flat hoverable nostra-button">Resolve Parlays</Link>
+              </div>
+            </div>
+          </div>  
         </div>
     } 
 
@@ -301,6 +319,7 @@ AdminSetOdds.propTypes = {
   updateRecord: PropTypes.func.isRequired,
   resolveWagers: PropTypes.func.isRequired,
   rollbackWagers: PropTypes.func.isRequired,
+  resolveParlays: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -310,4 +329,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { setResult, updateRecord, resolveWagers, showMatch, updateMatchTeams, checkAdmin, rollbackWagers })(withRouter(AdminSetOdds));
+export default connect(mapStateToProps, { setResult, updateRecord, resolveWagers, showMatch, updateMatchTeams, checkAdmin, rollbackWagers, resolveParlays })(withRouter(AdminSetOdds));

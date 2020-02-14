@@ -178,7 +178,7 @@ router.get("/:id/myClosedWagers", (req, res) => {
   var id = req.params.id;
 
   UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
-    Wager.find({ user_league_id: { $in: user_leagues }, closed: true}).sort({"match.match_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    Wager.find({ user_league_id: { $in: user_leagues }, closed: true}).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
   });
 
 });
@@ -626,6 +626,73 @@ router.post("/createParlay", (req, res) => {
       }
     }
   }); 
+});
+
+router.put("/resolveParlays", (req, res) => {
+
+  var win = true;
+
+  Wager.find({ match_id: "parlay", closed: null}).then(wagers => {
+    console.log(wagers);
+    wagers.forEach(wager => {
+      var items_processed = 0;
+      wager.parlay_wagers.forEach(parlay_wager => {
+        console.log(parlay_wager);
+        Wager.findOne({ _id: parlay_wager }).then(sub_wager => {
+          if(sub_wager.win === null) {
+            win = false;
+            console.log(win);
+            return;
+          } else if (sub_wager.win === false) { 
+            win = false;
+
+            Wager.updateOne({ _id: wager._id }, {
+              win: false,
+              payout: 0,
+              closed: true
+            }, function(err, affected, res) {
+              console.log(res);
+            });
+          } else {
+            return;
+          }
+        });
+
+        items_processed++;
+        console.log(items_processed);
+        console.log(wager.parlay_wagers.length === items_processed);
+        if (items_processed === wager.parlay_wagers.length) {
+          console.log(win);
+          if (win === true) {
+            payout = (wager.amount*wager.odds);
+
+            UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+
+              var new_bankroll = user_league.user_bankroll + payout;
+
+              UserLeague.updateOne({ _id: user_league.id}, {
+                user_bankroll: new_bankroll,
+                bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
+              }, function(err, affected, res) {
+                console.log(res);
+              }).then(() => {
+                Wager.updateOne({ _id: wager._id }, {
+                  win: true,
+                  payout: payout,
+                  closed: true
+                }, function(err, affected, res) {
+                  console.log(res);
+                });
+              });    
+            });
+          } else {
+            return;
+          }
+        }
+      });
+    });
+    return res.status(200).json({ wager: "Parlays successfully resolved" });
+  });
 });
 
 module.exports = router;
