@@ -628,6 +628,9 @@ router.post("/createParlay", (req, res) => {
   }); 
 });
 
+// @route PUT api/wagers/resolveParlays
+// @desc resolve all open parlays
+// @access public
 router.put("/resolveParlays", (req, res) => {
 
   var win = true;
@@ -641,11 +644,9 @@ router.put("/resolveParlays", (req, res) => {
         Wager.findOne({ _id: parlay_wager }).then(sub_wager => {
           if(sub_wager.win === null) {
             win = false;
-            console.log(win);
             return;
           } else if (sub_wager.win === false) { 
             win = false;
-
             Wager.updateOne({ _id: wager._id }, {
               win: false,
               payout: 0,
@@ -656,14 +657,11 @@ router.put("/resolveParlays", (req, res) => {
           } else {
             return;
           }
-
           items_processed++;
-          console.log(items_processed);
-          console.log(wager.parlay_wagers.length === items_processed);
           if (items_processed === wager.parlay_wagers.length) {
             console.log(win);
             if (win === true) {
-              payout = (wager.amount*wager.odds);
+              payout = ((wager.amount*wager.odds) + wager.amount);
 
               UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
                 var new_bankroll = user_league.user_bankroll + payout;
