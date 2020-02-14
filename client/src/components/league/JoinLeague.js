@@ -139,7 +139,7 @@ class JoinLeague extends Component {
                           </td>
                           <td className={((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash + parseInt(row.open_wager_amount)}g ({((((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash)/this.state.starting_cash)*100).toFixed(1)}%)</td>
                           <td className="right-align">{row.open_wager_amount}</td>
-                          <td className={(row.user_bankroll - row.prev_week_bankroll) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{(row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)}g ({parseInt(((row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)/row.prev_week_bankroll*100))}%)</td>
+                          <td className={(row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{(row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)}g ({parseInt(((row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)/row.prev_week_bankroll*100))}%)</td>
                           <td className="right-align">{row.user_bankroll + row.open_wager_amount}g</td>
                         </tr>
                       ))}
