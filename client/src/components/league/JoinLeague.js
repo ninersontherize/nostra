@@ -125,10 +125,10 @@ class JoinLeague extends Component {
                     <thead>
                       <tr>
                         <th>Username</th>
-                        <th className="right-align">Season Change</th>
+                        <th className="right-align">Current Gold</th>
                         <th className="right-align">Open Wagers</th>
                         <th className="right-align">WoW Change</th>
-                        <th className="right-align">Current Gold</th>
+                        <th className="right-align">Season Change</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -137,10 +137,10 @@ class JoinLeague extends Component {
                           <td component="th" scope="row" align="right">
                               <Link className="dash-link" to={`/userProfile/${row.user_id}`}>{row.username}</Link>
                           </td>
-                          <td className={((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash + parseInt(row.open_wager_amount)}g ({((((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash)/this.state.starting_cash)*100).toFixed(1)}%)</td>
+                          <td className="right-align">{row.user_bankroll + row.open_wager_amount}g</td>
                           <td className="right-align">{row.open_wager_amount}</td>
                           <td className={(row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{(row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)}g ({parseInt(((row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)/row.prev_week_bankroll*100))}%)</td>
-                          <td className="right-align">{row.user_bankroll + row.open_wager_amount}g</td>
+                          <td className={((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash + parseInt(row.open_wager_amount)}g ({((((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash)/this.state.starting_cash)*100).toFixed(1)}%)</td>
                         </tr>
                       ))}
                     </tbody>
