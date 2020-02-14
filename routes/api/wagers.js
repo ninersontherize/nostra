@@ -609,6 +609,12 @@ router.post("/createParlay", (req, res) => {
                     });
 
                     new_parlay.save().then(parlay => {
+                      UserLeague.updateOne({_id: user_league._id}, {
+                        user_bankroll: (user_league.user_bankroll - req.body.parlay_amount),
+                        bankroll_percent_change: ((((user_league.user_bankroll - req.body.parlay_amount)/user_league.league.starting_cash)*100)-100).toFixed(2)
+                      }, function(err, affected, res) {
+                        console.log(res);
+                      });
                       res.json(parlay);
                     }).catch(err => console.log(err));
                   }
