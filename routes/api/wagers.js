@@ -152,10 +152,21 @@ router.get("/:id/myWagers", (req, res) => {
 router.get("/:id/myOpenWagers", (req, res) => {
 
   var id = req.params.id;
+  var user_league = req.query.user_league_id;
 
-  UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
-    Wager.find({ user_league_id: { $in: user_leagues }, closed: null }).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
-  });
+  if (user_league === "" || user_league === undefined) {
+    UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
+      Wager.find({ user_league_id: { $in: user_leagues }, closed: null }).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    });
+  } else {
+    Wager.aggregate([ {$match: {user_league_id: user_league, closed: null} }, {
+      $group: {
+        _id: { user_league: "$user_league_id" },
+        wager_total: { $sum: "$amount"}
+      }
+    }]).then( wagers => res.json(wagers)).catch(err => console.log(err));
+  }
+  
 
 });
 

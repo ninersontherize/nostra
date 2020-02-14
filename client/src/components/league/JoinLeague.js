@@ -3,6 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { showLeague, joinLeague, getCurrentPlayers, checkCurrentUserMembership } from "../../actions/leagueActions";
+import { getMyOpenWagers } from "../../actions/wagerActions";
 import classnames from "classnames"
 
 class JoinLeague extends Component {
@@ -67,9 +68,19 @@ class JoinLeague extends Component {
     }
 
     await this.props.getCurrentPlayers(this.props.match.params.league_id).then(res => {
-      this.setState({
-        current_players: res,
-        current_player_count: res.length
+      let items_processed = 0;
+      res.forEach(player => {
+        this.props.getMyOpenWagers(player.user_id, player._id).then(agg_res => {
+          if (agg_res.length === 0) {
+            player.open_wager_amount = 0
+          } else {
+            player.open_wager_amount = agg_res[0].wager_total;
+          }
+          this.setState({
+            current_players: this.state.current_players.concat(player).sort((a, b) => ((a.user_bankroll + a.open_wager_amount) < (b.user_bankroll + b.open_wager_amount)) ? 1 : -1),
+            current_player_count: res.length
+          });
+        });
       });
     });
 
@@ -109,12 +120,13 @@ class JoinLeague extends Component {
                     <span className="sub-title">Leaderboard</span>
                   </h5>
                 </div>
-                <div className="col s10 offset-s1">
+                <div className="col s12">
                   <table className="highlight minwidth: 650" aria-label="simple table">
                     <thead>
                       <tr>
                         <th>Username</th>
                         <th className="right-align">Season Change</th>
+                        <th className="right-align">Open Wagers</th>
                         <th className="right-align">WoW Change</th>
                         <th className="right-align">Current Gold</th>
                       </tr>
@@ -125,9 +137,10 @@ class JoinLeague extends Component {
                           <td component="th" scope="row" align="right">
                               <Link className="dash-link" to={`/userProfile/${row.user_id}`}>{row.username}</Link>
                           </td>
-                          <td className={row.bankroll_percent_change < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash}g ({parseInt(row.bankroll_percent_change)}%)</td>
-                          <td className={((row.user_bankroll - row.prev_week_bankroll)/row.prev_week_bankroll)*100 < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{(row.user_bankroll - row.prev_week_bankroll)}g ({parseInt(((row.user_bankroll - row.prev_week_bankroll)/row.prev_week_bankroll*100))}%)</td>
-                          <td className="right-align">{row.user_bankroll}g</td>
+                          <td className={((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{row.user_bankroll - this.state.starting_cash + parseInt(row.open_wager_amount)}g ({((((row.user_bankroll+row.open_wager_amount)-this.state.starting_cash)/this.state.starting_cash)*100).toFixed(1)}%)</td>
+                          <td className="right-align">{row.open_wager_amount}</td>
+                          <td className={(row.user_bankroll - row.prev_week_bankroll) < 0 ? "search-info-value-red right-align" : "search-info-value-green right-align"}>{(row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)}g ({parseInt(((row.user_bankroll + row.open_wager_amount - row.prev_week_bankroll)/row.prev_week_bankroll*100))}%)</td>
+                          <td className="right-align">{row.user_bankroll + row.open_wager_amount}g</td>
                         </tr>
                       ))}
                     </tbody>
@@ -245,6 +258,7 @@ JoinLeague.propTypes = {
   showLeague: PropTypes.func.isRequired,
   getCurrentPlayers: PropTypes.func.isRequired,
   checkCurrentUserMembership: PropTypes.func.isRequired,
+  getMyOpenWagers: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -254,4 +268,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { joinLeague, showLeague, getCurrentPlayers, checkCurrentUserMembership })(withRouter(JoinLeague));
+export default connect(mapStateToProps, { getMyOpenWagers, joinLeague, showLeague, getCurrentPlayers, checkCurrentUserMembership })(withRouter(JoinLeague));

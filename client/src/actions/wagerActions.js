@@ -32,9 +32,13 @@ export const getMyWagers = user_id => dispatch => {
 };
 
 //Get myOpenWagers
-export const getMyOpenWagers = user_id => dispatch => {
+export const getMyOpenWagers = (user_id, user_league_id)  => dispatch => {
   return axios
-    .get(`/api/wagers/${user_id}/myOpenWagers`)
+    .get(`/api/wagers/${user_id}/myOpenWagers`, {
+      params: {
+        user_league_id: user_league_id
+      }
+    })
     .then(res => {return res.data;})
     .catch(err =>
       dispatch({
