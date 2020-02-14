@@ -202,8 +202,8 @@ class MyWagers extends Component {
           }
 
           this.setState({
-            open_search_results: this.state.open_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1),
-            open_display_search_results: this.state.open_display_search_results.concat(row).sort((a, b) => (a.match.match_date > b.match.match_date) ? 1 : -1)
+            open_search_results: this.state.open_search_results.concat(row),
+            open_display_search_results: this.state.open_display_search_results.concat(row)
           });
         });
       });
