@@ -73,7 +73,7 @@ class Sidebar extends Component {
                         </Link>
                       </li>
                       <li className="sidenav-item">
-                        <Link to="/lcsPowerRankings/week3">
+                        <Link to="/lcsPowerRankings/week4">
                           <span className="sidenav-item"><b>LCS</b> Power Rankings</span>
                         </Link>
                       </li>
