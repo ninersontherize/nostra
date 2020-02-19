@@ -20,7 +20,7 @@ router.post("/createWager", (req, res) => {
     return res.status(400).json({ amount: "Please enter an amount for your wager." });
   } else if (req.body.wager_amount <= 0) {
     return res.status(400).json({ amount: "Wager amount must be above 0." });
-  } else if (req.body.wager_odds === null) {
+  } else if (req.body.wager_odds === null || req.body.wager_odds === undefined) {
     return res.status(400).json({ wager_info: "Odds not set for this type/match yet." });
   }
 
