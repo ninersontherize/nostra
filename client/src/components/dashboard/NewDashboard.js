@@ -395,7 +395,7 @@ class NewDashboard extends Component {
                       <tbody>
                         {this.state.display_wager_search_results.map(row => (
                           <tr className="dash-row" key={row._id}>
-                            <td className="dash-league-name" component="th" scope="row">
+                            <td className="search-info-datetime" component="th" scope="row">
                               <Link className="dash-link" to={`/joinLeague/${row.league_id}`}>
                                 {row.league_name}
                               </Link>
@@ -407,7 +407,7 @@ class NewDashboard extends Component {
                                 {row.wager_type === "over_under" ? <span>{row.team_id}</span> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                               </button>
                             </td>
-                            <td className="center-align">{row.amount}g</td>
+                            <td className="center-align search-info-datetime">{row.amount}g</td>
                             <td className="right-align" component="th" scope="row">
                               <button
                                 className="btn-flat"
@@ -429,10 +429,10 @@ class NewDashboard extends Component {
                             </td>
                             <td className="center-align">
                               <div className="row dash-text-container">
-                                <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
+                                <span className="search-info-label">{this.renderOddType(row.wager_type)}</span>
                               </div>
                               <div className="row dash-text-container"> 
-                                <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                                {row.wager_type === "over_under" ? <span className="search-info-label">{row.odds}</span> : <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> }
                               </div>
                             </td>
                             <td>
@@ -580,26 +580,27 @@ class NewDashboard extends Component {
                     <thead className="long-table">
                       <tr>
                         <th>League</th>
-                        <th className="left-align">Match Date</th>
+                        <th className="center-align">Match Date</th>
                         <th></th>
                         <th className="center-align">Match</th>
-                        <th></th>
-                        <th className="left-align">Money Line</th>
-                        <th className="left-align">Spread</th>
+                        <th className="left-align"></th>
+                        <th className="center-align">Money Line</th>
+                        <th className="center-align">Spread</th>
+                        <th className="center-align">Over/Under</th>
                         <th className="right-align"></th>
                       </tr>
                     </thead>
                     <tbody className="long-table">
                       {this.state.display_match_search_results.map(row => (
                         <tr className="dash-row" key={row._id}>
-                          <td>
+                          <td className="left-align">
                             <button
                               className="btn-flat"
                               onClick={() => this.onMatchFilterClick(row.tournament.name)}> 
                               <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
                             </button>
                           </td>
-                          <td>
+                          <td className="center-align">
                             <div className="row search-info-row-container">
                               <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
                             </div>
@@ -626,7 +627,7 @@ class NewDashboard extends Component {
                               <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                             </button>
                           </td>
-                          <td className="left-align">
+                          <td className="center-align">
                             <div className="row search-info-row-container">
                               <span className="search-info-label">{row.home_team.short_name}: </span> 
                               <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_home)}</span> 
@@ -636,7 +637,7 @@ class NewDashboard extends Component {
                               <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_away)}</span>
                             </div>
                           </td>
-                          <td className="left-align">
+                          <td className="center-align">
                             <div className="row search-info-row-container">
                               <span className="search-info-label">{row.home_team.short_name}: </span> 
                               <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_home)}</span> 
@@ -645,6 +646,9 @@ class NewDashboard extends Component {
                               <span className="search-info-label">{row.away_team.short_name}: </span>
                               <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
                             </div>
+                          </td>
+                          <td className="center-align">
+                            <span className="search-info-label">{row.over_under_odds}</span>
                           </td>
                           <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>
                         </tr>
@@ -661,12 +665,13 @@ class NewDashboard extends Component {
                     <thead className="long-table">
                       <tr>
                         <th>League</th>
-                        <th className="left-align">Match Date</th>
+                        <th className="center-align">Match Date</th>
                         <th></th>
                         <th className="center-align">Match</th>
                         <th></th>
-                        <th className="left-align">Gold Diff</th>
-                        <th className="left-align">Winner</th>
+                        <th className="center-align">Gold Diff</th>
+                        <th className="center-align">Kills</th>
+                        <th className="center-align">Winner</th>
                         <th className="right-align"></th>
                       </tr>
                     </thead>
@@ -680,7 +685,7 @@ class NewDashboard extends Component {
                               <img className="search-match-tournament-img" src={process.env.PUBLIC_URL + row.tournament.tournament_logo} />
                             </button>
                           </td>
-                          <td>
+                          <td className="center-align">
                             <div className="row search-info-row-container">
                               <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
                             </div>
@@ -707,10 +712,13 @@ class NewDashboard extends Component {
                               <img className="search-match-img" src={process.env.PUBLIC_URL + row.away_team.logo_small} />
                             </button>
                           </td>
-                          <td className="left-align">
+                          <td className="center-align">
                             <span>{row.gold_difference/1000} K</span>
                           </td>
-                          <td className="left-align">
+                          <td className="center-align">
+                            <span>{row.kills}</span>
+                          </td>          
+                          <td className="center-align">
                             <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
                           </td>
                           <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>

@@ -47,7 +47,7 @@
 .versus-small {
   font-style: italic;
   font-weight: bolder;
-  font-size: 15px;
+  font-size: 12px;
   float: top;
 }
 
@@ -110,21 +110,26 @@ table.striped > tbody > tr:nth-child(odd) {
 
 .search-info-label {
   font-weight: 400;
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .search-info-value-green {
   font-weight: 250;
-  font-size: 15px;
+  font-size: 12px;
   margin-left: 1%;
   color: green;
 }
 
 .search-info-value-red {
   font-weight: 250;
-  font-size: 15px;
+  font-size: 12px;
   margin-left: 1%;
   color: red;
+}
+
+.search-info-datetime {
+  font-weight: 250;
+  font-size: 12px;
 }
 
 .search-info-row-container, .parenthesis, .row-input-field {
@@ -353,8 +358,8 @@ table.striped > tbody > tr:nth-child(odd) {
 
 .search-match-img {
   display: inline-table;
-  max-width:40px;
-  max-height:40px;
+  max-width:35px;
+  max-height:35px;
   width: auto;
   height: auto;
 }
@@ -362,7 +367,7 @@ table.striped > tbody > tr:nth-child(odd) {
 .search-match-tournament-img {
   display: inline-table;
   max-width:65px;
-  max-height:40px;
+  max-height:35px;
   width: auto;
   height: auto;
 }

@@ -69,12 +69,14 @@ class CreateParlay extends Component {
         } else {
           wager_odds = match.money_line_away;
         }
-      } else {
+      } else if (wager_type === "spread") {
         if (wager_team === match.home_team._id) {
           wager_odds = match.spread_home;
         } else {
           wager_odds = match.spread_away;
         }
+      } else {
+        wager_odds = match.over_under_odds;
       }
 
       const sub_wager = {
