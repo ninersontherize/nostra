@@ -150,6 +150,7 @@ class AdminSetOdds extends Component {
         away_team: res.away_team,
         winning_team: res.winning_id,
         gold_difference: res.gold_difference,
+        kills: res.kills,
         match_date: res.match_date
       });
     });

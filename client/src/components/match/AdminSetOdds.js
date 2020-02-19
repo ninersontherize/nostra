@@ -64,6 +64,7 @@ class AdminSetOdds extends Component {
         away_team: res.away_team,
         money_line_home: res.money_line_home,
         money_line_away: res.money_line_away,
+        over_under_odds: res.over_under_odds,
         spread_home: res.spread_home,
         spread_away: res.spread_away,
         winning_id: res.winning_id,

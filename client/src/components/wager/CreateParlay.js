@@ -355,6 +355,7 @@ class CreateParlay extends Component {
                   <th></th>
                   <th className="left-align">Money Line</th>
                   <th className="left-align">Spread</th>
+                  <th className="center-align">Over/Under</th>
                   <th className="right-align"></th>
                 </tr>
               </thead>
@@ -414,6 +415,9 @@ class CreateParlay extends Component {
                         <span className="search-info-label">{row.away_team.short_name}: </span>
                         <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
                       </div>
+                    </td>
+                    <td className="center-align">
+                      <span className="search-info-label">{row.over_under_odds}</span>
                     </td>
                     <td className="center-align">
                       {row.added === true ? <span className="center-align">Included</span> :
@@ -483,6 +487,10 @@ class CreateParlay extends Component {
                           <optgroup label="Spread">
                             <option value={row.home_team._id + "/spread"}>{row.home_team.short_name}</option>
                             <option value={row.away_team._id + "/spread"}>{row.away_team.short_name}</option>
+                          </optgroup>
+                          <optgroup label="Over/Under">
+                            <option value="over/over_under">Over</option>
+                            <option value="under/over_under">Under</option>
                           </optgroup>
                         </select>
                         <span className="red-text">{errors.wager_info}</span>
