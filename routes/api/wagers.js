@@ -192,7 +192,15 @@ router.get("/:id/topLosses", (req, res) => {
 
   UserLeague.find({ user_id: id }).distinct("_id", {}).then( user_leagues => {
     console.log(user_leagues);
-    Wager.find({ user_league_id: { $in: user_leagues }, win: false}).sort({amount: -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    Wager.aggregate([
+      {$match: {
+        user_league_id: { $in: user_leagues.map(String) },
+        win: false
+      }}, 
+      {$sort: {
+        amount: -1
+      }}
+    ]).then( wagers => res.json(wagers)).catch(err => console.log(err));
   });
 
 });
@@ -206,7 +214,19 @@ router.get("/topWins/:id", (req, res) => {
 
   UserLeague.find({ user_id: id }).distinct("_id", {}).then( user_leagues => {
     console.log(user_leagues);
-    Wager.find({ user_league_id: { $in: user_leagues }, win: true}).sort({payout: -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    Wager.aggregate([
+      {$match: {
+        user_league_id: { $in: user_leagues.map(String) },
+        win: true,
+        payout: {$gt: 0}
+      }},
+      {$addFields: {
+        total_payout: { $subtract: ["$payout","$amount"] }
+      }}, 
+      {$sort: {
+        total_payout: -1
+      }}
+    ]).then( wagers => res.json(wagers)).catch(err => console.log(err));
   });
 
 });

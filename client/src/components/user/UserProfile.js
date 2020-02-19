@@ -127,7 +127,7 @@ class UserProfile extends Component {
         this.props.showUser(row.follower_id).then(user_info => {
           user_info.favorite = row.favorite
           this.setState({
-            follower_results: this.state.follower_results.concat(user_info).sort((a, b) => (a.favorite < b.favorite) ? 1 : -1)
+            follower_results: this.state.follower_results.concat(user_info)
           });
         });
       });
@@ -150,7 +150,7 @@ class UserProfile extends Component {
           lifetime_starting_cash = lifetime_starting_cash + res.starting_cash;
         
           this.setState({ 
-            league_search_results: this.state.league_search_results.concat(res).sort((a, b) => (a.bankroll_percent_change < b.bankroll_percent_change) ? 1 : -1),
+            league_search_results: this.state.league_search_results.concat(res),
             lifetime_earnings_cash: lifetime_bankroll - lifetime_starting_cash,
             lifetime_earnings_pct: ((lifetime_bankroll - lifetime_starting_cash)/lifetime_starting_cash*100).toFixed(2),
           });
@@ -174,7 +174,7 @@ class UserProfile extends Component {
             row.team_logo = row.match.away_team.logo_small;
           }
           this.setState({
-            wager_wins_search_results: this.state.wager_wins_search_results.concat(row).sort((a, b) => ((a.payout - a.amount) < (b.payout - b.amount)) ? 1 : -1)
+            wager_wins_search_results: this.state.wager_wins_search_results.concat(row)
           });
         });
       });
@@ -196,7 +196,7 @@ class UserProfile extends Component {
             row.team_logo = row.match.away_team.logo_small;
           }
           this.setState({
-            wager_losses_search_results: this.state.wager_losses_search_results.concat(row).sort((a, b) => (a.amount < b.amount) ? 1 : -1)
+            wager_losses_search_results: this.state.wager_losses_search_results.concat(row)
           });
         });
       });

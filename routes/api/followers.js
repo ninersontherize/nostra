@@ -49,9 +49,9 @@ router.get("/followers", (req, res) => {
   if ( isEmpty(req.query || req.query.search === "" ) ) {
     Follower.find().then( followers => res.json(followers)).catch(err => console.log(err));
   } else if (req.query.type === "followers") {
-    Follower.find({ followee_id: req.query.search }).then( followers => res.json(followers)).catch(err => console.log(err));
+    Follower.find({ followee_id: req.query.search }).sort({favorite: -1}).then( followers => res.json(followers)).catch(err => console.log(err));
   } else {
-    Follower.find({ follower_id: req.query.search }).then( followees => res.json(followees)).catch(err => console.log(err));
+    Follower.find({ follower_id: req.query.search }).sort({favorite: -1}).then( followees => res.json(followees)).catch(err => console.log(err));
   }
 
 });

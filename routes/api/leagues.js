@@ -363,7 +363,7 @@ router.get("/getMyLeagues", (req, res) => {
 
   var user_id = req.query.user_id;
 
-  UserLeague.find({ user_id: user_id }).then(leagues => {
+  UserLeague.find({ user_id: user_id }).sort({bankroll_percent_change: -1}).then(leagues => {
     return res.status(200).json(leagues);
   });
 

@@ -101,6 +101,7 @@ class NewDashboard extends Component {
     }
 
     var new_search_results = [];
+    var new_past_search_results = [];
     
     this.state.match_search_results.filter(obj => {
       if (obj.tournament.name === id || obj.home_team.short_name === id || obj.away_team.short_name === id) {
@@ -108,8 +109,15 @@ class NewDashboard extends Component {
       }
     });
 
+    this.state.past_match_search_results.filter(obj => {
+      if (obj.tournament.name === id || obj.home_team.short_name === id || obj.away_team.short_name === id) {
+        new_past_search_results = new_past_search_results.concat(obj);
+      }
+    });
+
     this.setState({
       display_match_search_results: new_search_results,
+      display_past_match_search_results: new_past_search_results,
       current_match_filter: id
     });
   };
@@ -285,7 +293,7 @@ class NewDashboard extends Component {
           lifetime_starting_cash = lifetime_starting_cash + res.starting_cash;
         
           this.setState({ 
-            league_search_results: this.state.league_search_results.concat(res).sort((a, b) => (a.bankroll_percent_change < b.bankroll_percent_change) ? 1 : -1),
+            league_search_results: this.state.league_search_results.concat(res),
             lifetime_earnings_cash: lifetime_bankroll - lifetime_starting_cash,
             lifetime_earnings_pct: ((lifetime_bankroll - lifetime_starting_cash)/lifetime_starting_cash*100).toFixed(2),
           });
@@ -300,7 +308,7 @@ class NewDashboard extends Component {
           user_info.favorite = row.favorite
           user_info.follower_id = row._id
           this.setState({
-            follower_results: this.state.follower_results.concat(user_info).sort((a, b) => (a.favorite < b.favorite) ? 1 : -1)
+            follower_results: this.state.follower_results.concat(user_info)
           });
         });
       });

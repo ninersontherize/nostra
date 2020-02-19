@@ -26,7 +26,7 @@ class MyLeagues extends Component {
             res.bankroll_percent_change = row.bankroll_percent_change;
             res.current_player_count = player_res.length;
             this.setState({ 
-              search_results: this.state.search_results.concat(res).sort((a, b) => (a.bankroll_percent_change < b.bankroll_percent_change) ? 1 : -1)
+              search_results: this.state.search_results.concat(res)
             });
           });
         });

@@ -31,6 +31,7 @@ class LcsPowerRankingsWeek1 extends Component {
               </div>
               <div className="col s6 right-align">
                 <span className="rankings-week-selector right-align">
+                  Previous Weeks: <Link to="/lcsPowerRankings/week0">0</Link>
                 </span>
               </div>
             </div>
