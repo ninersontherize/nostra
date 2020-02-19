@@ -31,6 +31,10 @@ const MatchSchema = new Schema({
     type: Number,
     required: false
   },
+  over_under_odds: {
+    type: Number,
+    required: false
+  },
   winning_id: {
     type: String,
     required: false
@@ -40,6 +44,10 @@ const MatchSchema = new Schema({
     required: false
   },
   gold_difference: {
+    type: Number,
+    required: false
+  },
+  kills: {
     type: Number,
     required: false
   },

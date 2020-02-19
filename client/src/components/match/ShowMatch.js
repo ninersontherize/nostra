@@ -20,6 +20,7 @@ class ShowMatch extends Component {
       money_line_away: "",
       spread_home: "",
       spread_away: "",
+      over_under_odds: "",
       winning_id: "",
       losing_id: "",
       gold_difference: "",
@@ -181,12 +182,14 @@ class ShowMatch extends Component {
       } else {
         wager_odds = this.state.money_line_away;
       }
-    } else {
+    } else if (wager_type === "spread") {
       if (wager_team === this.state.home_team._id) {
         wager_odds = this.state.spread_home;
       } else {
         wager_odds = this.state.spread_away;
       }
+    } else {
+      wager_odds = this.state.over_under_odds;
     }
 
     const wagerData = {
@@ -266,6 +269,7 @@ class ShowMatch extends Component {
         money_line_away: res.money_line_away,
         spread_home: res.spread_home,
         spread_away: res.spread_away,
+        over_under_odds: res.over_under_odds,
         winning_id: res.winning_id,
         losing_id: res.losing_id,
         gold_difference: res.gold_difference,
@@ -441,6 +445,19 @@ class ShowMatch extends Component {
                     </div> 
                   </td>
                 </tr>
+                <tr key="money-line">
+                  <td className="right-align">
+                  </td>
+                  <td className="center-align">
+                    <div className="odds-label">
+                      <div className="odds-label">
+                        <span className="spread">Over/Under (Kills): {this.state.over_under_odds}</span>
+                      </div> 
+                    </div>
+                  </td>
+                  <td className="left-align">
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -458,7 +475,7 @@ class ShowMatch extends Component {
             <div className="row wager-info-container">
               <div className="hide-on-med-and-down input-field col s3">
                 <select id="wager_info" value={this.state.wager_info} onChange={this.onTeamChange} error={errors.wager_info}>
-                  <option value="" disabled selected>Team</option>
+                  <option value="" disabled selected>Wager</option>
                   <optgroup label="Money-Line">
                     <option value={this.state.home_team._id + "/money_line"}>{this.state.home_team.short_name}</option>
                     <option value={this.state.away_team._id + "/money_line"}>{this.state.away_team.short_name}</option>
@@ -467,8 +484,12 @@ class ShowMatch extends Component {
                     <option value={this.state.home_team._id + "/spread"}>{this.state.home_team.short_name}</option>
                     <option value={this.state.away_team._id + "/spread"}>{this.state.away_team.short_name}</option>
                   </optgroup>
+                  <optgroup label="Over/Under">
+                    <option value="over/over_under">Over</option>
+                    <option value="under/over_under">Under</option>
+                  </optgroup>
                 </select>
-                <label>Team and Type of Wager</label>
+                <label>Type of Wager</label>
                 <span className="red-text">{errors.wager_info}</span>
               </div>
               <div className="hide-on-large-only input-field col s3">
@@ -481,6 +502,10 @@ class ShowMatch extends Component {
                   <optgroup label="Spread">
                     <option value={this.state.home_team._id + "/spread"}>{this.state.home_team.short_name}</option>
                     <option value={this.state.away_team._id + "/spread"}>{this.state.away_team.short_name}</option>
+                  </optgroup>
+                  <optgroup label="Over/Under">
+                    <option value="over/over_under">Over</option>
+                    <option value="under/over_under">Under</option>
                   </optgroup>
                 </select>
                 <span className="red-text">{errors.wager_info}</span>
@@ -728,6 +753,20 @@ class ShowMatch extends Component {
               <div className="col s4">
                 <div className="team-record">
                   <span className="record" title="away-team-record">{this.state.away_team.wins}-{this.state.away_team.losses}</span>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col s4">
+                <div className="team-record-vs-spread">
+                  <span className="record" title="home-team-record">Vs Spread: ({this.state.home_team.winsVsSpread}-{this.state.home_team.lossesVsSpread})</span>
+                </div>
+              </div>
+              <div className="col s4">
+              </div>
+              <div className="col s4">
+                <div className="team-record-vs-spread">
+                  <span className="record" title="away-team-record">Vs Spread: ({this.state.away_team.winsVsSpread}-{this.state.away_team.lossesVsSpread})</span>
                 </div>
               </div>
             </div>

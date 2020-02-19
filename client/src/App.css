@@ -86,6 +86,11 @@
   font-size: 20px;
 }
 
+.team-record-vs-spread {
+  font-weight: 200;
+  font-size: 15px;
+}
+
 table.striped > tbody > tr:nth-child(odd) {
   background-color: rgb(255, 255, 255);
 }

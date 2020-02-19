@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { resolveWagers, rollbackWagers, resolveParlays } from "../../actions/wagerActions";
 import { showMatch, updateMatchTeams, setResult } from "../../actions/matchActions";
 import { checkAdmin } from "../../actions/userActions";
-import { updateRecord } from "../../actions/teamActions";
+import { updateRecord, updateSpreadRecord } from "../../actions/teamActions";
 import classnames from "classnames"
 import M from "materialize-css";
 
@@ -20,6 +20,7 @@ class AdminSetOdds extends Component {
       winning_team: "",
       losing_team: "",
       gold_difference: "",
+      kills: "",
       match_date: "",
       match_complete: false,
       admin: "",
@@ -57,7 +58,8 @@ class AdminSetOdds extends Component {
     const matchData = {
       winning_id: this.state.winning_team,
       losing_id: this.state.losing_team,
-      gold_difference: this.state.gold_difference
+      gold_difference: this.state.gold_difference,
+      kills: this.state.kills
     }
 
     //set the Result
@@ -82,6 +84,26 @@ class AdminSetOdds extends Component {
     }
 
     this.props.updateRecord(this.state.home_team._id);
+  }
+
+  onAwayTeamUpdateSpreadClick = e => {
+    e.preventDefault();
+
+    if (this.state.admin === false) {
+      return;
+    }
+
+    this.props.updateSpreadRecord(this.state.away_team._id);
+  }
+
+  onHomeTeamUpdateSpreadClick = e => {
+    e.preventDefault();
+
+    if (this.state.admin === false) {
+      return;
+    }
+
+    this.props.updateSpreadRecord(this.state.home_team._id);
   }
 
   onResolveWagerClick = e => {
@@ -206,6 +228,18 @@ class AdminSetOdds extends Component {
               <label htmlFor="name">Gold Difference</label>
               <span className="red-text">{errors.gold_difference}</span>
             </div>
+            <div className="input-field col s8 offset-s2">
+              <input
+                onChange={this.onChange}
+                value={this.state.kills}
+                error={errors.kills}
+                id="kills"
+                type="number"
+                className={classnames('', { invalid: errors.kills})}
+              />
+              <label htmlFor="name">Kills</label>
+              <span className="red-text">{errors.kills}</span>
+            </div>
             <div className="section">
               <div className="row">
                 <div className="update-record-button-home col s12">
@@ -234,6 +268,14 @@ class AdminSetOdds extends Component {
               </div>
               <div className="update-record-button-away col s5">
                 <Link onClick={this.onAwayTeamUpdateClick} className="btn btn-flat hoverable nostra-button">Update Away Record</Link>
+              </div>
+            </div>
+            <div className="row">
+              <div className="update-record-button-home col s5 offset-s1">
+                <Link onClick={this.onHomeTeamUpdateSpreadClick} className="btn btn-flat hoverable nostra-button">Update Home Spread Record</Link>
+              </div>
+              <div className="update-record-button-away col s5">
+                <Link onClick={this.onAwayTeamUpdateSpreadClick} className="btn btn-flat hoverable nostra-button">Update Away Spread Record</Link>
               </div>
             </div>
           </div>  
@@ -317,6 +359,7 @@ AdminSetOdds.propTypes = {
   checkAdmin: PropTypes.func.isRequired,
   setResult: PropTypes.func.isRequired,
   updateRecord: PropTypes.func.isRequired,
+  updateSpreadRecord: PropTypes.func.isRequired,
   resolveWagers: PropTypes.func.isRequired,
   rollbackWagers: PropTypes.func.isRequired,
   resolveParlays: PropTypes.func.isRequired,
@@ -329,4 +372,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { setResult, updateRecord, resolveWagers, showMatch, updateMatchTeams, checkAdmin, rollbackWagers, resolveParlays })(withRouter(AdminSetOdds));
+export default connect(mapStateToProps, { setResult, updateRecord, updateSpreadRecord, resolveWagers, showMatch, updateMatchTeams, checkAdmin, rollbackWagers, resolveParlays })(withRouter(AdminSetOdds));

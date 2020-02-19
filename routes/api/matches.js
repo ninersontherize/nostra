@@ -187,7 +187,8 @@ router.put("/:id/updateMatchOdds", (req, res) => {
         money_line_home: req.body.money_line_home,
         money_line_away: req.body.money_line_away,
         spread_home: req.body.spread_home,
-        spread_away: req.body.spread_away
+        spread_away: req.body.spread_away,
+        over_under_odds: req.body.over_under_odds
       }, function(err, affected, res) {
         console.log(res);
       })
@@ -269,7 +270,8 @@ router.put("/:id/setResult", (req, res) => {
       Match.updateOne({ _id: id }, {
         winning_id: req.body.winning_id,
         losing_id: req.body.losing_id,
-        gold_difference: req.body.gold_difference
+        gold_difference: req.body.gold_difference,
+        kills: req.body.kills
       }, function(err, affected, res) {
         console.log(res);
       })

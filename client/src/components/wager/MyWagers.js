@@ -42,14 +42,16 @@ class MyWagers extends Component {
       return "Spread";
     } else if (odd_type === "money_line"){
       return "Money Line";
-    } else {
+    } else if (odd_type === "parlay") {
       return "Parlay";
+    } else {
+      return "Over/Under"
     }
   };
 
   onFilterClick = (id, status) => {
     if (status === "open") {
-      if (this.state.open_current_filter === id) {
+      if (this.state.open_current_filter === id || id === "over_under") {
         this.setState({
           open_display_search_results: this.state.open_search_results,
           open_current_tournament_filter: "",
@@ -58,7 +60,7 @@ class MyWagers extends Component {
         return;
       }
     } else {
-      if (this.state.closed_current_filter === id) {
+      if (this.state.closed_current_filter === id || id === "over_under") {
         this.setState({
           closed_display_search_results: this.state.closed_search_results,
           closed_current_tournament_filter: "",
@@ -193,6 +195,8 @@ class MyWagers extends Component {
             row.team_logo = "/lcs/lcs_logo.png";
             row.match.home_team.logo_small = "/lcs/lcs_logo.png";
             row.match.away_team.logo_small = "/lcs/lcs_logo.png";
+          } else if (row.wager_type === "over_under") {
+            row.short_name = "over_under";
           } else if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
             row.short_name = row.match.home_team.short_name;
@@ -301,7 +305,7 @@ class MyWagers extends Component {
                         <button
                           className="btn-flat"
                           onClick={() => this.onFilterClick(row.short_name, "open")}>            
-                          <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                          {row.wager_type === "over_under" ? <span>{row.team_id}</span> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                         </button>
                       </td>
                       <td className="center-align">
@@ -374,7 +378,7 @@ class MyWagers extends Component {
                         <button
                           className="btn-flat"
                           onClick={() => this.onFilterClick(row.short_name)}>            
-                          <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                          {row.wager_type === "over_under" ? <span>{row.team_id}</span> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                         </button>
                       </td>
                       <td className="center-align">

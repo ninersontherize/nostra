@@ -170,6 +170,8 @@ class UserProfile extends Component {
           row.league_id = user_league.league._id;
           if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
+          } else if (row.wager_type === "over_under") {
+            row.short_name = "over_under";
           } else {
             row.team_logo = row.match.away_team.logo_small;
           }
@@ -192,6 +194,8 @@ class UserProfile extends Component {
           row.league_id = user_league.league._id;
           if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
+          } else if (row.wager_type === "over_under") {
+            row.short_name = "over_under";
           } else {
             row.team_logo = row.match.away_team.logo_small;
           }
@@ -266,7 +270,7 @@ class UserProfile extends Component {
                           <tr className="dash-row" key={row._id}>
                             <td className="left-align">
                               <Link to={`/showMatch/${row.match_id}`}>
-                                <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                                {row.wager_type === "over_under" ? <span>{row.team_id}</span> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                               </Link>
                             </td>
                             <td className="center-align">{row.amount}g</td>
@@ -327,7 +331,7 @@ class UserProfile extends Component {
                           <tr className="dash-row" key={row._id}>
                             <td className="left-align">
                               <Link to={`/showMatch/${row.match_id}`}>
-                                <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                                {row.wager_type === "over_under" ? <span>{row.team_id}</span> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                               </Link>
                             </td>
                             <td className="center-align">{row.amount}g</td>

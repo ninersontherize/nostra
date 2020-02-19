@@ -20,6 +20,7 @@ class AdminSetOdds extends Component {
       money_line_away: "",
       spread_home: "",
       spread_away: "",
+      over_under_odds: "",
       winning_id: "",
       losing_id: "",
       gold_difference: "",
@@ -45,7 +46,8 @@ class AdminSetOdds extends Component {
       money_line_home: this.state.money_line_home,
       money_line_away: this.state.money_line_away,
       spread_home: this.state.spread_home,
-      spread_away: this.state.spread_away
+      spread_away: this.state.spread_away,
+      over_under_odds: this.state.over_under_odds
     }
 
     this.props.updateMatchOdds(this.props.match.params.match_id, oddsData, this.props.history);
@@ -163,6 +165,18 @@ class AdminSetOdds extends Component {
                 />
                 <label htmlFor="name">Spread ({this.state.away_team.name})</label>
                 <span className="red-text">{errors.spread_away}</span>
+              </div>
+              <div className="input-field col s8 offset-s2">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.over_under_odds}
+                  error={errors.over_under_odds}
+                  id="over_under_odds"
+                  type="number"
+                  className={classnames('', { invalid: errors.over_under_odds })}
+                />
+                <label htmlFor="name">Over/Under</label>
+                <span className="red-text">{errors.over_under_odds}</span>
               </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <button

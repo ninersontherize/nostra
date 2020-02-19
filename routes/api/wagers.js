@@ -20,6 +20,8 @@ router.post("/createWager", (req, res) => {
     return res.status(400).json({ amount: "Please enter an amount for your wager." });
   } else if (req.body.wager_amount <= 0) {
     return res.status(400).json({ amount: "Wager amount must be above 0." });
+  } else if (req.body.wager_odds === null) {
+    return res.status(400).json({ wager_info: "Odds not set for this type/match yet." });
   }
 
   UserLeague.findOne({ _id: req.body.wager_user_league }).then(user_league => {
@@ -452,7 +454,7 @@ router.put("/:id/resolveWagers", (req, res) => {
                 });
               }
             }
-          } else {
+          } else if (wager.wager_type === "spread") {
             if (wager.odds < 0) {
               //favorite logic
               if (wager.team_id === match.winning_id && match.gold_difference > Math.abs(wager.odds)) {
@@ -543,6 +545,38 @@ router.put("/:id/resolveWagers", (req, res) => {
                   console.log(res);
                 });
               }
+            }
+          } else {
+            if ((wager.team_id === "over" && match.kills > match.over_under_odds) || (wager.team_id === "under" && match.kills < match.over_under_odds)) {
+              var payout = parseInt(wager.amount*2);
+
+                UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+                  var new_bankroll = user_league.user_bankroll + payout;
+                  
+                  UserLeague.updateOne({ _id: user_league.id}, {
+                    user_bankroll: new_bankroll,
+                    bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
+                  }, function(err, affected, res) {
+                    console.log(res);
+                  }).then(() => {
+                    Wager.updateOne({ _id: wager._id }, {
+                      win: true,
+                      payout: payout,
+                      closed: true
+                    }, function(err, affected, res) {
+                      console.log(res);
+                    });
+                  });  
+                });
+            } else {
+              //lose logic
+              Wager.updateOne({ _id: wager._id }, {
+                win: false,
+                payout: 0,
+                closed: true
+              }, function(err, affected, res) {
+                console.log(res);
+              });
             }
           }
         });

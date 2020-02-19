@@ -30,7 +30,15 @@ const TeamSchema = new Schema({
   losses: {
     type: Number,
     required: true
-  },   
+  },
+  winsVsSpread: {
+    type: Number,
+    required: false
+  },
+  lossesVsSpread: {
+    type: Number,
+    required: false
+  }, 
   created_date: {
     type: Date,
     default: Date.now

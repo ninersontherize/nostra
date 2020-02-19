@@ -47,3 +47,16 @@ export const updateRecord = teamId => dispatch => {
     );
 };
 
+//update Team Records
+export const updateSpreadRecord = teamId => dispatch => {
+  axios
+    .put(`/api/teams/${teamId}/updateRecordVsSpread`)
+    .then(res => res.data)
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+

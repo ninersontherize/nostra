@@ -143,4 +143,75 @@ router.put("/:id/updateRecord", (req, res) => {
 
 }); 
 
+// @route Get api/teams/:id/getRecordVsSpread
+// @desc Update a team's record by id
+// @access public
+router.put("/:id/updateRecordVsSpread", (req, res) => {
+  console.log(req.params.id);
+  
+  var team_id = req.params.id;
+  var wins = 0;
+  var losses = 0;
+  var items_processed = 0;
+  
+
+  Team.findOne({_id: team_id }).then( team => {
+    console.log(team);
+    Match.find({ $or:[{"home_team.short_name": team.short_name, winning_id: {$ne: null} }, {"away_team.short_name": team.short_name, winning_id: {$ne: null} }]}).then(matches => {
+      matches.forEach(match_item => {
+        Match.findOne({_id: match_item._id}).then(match => {
+          if(match.home_team._id.toString() == team._id.toString()){ 
+            if(match.winning_id === team_id) {
+              if(match.gold_difference > (match.spread_home*-1)) {
+                wins++;
+              } else {
+                losses++;
+              }
+            } else {
+              if(match.spread_home < 0) {
+                losses++;
+              } else if (match.spread_home > match.gold_difference) {
+                wins++;
+              } else {
+                losses++;
+              }
+            }
+          } else {
+            if(match.winning_id === team_id) {
+              if(match.gold_difference > (match.spread_away*-1)) {
+                wins++;
+              } else {
+                losses++;
+              }
+            } else {
+              if(match.spread_away < 0) {
+                losses++;
+              } else if (match.spread_away > match.gold_difference) {
+                wins++;
+              } else {
+                losses++
+              }
+            }
+          }
+          items_processed++;
+          if (items_processed === matches.length) {
+            Team.updateOne({ _id: team._id }, {
+              winsVsSpread: wins,
+              lossesVsSpread: losses
+            }, function(err, affected, res) {
+              console.log(res);
+            })
+            .then(() => {
+              console.log(wins);
+              console.log(losses);
+              res.status(200).send({ message: "record updated successfully"});
+            });
+          }
+        });
+      });
+    });
+  });
+
+}); 
+
 module.exports = router;

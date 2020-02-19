@@ -68,8 +68,10 @@ class NewDashboard extends Component {
       return "Spread";
     } else if (odd_type === "money_line"){
       return "Money Line";
-    } else {
+    } else if (odd_type === "parlay") {
       return "Parlay";
+    } else {
+      return "Over/Under"
     }
   };
 
@@ -123,7 +125,7 @@ class NewDashboard extends Component {
   };
 
   onWagerFilterClick = id => {
-    if (this.state.current_wager_filter === id) {
+    if (this.state.current_wager_filter === id || id === "over_under") {
       this.setState({
         display_wager_search_results: this.state.wager_search_results,
         current_wager_filter: ""
@@ -258,6 +260,8 @@ class NewDashboard extends Component {
             row.team_logo = "/lcs/lcs_logo.png";
             row.match.home_team.logo_small = "/lcs/lcs_logo.png";
             row.match.away_team.logo_small = "/lcs/lcs_logo.png";
+          } else if (row.wager_type === "over_under") {
+            row.short_name = "over_under";
           } else if (row.team_id === row.match.home_team._id) {
             row.team_logo = row.match.home_team.logo_small;
             row.short_name = row.match.home_team.short_name;
@@ -400,7 +404,7 @@ class NewDashboard extends Component {
                               <button
                                 className="btn-flat"
                                 onClick={() => this.onWagerFilterClick(row.short_name)}>            
-                                <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                                {row.wager_type === "over_under" ? <span>{row.team_id}</span> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                               </button>
                             </td>
                             <td className="center-align">{row.amount}g</td>
