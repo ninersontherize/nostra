@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { getMyLeagues, showLeague } from "../../actions/leagueActions";
 import { getTopWins, getTopLosses, getLeagueInfo } from "../../actions/wagerActions";
 import { showUser, getFollowers, checkFollowed, followUser, unfollowUser } from "../../actions/userActions";
+import { renderOdds, renderOddType } from "../../helpers/odds";
 import { showTeam } from "../../actions/teamActions";
 
 
@@ -54,34 +55,6 @@ class UserProfile extends Component {
       is_followed:false
     })
   }
-
-  renderOdds = (odd_type, odd) => {
-    if(odd > 0 && odd_type === "spread") {
-      return `+${odd/1000} K`;
-    } else if (odd < 0 && odd_type === "spread") {
-      return `${odd/1000} K`;
-    } else if (odd > 0) {
-      return `+${odd}`;
-    } else {
-      return odd;
-    }
-  };
-
-  renderOddType = odd_type => {
-    if (odd_type === "spread") {
-      return "Spread";
-    } else {
-      return "Money Line";
-    }
-  };
-
-  getOpponent = (id, home_team, home_team_logo, away_team_logo) => {
-    if (id === home_team) {
-      return away_team_logo;
-    } else {
-      return home_team_logo;
-    }
-  };
 
   UNSAFE_componentWillReceiveProps = nextProps => {
     if(nextProps.location.key !== this.props.location.key) {
@@ -291,10 +264,10 @@ class UserProfile extends Component {
                             </td>
                             <td className="center-align">
                               <div className="row dash-text-container">
-                                <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
+                                <span className="dash-spread-label">{renderOddType(row.wager_type)}</span>
                               </div>
                               <div className="row dash-text-container"> 
-                                <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                                <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> 
                               </div>
                             </td>
                             <td className="right-align dash-info-value-green">{(row.payout-row.amount)}g</td>
@@ -352,10 +325,10 @@ class UserProfile extends Component {
                             </td>
                             <td className="center-align">
                               <div className="row dash-text-container">
-                                <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
+                                <span className="dash-spread-label">{renderOddType(row.wager_type)}</span>
                               </div>
                               <div className="row dash-text-container"> 
-                                <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                                <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> 
                               </div>
                             </td>
                             <td className="right-align dash-info-value-red">-({row.amount})g</td>
@@ -413,7 +386,7 @@ class UserProfile extends Component {
                   </div>
                   <div className="row">
                     <span className="user-status">
-                      <b>Total Earnings:</b> <span className={this.state.lifetime_earnings_cash > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds("none", this.state.lifetime_earnings_cash)}g <br/>({this.renderOdds("none", this.state.lifetime_earnings_pct)}%)</span>
+                      <b>Total Earnings:</b> <span className={this.state.lifetime_earnings_cash > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{renderOdds("none", this.state.lifetime_earnings_cash)}g <br/>({renderOdds("none", this.state.lifetime_earnings_pct)}%)</span>
                     </span>
                   </div>
                   <div className="row">

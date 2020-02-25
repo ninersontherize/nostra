@@ -586,15 +586,6 @@ router.put("/:id/resolveWagers", (req, res) => {
   });
 });
 
-// @route DELETE api/wagers/deleteWager
-// @desc Delete a wager by id
-// @access public
-//router.delete("/deleteAll", (req, res) => {
-//
-//  Match.deleteMany({}).then(res => console.log(res));
-//
-//});
-
 // @route POST api/wagers/createParlay
 // @desc Create New Parlay Wager with X number of bets
 // @access Public
@@ -682,66 +673,68 @@ router.post("/createParlay", (req, res) => {
   }); 
 });
 
+async function updateBankroll(wager, win) {
+  if (win === true) {
+    let payout = (parseInt(wager.amount*wager.odds) + wager.amount);
+    console.log(payout);
+    UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
+      var new_bankroll = user_league.user_bankroll + payout;
+      console.log(new_bankroll);
+
+      UserLeague.updateOne({ _id: user_league.id}, {
+        user_bankroll: new_bankroll,
+        bankroll_percent_change: (((new_bankroll/user_league.league.starting_cash)*100)-100).toFixed(2)
+      }, function(err, affected, res) {
+        console.log(res);
+      }).then(() => {
+        Wager.updateOne({ _id: wager._id }, {
+          win: true,
+          payout: (parseInt(wager.amount*wager.odds) + wager.amount),
+          closed: true
+        }, function(err, affected, res) {
+          console.log(res);
+        });
+      });    
+    });
+  };
+}
+
+async function processWagers(wagers) {
+  var win = true;
+
+  for await (const wager of wagers) {
+    for await (const parlay_wager of wager.parlay_wagers) {
+      console.log(parlay_wager);
+      Wager.findOne({ _id: parlay_wager }).then(sub_wager => {
+        if(sub_wager.win === null) {
+          win = false;
+          return;
+        } else if (sub_wager.win === false) { 
+          win = false;
+          Wager.updateOne({ _id: wager._id }, {
+            win: false,
+            payout: 0,
+            closed: true
+          }, function(err, affected, res) {
+            console.log(res);
+          });
+        } else {
+          return;
+        }
+      });
+    };
+    console.log(win);
+    await updateBankroll(wager, win)
+  };
+};
+
 // @route PUT api/wagers/resolveParlays
 // @desc resolve all open parlays
 // @access public
 router.put("/resolveParlays", (req, res) => {
-
-  var win = true;
-
   Wager.find({ match_id: "parlay", closed: null}).then(wagers => {
     console.log(wagers);
-    wagers.forEach(wager => {
-      var items_processed = 0;
-      wager.parlay_wagers.forEach(parlay_wager => {
-        console.log(parlay_wager);
-        Wager.findOne({ _id: parlay_wager }).then(sub_wager => {
-          if(sub_wager.win === null) {
-            win = false;
-            return;
-          } else if (sub_wager.win === false) { 
-            win = false;
-            Wager.updateOne({ _id: wager._id }, {
-              win: false,
-              payout: 0,
-              closed: true
-            }, function(err, affected, res) {
-              console.log(res);
-            });
-          } else {
-            return;
-          }
-          items_processed++;
-          if (items_processed === wager.parlay_wagers.length) {
-            console.log(win);
-            if (win === true) {
-              payout = ((wager.amount*wager.odds) + wager.amount);
-
-              UserLeague.findOne({ _id: wager.user_league_id }).then(user_league => {
-                var new_bankroll = user_league.user_bankroll + payout;
-
-                UserLeague.updateOne({ _id: user_league.id}, {
-                  user_bankroll: new_bankroll,
-                  bankroll_percent_change: ((((new_bankroll)/user_league.league.starting_cash)*100)-100).toFixed(2)
-                }, function(err, affected, res) {
-                  console.log(res);
-                }).then(() => {
-                  Wager.updateOne({ _id: wager._id }, {
-                    win: true,
-                    payout: payout,
-                    closed: true
-                  }, function(err, affected, res) {
-                    console.log(res);
-                  });
-                });    
-              });
-            } else {
-              return;
-            }
-          }
-        });
-      });
-    });
+    processWagers(wagers);
     return res.status(200).json({ wager: "Parlays successfully resolved" });
   });
 });

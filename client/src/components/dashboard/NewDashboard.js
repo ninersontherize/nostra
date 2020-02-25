@@ -7,6 +7,7 @@ import { getMyOpenWagers, getLeagueInfo, deleteWager } from "../../actions/wager
 import { showUser, getFollowing, favoriteUser } from "../../actions/userActions";
 import { showTeam } from "../../actions/teamActions";
 import { searchMatchByDateRange } from "../../actions/matchActions";
+import { renderOdds, renderOddType, renderMatchTime, getOpponent } from "../../helpers/odds";
 
 
 class NewDashboard extends Component {
@@ -38,22 +39,6 @@ class NewDashboard extends Component {
     };
   }
 
-  renderOdds = (odd_type, odd) => {
-    if(odd > 0 && odd_type === "spread") {
-      return `+${odd/1000} K`;
-    } else if (odd < 0 && odd_type === "spread") {
-      return `${odd/1000} K`;
-    } else if (odd > 0 && odd_type === "money_line") {
-      return `+${odd}`;
-    } else if (odd < 0 && odd_type === "money_line") {
-      return odd;
-    } else if (odd_type ==="parlay") {
-      return `${parseFloat(odd).toFixed(2)}-1`
-    } else {
-      return odd;
-    }
-  };
-
   onFavoriteClick = id => {
     this.props.favoriteUser(id, this.props.history);
     this.state.follower_results.filter(obj => {
@@ -62,36 +47,6 @@ class NewDashboard extends Component {
       }
     });
   }
-
-  renderOddType = odd_type => {
-    if (odd_type === "spread") {
-      return "Spread";
-    } else if (odd_type === "money_line"){
-      return "Money Line";
-    } else if (odd_type === "parlay") {
-      return "Parlay";
-    } else {
-      return "Over/Under"
-    }
-  };
-
-  renderMatchTime = datetime => {
-    let match_hour = (datetime.getHours() % 12);
-    if (match_hour === 0) {
-      match_hour = 12;
-    }
-    let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
-    let match_trailer = (datetime.getHours() > 11) ? " PM PST" : " AM PST";
-    return match_hour + ":" + match_minute + match_trailer;
-  };
-
-  getOpponent = (id, home_team, home_team_logo, away_team_logo) => {
-    if (id === home_team) {
-      return away_team_logo;
-    } else {
-      return home_team_logo;
-    }
-  };
 
   onMatchFilterClick = id => {
     if (this.state.current_match_filter === id) {
@@ -429,10 +384,10 @@ class NewDashboard extends Component {
                             </td>
                             <td className="center-align">
                               <div className="row dash-text-container">
-                                <span className="search-info-label">{this.renderOddType(row.wager_type)}</span>
+                                <span className="search-info-label">{renderOddType(row.wager_type)}</span>
                               </div>
                               <div className="row dash-text-container"> 
-                                {row.wager_type === "over_under" ? <span className="search-info-label">{row.odds}</span> : <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> }
+                                {row.wager_type === "over_under" ? <span className="search-info-label">{row.odds}</span> : <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> }
                               </div>
                             </td>
                             <td>
@@ -524,7 +479,7 @@ class NewDashboard extends Component {
                   </div>
                   <div className="row">
                     <span className="user-status">
-                      <b>Total Earnings:</b> <span className={this.state.lifetime_earnings_cash < 0 ? "dash-info-value-red" : "dash-info-value-green"}>{this.renderOdds("none", this.state.lifetime_earnings_cash)}g <br/>({this.renderOdds("none", this.state.lifetime_earnings_pct)}%)</span>
+                      <b>Total Earnings:</b> <span className={this.state.lifetime_earnings_cash < 0 ? "dash-info-value-red" : "dash-info-value-green"}>{renderOdds("none", this.state.lifetime_earnings_cash)}g <br/>({renderOdds("none", this.state.lifetime_earnings_pct)}%)</span>
                     </span>
                   </div>
                   <div className="divider" />
@@ -605,7 +560,7 @@ class NewDashboard extends Component {
                               <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
                             </div>
                             <div className="row search-info-row-container">
-                              <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
+                              <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>
                             </div>
                           </td>
                           <td className="right-align" component="th" scope="row">
@@ -630,21 +585,21 @@ class NewDashboard extends Component {
                           <td className="center-align">
                             <div className="row search-info-row-container">
                               <span className="search-info-label">{row.home_team.short_name}: </span> 
-                              <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_home)}</span> 
+                              <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("money_line", row.money_line_home)}</span> 
                             </div>
                             <div className="row search-info-row-container">
                               <span className="search-info-label">{row.away_team.short_name}: </span>
-                              <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_away)}</span>
+                              <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("money_line", row.money_line_away)}</span>
                             </div>
                           </td>
                           <td className="center-align">
                             <div className="row search-info-row-container">
                               <span className="search-info-label">{row.home_team.short_name}: </span> 
-                              <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_home)}</span> 
+                              <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("spread", row.spread_home)}</span> 
                             </div>
                             <div className="row search-info-row-container">
                               <span className="search-info-label">{row.away_team.short_name}: </span>
-                              <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
+                              <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("spread", row.spread_away)}</span>
                             </div>
                           </td>
                           <td className="center-align">
@@ -690,7 +645,7 @@ class NewDashboard extends Component {
                               <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
                             </div>
                             <div className="row search-info-row-container">
-                              <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
+                              <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>
                             </div>
                           </td>
                           <td className="right-align" component="th" scope="row">

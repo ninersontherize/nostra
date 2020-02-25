@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getMyOpenWagers, getMyClosedWagers, getLeagueInfo } from "../../actions/wagerActions";
+import { renderOdds, renderOddType } from "../../helpers/odds";
 
 class MyWagers extends Component {
   constructor() {
@@ -20,34 +21,6 @@ class MyWagers extends Component {
       errors: {}
     };
   }
-
-  renderOdds = (odd_type, odd) => {
-    if(odd > 0 && odd_type === "spread") {
-      return `+${odd/1000} K`;
-    } else if (odd < 0 && odd_type === "spread") {
-      return `${odd/1000} K`;
-    } else if (odd > 0 && odd_type === "money_line") {
-      return `+${odd}`;
-    } else if (odd < 0 && odd_type === "money_line") {
-      return odd;
-    } else if (odd_type ==="parlay") {
-      return `${parseFloat(odd).toFixed(2)}-1`
-    } else {
-      return odd;
-    }
-  };
-
-  renderOddType = odd_type => {
-    if (odd_type === "spread") {
-      return "Spread";
-    } else if (odd_type === "money_line"){
-      return "Money Line";
-    } else if (odd_type === "parlay") {
-      return "Parlay";
-    } else {
-      return "Over/Under"
-    }
-  };
 
   onFilterClick = (id, status) => {
     if (status === "open") {
@@ -310,10 +283,10 @@ class MyWagers extends Component {
                       </td>
                       <td className="center-align">
                         <div className="row search-info-row-container">
-                          <span className="search-info-label">{this.renderOddType(row.wager_type)}</span>
+                          <span className="search-info-label">{renderOddType(row.wager_type)}</span>
                         </div>
                         <div className="row search-info-row-container"> 
-                          <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                          <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> 
                         </div>
                       </td>
                       <td className="right-align"><Link to={`/showMatch/${row.match._id}`}>Match Page</Link></td>
@@ -383,10 +356,10 @@ class MyWagers extends Component {
                       </td>
                       <td className="center-align">
                         <div className="row search-info-row-container">
-                          <span className="search-info-label">{this.renderOddType(row.wager_type)}</span>
+                          <span className="search-info-label">{renderOddType(row.wager_type)}</span>
                         </div>
                         <div className="row search-info-row-container"> 
-                          <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                          <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> 
                         </div>
                       </td>
                       <td className="center-align">{parseInt(row.payout)}</td>

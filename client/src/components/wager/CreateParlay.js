@@ -7,6 +7,7 @@ import { searchMatchByDateRange } from "../../actions/matchActions";
 import { getMyLeagues, showUserLeague } from "../../actions/leagueActions";
 import classnames from "classnames"
 import { createParlay } from "../../actions/wagerActions";
+import { renderOdds, renderMatchTime, renderMoney, renderDifference } from "../../helpers/odds";
 
 const isEmpty = require("is-empty");
 
@@ -34,22 +35,6 @@ class CreateParlay extends Component {
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
-  
-  renderMoney = money => {
-    if (money === "") {
-      return
-    } else {
-      return `${money}g`
-    }
-  }
-
-  renderDifference = money => {
-    if (money === "") {
-      return
-    } else {
-      return `(+${money}g)`
-    }
-  }
 
   onSubmit = async e => {
     e.preventDefault();
@@ -102,18 +87,6 @@ class CreateParlay extends Component {
 
     this.props.createParlay(wagerData, this.props.history);
           
-  };
-
-  renderOdds = (odd_type, odd) => {
-    if(odd > 0 && odd_type === "spread") {
-      return `+${odd/1000} K`;
-    } else if (odd < 0 && odd_type === "spread") {
-      return `${odd/1000} K`;
-    } else if (odd > 0) {
-      return `+${odd}`;
-    } else {
-      return odd;
-    }
   };
 
   onFilterClick = id => {
@@ -281,17 +254,6 @@ class CreateParlay extends Component {
       }
     });
     
-
-  };
-
-  renderMatchTime = datetime => {
-    let match_hour = (datetime.getHours() % 12);
-    if (match_hour === 0) {
-      match_hour = 12;
-    }
-    let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
-    let match_trailer = (datetime.getHours() > 11) ? " PM PST" : " AM PST";
-    return match_hour + ":" + match_minute + match_trailer;
   };
 
   componentDidMount() {
@@ -376,7 +338,7 @@ class CreateParlay extends Component {
                         <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
                       </div>
                       <div className="row search-info-row-container">
-                        <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
+                        <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>
                       </div>
                     </td>
                     <td className="right-align" component="th" scope="row">
@@ -401,21 +363,21 @@ class CreateParlay extends Component {
                     <td className="left-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.home_team.short_name}: </span> 
-                        <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_home)}</span> 
+                        <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("money_line", row.money_line_home)}</span> 
                       </div>
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.away_team.short_name}: </span>
-                        <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_away)}</span>
+                        <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("money_line", row.money_line_away)}</span>
                       </div>
                     </td>
                     <td className="left-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.home_team.short_name}: </span> 
-                        <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_home)}</span> 
+                        <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("spread", row.spread_home)}</span> 
                       </div>
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.away_team.short_name}: </span>
-                        <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
+                        <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("spread", row.spread_away)}</span>
                       </div>
                     </td>
                     <td className="center-align">
@@ -543,9 +505,9 @@ class CreateParlay extends Component {
             <div className="input-field inline col s3 available-funds">
               <div className="row">
                 <span className="available-funds">
-                  Available Funds: {this.renderMoney(this.state.available_funds)}
+                  Available Funds: {renderMoney(this.state.available_funds)}
                   <br />
-                  Potential Payout: {this.renderMoney(this.state.potential_winnings)} {(this.renderDifference(this.state.potential_difference))}
+                  Potential Payout: {renderMoney(this.state.potential_winnings)} {(renderDifference(this.state.potential_difference))}
                 </span>
               </div>
             </div>

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { searchMatch, searchMatchByDateRange } from "../../actions/matchActions";
 import classnames from "classnames"
 import queryString from "query-string"
+import { renderOdds, renderOddType, renderMatchTime, getOpponent } from "../../helpers/odds";
 
 const isEmpty = require("is-empty");
 
@@ -43,18 +44,6 @@ class SearchMatch extends Component {
           
   };
 
-  renderOdds = (odd_type, odd) => {
-    if(odd > 0 && odd_type === "spread") {
-      return `+${odd/1000} K`;
-    } else if (odd < 0 && odd_type === "spread") {
-      return `${odd/1000} K`;
-    } else if (odd > 0) {
-      return `+${odd}`;
-    } else {
-      return odd;
-    }
-  };
-
   onFilterClick = id => {
     if (this.state.current_filter === id) {
       this.setState({
@@ -76,16 +65,6 @@ class SearchMatch extends Component {
       display_search_results: new_search_results,
       current_filter: id
     });
-  };
-
-  renderMatchTime = datetime => {
-    let match_hour = (datetime.getHours() % 12);
-    if (match_hour === 0) {
-      match_hour = 12;
-    }
-    let match_minute = (datetime.getMinutes() < 10) ? "0" + datetime.getMinutes() : datetime.getMinutes();
-    let match_trailer = (datetime.getHours() > 11) ? " PM PST" : " AM PST";
-    return match_hour + ":" + match_minute + match_trailer;
   };
 
   componentDidMount() {
@@ -171,7 +150,7 @@ class SearchMatch extends Component {
                         <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
                       </div>
                       <div className="row search-info-row-container">
-                        <span className="search-info-datetime">{this.renderMatchTime(new Date(row.match_date))}</span>
+                        <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>
                       </div>
                     </td>
                     <td className="right-align" component="th" scope="row">
@@ -196,21 +175,21 @@ class SearchMatch extends Component {
                     <td className="left-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.home_team.short_name}: </span> 
-                        <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_home)}</span> 
+                        <span className={row.money_line_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("money_line", row.money_line_home)}</span> 
                       </div>
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.away_team.short_name}: </span>
-                        <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("money_line", row.money_line_away)}</span>
+                        <span className={row.money_line_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("money_line", row.money_line_away)}</span>
                       </div>
                     </td>
                     <td className="left-align">
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.home_team.short_name}: </span> 
-                        <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_home)}</span> 
+                        <span className={row.spread_home > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("spread", row.spread_home)}</span> 
                       </div>
                       <div className="row search-info-row-container">
                         <span className="search-info-label">{row.away_team.short_name}: </span>
-                        <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{this.renderOdds("spread", row.spread_away)}</span>
+                        <span className={row.spread_away > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds("spread", row.spread_away)}</span>
                       </div>
                     </td>
                     <td className="right-align"><Link to={`/showMatch/${row._id}`}>Match Page</Link></td>

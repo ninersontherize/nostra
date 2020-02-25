@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { showMatch, updateMatchTeams } from "../../actions/matchActions";
 import { getMyLeagues, showUserLeague } from "../../actions/leagueActions";
 import { createWager, getWagersByMatch, getLosingWagersByMatch } from "../../actions/wagerActions";
+import { renderOdds, renderOddType, renderMatchTime, renderMoney, renderDifference } from "../../helpers/odds";
 import classnames from "classnames"
 import M from "materialize-css";
 
@@ -212,50 +213,6 @@ class ShowMatch extends Component {
     }
   };
 
-  renderPositiveOdds = odd => {
-    if(odd > 0) {
-      return `+${odd}`
-    } else {
-      return odd
-    }
-  };
-
-  renderOdds = (odd_type, odd) => {
-    if(odd > 0 && odd_type === "spread") {
-      return `+${odd/1000} K`;
-    } else if (odd < 0 && odd_type === "spread") {
-      return `${odd/1000} K`;
-    } else if (odd > 0) {
-      return `+${odd}`;
-    } else {
-      return odd;
-    }
-  };
-
-  renderOddType = odd_type => {
-    if (odd_type === "spread") {
-      return "Spread";
-    } else {
-      return "Money Line";
-    }
-  };
-
-  renderMoney = money => {
-    if (money === "") {
-      return
-    } else {
-      return `${money}g`
-    }
-  }
-
-  renderDifference = money => {
-    if (money === "") {
-      return
-    } else {
-      return `(+${money}g)`
-    }
-  }
-
   async componentDidMount() {
 
     await this.props.updateMatchTeams(this.props.match.params.match_id);
@@ -372,13 +329,6 @@ class ShowMatch extends Component {
 
     let wager_section;
     let match_date = new Date(this.state.match_date);
-    let match_hour = (match_date.getHours() % 12);
-    if (match_hour === 0) {
-      match_hour = 12;
-    }
-    let match_minute = (match_date.getMinutes() < 10) ? "0" + match_date.getMinutes() : match_date.getMinutes();
-    let match_trailer = (match_date.getHours() > 11) ? " PM PST" : " AM PST";
-    let match_time = match_hour + ":" + match_minute + match_trailer;
     let home_logo = process.env.PUBLIC_URL + this.state.home_team.logo_large;
     let away_logo = process.env.PUBLIC_URL + this.state.away_team.logo_large;
 
@@ -402,7 +352,7 @@ class ShowMatch extends Component {
                   <td className="right-align">
                     <div className={this.state.money_line_home > 0 ? "odds-green" : "odds-red"}>
                       <div className="money-line">
-                        <span className="money-line-odds" title="money-line-odds">{this.renderPositiveOdds(this.state.money_line_home)}</span>
+                        <span className="money-line-odds" title="money-line-odds">{renderOdds("money_line", this.state.money_line_home)}</span>
                       </div>
                     </div>   
                   </td>
@@ -414,7 +364,7 @@ class ShowMatch extends Component {
                   <td className="left-align">
                     <div className={this.state.money_line_away > 0 ? "odds-green" : "odds-red"}>
                       <div className="money-line">
-                        <span className="money-line-odds">{this.renderPositiveOdds(this.state.money_line_away)}</span>
+                        <span className="money-line-odds">{renderOdds("money_line", this.state.money_line_away)}</span>
                       </div>
                     </div> 
                   </td>
@@ -423,7 +373,7 @@ class ShowMatch extends Component {
                   <td className="right-align">
                     <div className={this.state.spread_home > 0 ? "odds-green" : "odds-red"}>
                       <div className="spread">
-                        <span className="spread-odds" title="spread-odds">{this.renderPositiveOdds(this.state.spread_home/1000)} K</span>
+                        <span className="spread-odds" title="spread-odds">{renderOdds("spread", this.state.spread_home)}</span>
                       </div>
                     </div> 
                   </td>
@@ -440,7 +390,7 @@ class ShowMatch extends Component {
                   <td className="left-align">
                     <div className={this.state.spread_away > 0 ? "odds-green" : "odds-red"}>
                       <div className="spread">
-                        <span className="spread-odds">{this.renderPositiveOdds(this.state.spread_away/1000)} K</span>
+                        <span className="spread-odds">{renderOdds("spread", this.state.spread_away)}</span>
                       </div>
                     </div> 
                   </td>
@@ -544,9 +494,9 @@ class ShowMatch extends Component {
               <div className="input-field inline col s3 available-funds">
                 <div className="row">
                   <span className="available-funds">
-                    Available Funds: {this.renderMoney(this.state.available_funds)}
+                    Available Funds: {renderMoney(this.state.available_funds)}
                     <br />
-                    Potential Payout: {this.renderMoney(this.state.potential_winnings)} {(this.renderDifference(this.state.potential_difference))}
+                    Potential Payout: {renderMoney(this.state.potential_winnings)} {(renderDifference(this.state.potential_difference))}
                   </span>
                 </div>
               </div>
@@ -581,7 +531,7 @@ class ShowMatch extends Component {
               <img className="show-match-winner-img" src={process.env.PUBLIC_URL + this.getWinner(this.state.winning_id)} />
             </div>
             <div className="col s4 gold-diff">
-              <span className="gold-diff"> ({this.renderPositiveOdds(this.state.gold_difference)})</span>
+              <span className="gold-diff"> ({renderOdds("spread", this.state.gold_difference)})</span>
             </div>
           </div>
         </div>
@@ -620,10 +570,10 @@ class ShowMatch extends Component {
                   <td className="center-align">{row.amount}g</td>
                   <td className="center-align">
                     <div className="row dash-text-container">
-                      <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
+                      <span className="dash-spread-label">{renderOddType(row.wager_type)}</span>
                     </div>
                     <div className="row dash-text-container"> 
-                      <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                      <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> 
                     </div>
                   </td>
                   <td className="right-align dash-info-value-green">{row.payout - row.amount}g</td>
@@ -663,10 +613,10 @@ class ShowMatch extends Component {
                   <td className="center-align">{row.amount}g</td>
                   <td className="right-align">
                     <div className="row dash-text-container">
-                      <span className="dash-spread-label">{this.renderOddType(row.wager_type)}</span>
+                      <span className="dash-spread-label">{renderOddType(row.wager_type)}</span>
                     </div>
                     <div className="row dash-text-container"> 
-                      <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{this.renderOdds(row.wager_type, row.odds)}</span> 
+                      <span className={row.odds > 0 ? "dash-info-value-green" : "dash-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> 
                     </div>
                   </td>
                 </tr>
@@ -687,11 +637,25 @@ class ShowMatch extends Component {
               <img className="show-match-winner-img" src={process.env.PUBLIC_URL + this.getWinner(this.state.winning_id)} />
             </div>
             <div className="col s4 gold-diff">
-              <span className="gold-diff"> ({this.renderPositiveOdds(this.state.gold_difference)})</span>
+              <span className="gold-diff"> ({renderOdds("spread", this.state.gold_difference)})</span>
             </div>
           </div>
         </div>
       </div>
+    } else if (this.state.match_date > Date.now) {
+      wager_section = 
+        <div className="section">
+          <div className="row">
+            <h5 className="landing-header">
+              Match in Progress!
+            </h5>
+            <p className="flow-text grey-text text-darken-1 landing-sub-header">
+              Check back in an hour or so to get match results!
+              <br></ br>
+              If you have any questions reach out to us by emailing nostra.help@gmail.com
+            </p>
+          </div> 
+        </div>
     } else {
       wager_section = 
         <div className="section">
@@ -730,7 +694,7 @@ class ShowMatch extends Component {
                         {match_date.toDateString()}
                       </div>
                       <div className="match-time">
-                        {match_time}
+                        {renderMatchTime(match_date)}
                       </div>
                     </div>
                   </div>
