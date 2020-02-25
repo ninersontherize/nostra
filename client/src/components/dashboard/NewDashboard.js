@@ -7,7 +7,7 @@ import { getMyOpenWagers, getLeagueInfo, deleteWager } from "../../actions/wager
 import { showUser, getFollowing, favoriteUser } from "../../actions/userActions";
 import { showTeam } from "../../actions/teamActions";
 import { searchMatchByDateRange } from "../../actions/matchActions";
-import { renderOdds, renderOddType, renderMatchTime, getOpponent } from "../../helpers/odds";
+import { renderOdds, renderOddType, renderMatchTime, renderMatchDate } from "../../helpers/odds";
 
 
 class NewDashboard extends Component {
@@ -557,7 +557,7 @@ class NewDashboard extends Component {
                           </td>
                           <td className="center-align">
                             <div className="row search-info-row-container">
-                              <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
+                              <span className="search-info-datetime">{renderMatchDate(new Date(row.match_date))}</span>
                             </div>
                             <div className="row search-info-row-container">
                               <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>
@@ -642,7 +642,7 @@ class NewDashboard extends Component {
                           </td>
                           <td className="center-align">
                             <div className="row search-info-row-container">
-                              <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
+                              <span className="search-info-datetime">{renderMatchDate(new Date(row.match_date))}</span>
                             </div>
                             <div className="row search-info-row-container">
                               <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>

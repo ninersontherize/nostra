@@ -6,7 +6,7 @@ import { searchMatch, searchMatchByDateRange } from "../../actions/matchActions"
 import { checkAdmin } from "../../actions/userActions";
 import classnames from "classnames"
 import queryString from "query-string"
-import { renderOdds, renderMatchTime } from "../../helpers/odds";
+import { renderOdds, renderMatchTime, renderMatchDate } from "../../helpers/odds";
 
 const isEmpty = require("is-empty");
 
@@ -146,7 +146,7 @@ class AdminMatchSearch extends Component {
                       </td>
                       <td>
                         <div className="row search-info-row-container">
-                          <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
+                          <span className="search-info-datetime">{renderMatchDate(new Date(row.match_date))}</span>
                         </div>
                         <div className="row search-info-row-container">
                           <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>

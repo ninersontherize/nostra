@@ -7,7 +7,7 @@ import { searchMatchByDateRange } from "../../actions/matchActions";
 import { getMyLeagues, showUserLeague } from "../../actions/leagueActions";
 import classnames from "classnames"
 import { createParlay } from "../../actions/wagerActions";
-import { renderOdds, renderMatchTime, renderMoney, renderDifference } from "../../helpers/odds";
+import { renderOdds, renderMatchTime, renderMoney, renderDifference, renderMatchDate } from "../../helpers/odds";
 
 const isEmpty = require("is-empty");
 
@@ -335,7 +335,7 @@ class CreateParlay extends Component {
                     </td>
                     <td>
                       <div className="row search-info-row-container">
-                        <span className="search-info-datetime">{new Date(row.match_date).toDateString()}</span>
+                        <span className="search-info-datetime">{renderMatchDate(new Date(row.match_date))}</span>
                       </div>
                       <div className="row search-info-row-container">
                         <span className="search-info-datetime">{renderMatchTime(new Date(row.match_date))}</span>
