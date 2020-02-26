@@ -362,7 +362,7 @@ class MyWagers extends Component {
                           <span className={row.odds > 0 ? "search-info-value-green" : "search-info-value-red"}>{renderOdds(row.wager_type, row.odds)}</span> 
                         </div>
                       </td>
-                      <td className="center-align">{parseInt(row.payout)}</td>
+                      <td className="center-align">{parseInt(row.payout) - parseInt(row.amount)}</td>
                       <td className="right-align"><Link to={`/showMatch/${row.match._id}`}>Match Page</Link></td>
                     </tr>
                   ))}
