@@ -331,8 +331,8 @@ class ShowMatch extends Component {
     let match_date = new Date(this.state.match_date);
     let home_logo = process.env.PUBLIC_URL + this.state.home_team.logo_large;
     let away_logo = process.env.PUBLIC_URL + this.state.away_team.logo_large;
-    
-    if (this.state.match_date < Date.now && this.state.match_complete === false) {
+
+    if (new Date(this.state.match_date) < Date.now() && this.state.match_complete === false) {
       wager_section = 
         <div className="section">
           <div className="row">
