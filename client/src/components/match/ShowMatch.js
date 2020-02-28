@@ -331,8 +331,22 @@ class ShowMatch extends Component {
     let match_date = new Date(this.state.match_date);
     let home_logo = process.env.PUBLIC_URL + this.state.home_team.logo_large;
     let away_logo = process.env.PUBLIC_URL + this.state.away_team.logo_large;
-
-    if (this.state.match_complete === false && this.state.money_line_home !== null && this.state.spread_home !== null) {
+    
+    if (this.state.match_date < Date.now && this.state.match_complete === false) {
+      wager_section = 
+        <div className="section">
+          <div className="row">
+            <h5 className="landing-header">
+              Match in Progress!
+            </h5>
+            <p className="flow-text grey-text text-darken-1 landing-sub-header">
+              Check back in an hour or so to get match results!
+              <br></ br>
+              If you have any questions reach out to us by emailing nostra.help@gmail.com
+            </p>
+          </div> 
+        </div>
+    } else if (this.state.match_complete === false && this.state.money_line_home !== null && this.state.spread_home !== null) {
       wager_section = 
       <div className="section">
       <div className="section">
@@ -642,20 +656,6 @@ class ShowMatch extends Component {
           </div>
         </div>
       </div>
-    } else if (this.state.match_date > Date.now) {
-      wager_section = 
-        <div className="section">
-          <div className="row">
-            <h5 className="landing-header">
-              Match in Progress!
-            </h5>
-            <p className="flow-text grey-text text-darken-1 landing-sub-header">
-              Check back in an hour or so to get match results!
-              <br></ br>
-              If you have any questions reach out to us by emailing nostra.help@gmail.com
-            </p>
-          </div> 
-        </div>
     } else {
       wager_section = 
         <div className="section">

@@ -128,9 +128,7 @@ class LcsPowerRankingsWeek5 extends Component {
               Unfortunately, Golden Guardians couldn't keep up their strong performances, ending the week 0-2 with losses to 
               FlyQuest and 100 Thieves. While Keith has shown flashes of being impressive on Thresh, this weekend he kind of 
               reverted to his old ways with a few isolated deaths and poor performances. I'm worried about the flexibility of 
-              the team going forward, especially whether or not Keith can perform on different kinds of supports. Another 
-              interesting wrinkle is that, as of now, midlaner Goldenglue no longer has "playing for gg" or a Golden Guardians banner 
-              on his Twitter, so we'll have to follow that situation.
+              the team going forward, especially whether or not Keith can perform on different kinds of supports.
             </p>
             <p className="flow-text grey-text text-darken-1 rankings-section-sub-title left-align"><b>Next Week:</b> Immortals (5-5), Evil Geniuses (4-6)</p>
             <h4 className="rankings-section-title left-align">
