@@ -12,31 +12,44 @@ async function updateBankroll(wager, win) {
   };
 }
 
-async function processWagers(wagers) {
+async function processSubWagers(parlay_wagers, wager) {
   var win = true;
+  var total_win = false;
+  var items_processed = 0;
 
-  for await (const wager of wagers) {
-    for await (const parlay_wager of wager.parlay_wagers) {
-      Wager.findOne({ _id: parlay_wager }).then(sub_wager => {
-        if(sub_wager.win === null) {
-          win = false;
-          return;
-        } else if (sub_wager.win === false) { 
-          win = false;
-          Wager.updateOne({ _id: wager._id }, {
-            win: false,
-            payout: 0,
-            closed: true
-          }, function(err, affected, res) {
-            console.log(res);
-          });
-        } else {
-          return;
+  for await (const parlay_wager of parlay_wagers) {
+    console.log(parlay_wager);
+    Wager.findOne({ _id: parlay_wager }).then(sub_wager => {
+      if(sub_wager.win === null) {
+        win = false;
+      } else if (sub_wager.win === false) { 
+        win = false;
+        Wager.updateOne({ _id: wager._id }, {
+          win: false,
+          payout: 0,
+          closed: true
+        }, function(err, affected, res) {
+          console.log(res);
+        });
+      }
+      console.log(win);
+      items_processed++
+      if (items_processed === parlay_wagers.length) {
+        if (win === true) {
+          console.log(items_processed);
+          console.log("parlay_resolved");
+          console.log(win);
+          total_win = win;
         }
-      });
-    };
-    console.log(win);
-    await updateBankroll(wager, win)
+        updateBankroll(wager, total_win);
+      }
+    });
+  };
+}
+
+async function processWagers(wagers) {
+  for await (const wager of wagers) {
+    await processSubWagers(wager.parlay_wagers, wager);
   };
 };
 
