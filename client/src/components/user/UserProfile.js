@@ -243,7 +243,7 @@ class UserProfile extends Component {
                           <tr className="dash-row" key={row._id}>
                             <td className="left-align">
                               <Link to={`/showMatch/${row.match_id}`}>
-                                {row.wager_type === "over_under" ? <span>{row.team_id}</span> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
+                                {row.wager_type === "over_under" ? <button className="btn-flat"><span>{row.team_id}</span></button> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                               </Link>
                             </td>
                             <td className="center-align">{row.amount}g</td>
