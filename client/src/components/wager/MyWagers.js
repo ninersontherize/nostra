@@ -262,7 +262,7 @@ class MyWagers extends Component {
                         </button>
                       </td>
                       <td className="center-align" conponent="th" scopt="row">
-                        <Link to={`showMatch/${row.match_id}`} className="dash-link">
+                        <Link to={(row.match_id === "parlay") ? `/viewParlay/${row._id}` : `/showMatch/${row.match_id}`} className="dash-link">
                           <span className="versus-small">vs.</span>
                         </Link>
                       </td>
@@ -335,7 +335,7 @@ class MyWagers extends Component {
                         </button>
                       </td>
                       <td className="center-align" conponent="th" scopt="row">
-                        <Link to={`showMatch/${row.match_id}`} className="dash-link">
+                        <Link to={(row.match_id === "parlay") ? `/viewParlay/${row._id}` : `/showMatch/${row.match_id}`} className="dash-link">
                           <span className="versus-small">vs.</span>
                         </Link>
                       </td>
