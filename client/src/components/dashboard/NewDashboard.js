@@ -246,16 +246,25 @@ class NewDashboard extends Component {
       var lifetime_bankroll = 0;
       res.forEach(row => {
         this.props.showLeague(row.league._id).then(res => {
-          res.bankroll = row.user_bankroll;
-          res.bankroll_percent_change = row.bankroll_percent_change;
+          this.props.getMyOpenWagers(this.props.auth.user.id, row._id).then(agg_res => {
+            console.log(agg_res);
+            if (agg_res.length === 0) {
+              res.open_wager_amount = 0
+            } else {
+              res.open_wager_amount = agg_res[0].wager_total;
+            }
 
-          lifetime_bankroll = lifetime_bankroll + row.user_bankroll;
-          lifetime_starting_cash = lifetime_starting_cash + res.starting_cash;
+            res.bankroll = row.user_bankroll + res.open_wager_amount;
+            res.bankroll_percent_change = (row.user_bankroll + res.open_wager_amount - res.starting_cash)/res.starting_cash*100;
+
+            lifetime_bankroll = lifetime_bankroll + row.user_bankroll + res.open_wager_amount;
+            lifetime_starting_cash = lifetime_starting_cash + res.starting_cash;
         
-          this.setState({ 
-            league_search_results: this.state.league_search_results.concat(res),
-            lifetime_earnings_cash: lifetime_bankroll - lifetime_starting_cash,
-            lifetime_earnings_pct: ((lifetime_bankroll - lifetime_starting_cash)/lifetime_starting_cash*100).toFixed(2),
+            this.setState({ 
+              league_search_results: this.state.league_search_results.concat(res),
+              lifetime_earnings_cash: lifetime_bankroll - lifetime_starting_cash,
+              lifetime_earnings_pct: ((lifetime_bankroll - lifetime_starting_cash)/lifetime_starting_cash*100).toFixed(2),
+            });
           });
         });
       });
