@@ -52,6 +52,7 @@ class NewDashboard extends Component {
     if (this.state.current_match_filter === id) {
       this.setState({
         display_match_search_results: this.state.match_search_results,
+        display_past_match_search_results: this.state.past_match_search_results,
         current_match_filter: ""
       });
       return;
@@ -371,7 +372,7 @@ class NewDashboard extends Component {
                               </button>
                             </td>
                             <td className="center-align" conponent="th" scopt="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
+                              <Link to={(row.match_id === "parlay") ? `/viewParlay/${row._id}` : `/showMatch/${row._id}`} className="dash-link">
                                 <span className="versus-small">vs.</span>
                               </Link>
                             </td>

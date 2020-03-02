@@ -622,7 +622,7 @@ class ShowMatch extends Component {
                     </Link>
                   </td>
                   <td className="center-align" component="th" scope="row">           
-                    <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />
+                    {row.wager_type === "over_under" ? <button className="btn-flat"><span>{row.team_id}</span></button> : <img className="search-match-img" src={process.env.PUBLIC_URL + row.team_logo} />}
                   </td>
                   <td className="center-align">{row.amount}g</td>
                   <td className="right-align">

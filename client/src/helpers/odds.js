@@ -1,6 +1,5 @@
 //render Odds for site
 export const renderOdds = (odd_type, odd) => {
-  console.log(odd_type);
   if(odd > 0 && odd_type === "spread") {
     return `+${odd/1000} K`;
   } else if (odd < 0 && odd_type === "spread") {

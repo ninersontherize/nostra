@@ -141,12 +141,18 @@ class UserProfile extends Component {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
           row.league_id = user_league.league._id;
-          if (row.team_id === row.match.home_team._id) {
-            row.team_logo = row.match.home_team.logo_small;
+          if (row.match_id === "parlay") {
+            row.team_logo = "/lcs/lcs_logo.png";
+            row.match.home_team.logo_small = "/lcs/lcs_logo.png";
+            row.match.away_team.logo_small = "/lcs/lcs_logo.png";
           } else if (row.wager_type === "over_under") {
             row.short_name = "over_under";
-          } else {
+          } else if (row.team_id === row.match.home_team._id) {
+            row.team_logo = row.match.home_team.logo_small;
+            row.short_name = row.match.home_team.short_name;
+          } else if (row.team_id === row.match.away_team._id) {
             row.team_logo = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.short_name;
           }
           this.setState({
             wager_wins_search_results: this.state.wager_wins_search_results.concat(row)
@@ -165,12 +171,18 @@ class UserProfile extends Component {
         this.props.getLeagueInfo(row.user_league_id).then(user_league => {
           row.league_name = user_league.league.name;
           row.league_id = user_league.league._id;
-          if (row.team_id === row.match.home_team._id) {
-            row.team_logo = row.match.home_team.logo_small;
+          if (row.match_id === "parlay") {
+            row.team_logo = "/lcs/lcs_logo.png";
+            row.match.home_team.logo_small = "/lcs/lcs_logo.png";
+            row.match.away_team.logo_small = "/lcs/lcs_logo.png";
           } else if (row.wager_type === "over_under") {
             row.short_name = "over_under";
-          } else {
+          } else if (row.team_id === row.match.home_team._id) {
+            row.team_logo = row.match.home_team.logo_small;
+            row.short_name = row.match.home_team.short_name;
+          } else if (row.team_id === row.match.away_team._id) {
             row.team_logo = row.match.away_team.logo_small;
+            row.short_name = row.match.away_team.short_name;
           }
           this.setState({
             wager_losses_search_results: this.state.wager_losses_search_results.concat(row)
@@ -253,7 +265,7 @@ class UserProfile extends Component {
                               </Link>
                             </td>
                             <td className="center-align" conponent="th" scopt="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
+                              <Link to={(row.match_id === "parlay") ? `/viewParlay/${row._id}` : `/showMatch/${row.match_id}`} className="dash-link">
                                 <span className="versus-small">vs.</span>
                               </Link>
                             </td>
@@ -314,7 +326,7 @@ class UserProfile extends Component {
                               </Link>
                             </td>
                             <td className="center-align" conponent="th" scopt="row">
-                              <Link to={`/showMatch/${row.match_id}`} className="dash-link">
+                              <Link to={(row.match_id === "parlay") ? `/viewParlay/${row._id}` : `/showMatch/${row.match_id}`} className="dash-link">
                                 <span className="versus-small">vs.</span>
                               </Link>
                             </td>

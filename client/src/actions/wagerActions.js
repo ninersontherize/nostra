@@ -203,3 +203,29 @@ export const createParlay = (wagerData, history) => dispatch => {
       })
     );
 };
+
+//Show Parlay
+export const showParlay = wager_id => dispatch => {
+  return axios
+    .get(`/api/wagers/${wager_id}/showParlay`)
+    .then(res => {return res.data;})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Show Parlay
+export const showWager = wager_id => dispatch => {
+  return axios
+    .get(`/api/wagers/${wager_id}/wagers`)
+    .then(res => {return res.data;})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};

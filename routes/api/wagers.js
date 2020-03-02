@@ -159,7 +159,7 @@ router.get("/:id/myOpenWagers", (req, res) => {
 
   if (user_league === "" || user_league === undefined) {
     UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
-      Wager.find({ user_league_id: { $in: user_leagues }, closed: null }).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+      Wager.find({ user_league_id: { $in: user_leagues }, closed: null, amount: { $gt: 0 } }).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
     });
   } else {
     Wager.aggregate([ {$match: {user_league_id: user_league, closed: null} }, {
@@ -181,7 +181,7 @@ router.get("/:id/myClosedWagers", (req, res) => {
   var id = req.params.id;
 
   UserLeague.find({ user_id: id }).distinct("_id",{}).then( user_leagues => { 
-    Wager.find({ user_league_id: { $in: user_leagues }, closed: true}).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
+    Wager.find({ user_league_id: { $in: user_leagues }, closed: true, amount: { $gt: 0 }}).sort({"created_date": -1}).then( wagers => res.json(wagers)).catch(err => console.log(err));
   });
 
 });
@@ -198,7 +198,8 @@ router.get("/:id/topLosses", (req, res) => {
     Wager.aggregate([
       {$match: {
         user_league_id: { $in: user_leagues.map(String) },
-        win: false
+        win: false,
+        amount: { $gt: 0 }
       }}, 
       {$sort: {
         amount: -1
@@ -457,6 +458,16 @@ router.put("/rollbackParlays", (req, res) => {
     helper.processRollbackWagers(wagers);
     return res.status(200).json({ wager: "Parlays successfully reverted" });
   });
+});
+
+// @route GET api/wagers/:id/showParlay
+// @desc get all the wagers associated with a given parlay
+// @access public
+router.get("/:id/showParlay", (req, res) => {
+  Wager.findOne({ _id: req.params.id }).then(wager => {
+    console.log(wager);
+    Wager.find({ _id: { $in: wager.parlay_wagers } }).sort({ "match.match_date": 1 }).then(wagers => res.json(wagers)).catch(err => console.log(err));
+  })
 });
 
 module.exports = router;
