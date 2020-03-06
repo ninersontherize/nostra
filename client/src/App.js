@@ -32,6 +32,7 @@ import LcsPowerRankingsWeek2 from "./components/blog/LcsPowerRankingsWeek2";
 import LcsPowerRankingsWeek3 from "./components/blog/LcsPowerRankingsWeek3";
 import LcsPowerRankingsWeek4 from "./components/blog/LcsPowerRankingsWeek4";
 import LcsPowerRankingsWeek5 from "./components/blog/LcsPowerRankingsWeek5";
+import LcsPowerRankingsWeek6 from "./components/blog/LcsPowerRankingsWeek6";
 
 import "./App.css";
 import ForgotPassword from './components/auth/ForgotPassword';
@@ -99,6 +100,7 @@ class App extends Component {
               <PrivateRoute exact path="/lcsPowerRankings/week3" component={LcsPowerRankingsWeek3} />
               <PrivateRoute exact path="/lcsPowerRankings/week4" component={LcsPowerRankingsWeek4} />
               <PrivateRoute exact path="/lcsPowerRankings/week5" component={LcsPowerRankingsWeek5} />
+              <PrivateRoute exact path="/lcsPowerRankings/week6" component={LcsPowerRankingsWeek6} />
               <PrivateRoute exact path="/userSettings/:user_id" component={UserSettings} />
               <PrivateRoute exact path="/createParlay" component={CreateParlay} />
               <PrivateRoute exact path="/viewParlay/:parlay_id" component={ViewParlay} />
